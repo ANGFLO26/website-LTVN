@@ -1,0 +1,242 @@
+import { ArrowDown, ArrowRight, ClipboardCheck, LifeBuoy, Wrench } from 'lucide-react'
+import { Link } from 'react-router'
+import { NewsCard } from '../components/NewsCard'
+import { SectionHeading } from '../components/PageElements'
+import { newsItems } from '../data'
+import { usePageTitle } from '../hooks'
+import { useLanguage } from '../i18n'
+
+export function HomePage() {
+  const { language, t } = useLanguage()
+  usePageTitle(t('home'))
+
+  const supportSteps = language === 'vi'
+    ? [
+        ['Làm rõ yêu cầu', 'Xác định loại mẫu, ứng dụng, tiêu chuẩn và điều kiện vận hành.'],
+        ['Lựa chọn và triển khai', 'Tư vấn cấu hình, chuẩn bị lắp đặt và phối hợp đưa thiết bị vào sử dụng.'],
+        ['Chuyển giao và hỗ trợ', 'Hướng dẫn vận hành, bàn giao tài liệu và tiếp tục hỗ trợ sau bán hàng.'],
+      ]
+    : [
+        ['Define the requirement', 'Identify the sample, application, standards and operating conditions.'],
+        ['Select and implement', 'Configure, prepare the installation and commission the equipment.'],
+        ['Handover and support', 'Provide operating guidance, documentation and after-sales support.'],
+      ]
+
+  const servicePromises = language === 'vi'
+    ? [
+        { title: 'Tư vấn đúng ứng dụng', detail: 'Mẫu thử · tiêu chuẩn · điều kiện vận hành', Icon: ClipboardCheck },
+        { title: 'Triển khai tại hiện trường', detail: 'Lắp đặt · hướng dẫn · chuyển giao', Icon: Wrench },
+        { title: 'Hỗ trợ sau bán hàng', detail: 'Tài liệu · vận hành · kỹ thuật', Icon: LifeBuoy },
+      ]
+    : [
+        { title: 'Application-led advice', detail: 'Sample · standard · operating conditions', Icon: ClipboardCheck },
+        { title: 'On-site implementation', detail: 'Installation · guidance · handover', Icon: Wrench },
+        { title: 'After-sales support', detail: 'Documentation · operation · technical support', Icon: LifeBuoy },
+      ]
+
+  return (
+    <>
+      <section className="home-hero">
+        <img
+          className="home-hero-backdrop"
+          src="/images/hero/ltvietnam-selected-hero-v7.png"
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+        />
+        <div className="container home-hero-inner">
+          <div className="home-hero-copy">
+            <span className="eyebrow">
+              {language === 'vi' ? 'THIẾT BỊ PHÂN TÍCH · VAN CÔNG NGHIỆP' : 'ANALYTICAL INSTRUMENTS · INDUSTRIAL VALVES'}
+            </span>
+            <h1>
+              {language === 'vi'
+                ? 'Giải pháp thiết bị cho phòng thí nghiệm và nhà máy.'
+                : 'Equipment solutions for laboratories and plants.'}
+            </h1>
+            <p>
+              {language === 'vi'
+                ? 'Thiết bị phân tích PAC, Herzog và van công nghiệp Baker Hughes, được tư vấn theo ứng dụng, lắp đặt và chuyển giao bởi đội ngũ kỹ thuật LT Việt Nam.'
+                : 'PAC and Herzog analytical instruments and Baker Hughes industrial valves, selected, installed and handed over by LT Vietnam\'s technical team.'}
+            </p>
+            <div className="hero-actions">
+              <a href="#giai-phap" className="button button-primary">
+                {language === 'vi' ? 'Khám phá giải pháp' : 'Explore solutions'}
+                <ArrowRight size={17} aria-hidden="true" />
+              </a>
+              <Link to="/lien-he" className="button button-hero-secondary">
+                {language === 'vi' ? 'Trao đổi với kỹ sư' : 'Talk to an engineer'}
+              </Link>
+            </div>
+          </div>
+
+          <div className="hero-trust-bar" aria-label={language === 'vi' ? 'Cam kết dịch vụ' : 'Service commitments'}>
+            {servicePromises.map(({ title, detail, Icon }) => (
+              <div key={title}>
+                <Icon aria-hidden="true" />
+                <span><strong>{title}</strong><small>{detail}</small></span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="giai-phap" className="section home-solution-section">
+        <div className="container">
+          <SectionHeading
+            eyebrow={language === 'vi' ? '01 · CHỌN NHÓM THIẾT BỊ' : '01 · CHOOSE EQUIPMENT GROUP'}
+            title={language === 'vi' ? 'Thiết bị cho hai nhu cầu cốt lõi' : 'Equipment for two core needs'}
+            description={
+              language === 'vi'
+                ? 'Đi thẳng đến nhóm thiết bị phù hợp với phòng thí nghiệm hoặc hệ thống công nghệ của nhà máy.'
+                : 'Go directly to equipment for your laboratory or plant process system.'
+            }
+          />
+
+          <div className="home-solution-grid">
+            <Link to="/pac" className="home-solution-path home-solution-lab">
+              <span className="home-solution-index">01</span>
+              <div className="home-solution-copy">
+                <span className="home-solution-kicker">PAC · HERZOG</span>
+                <h3>{language === 'vi' ? 'Phân tích nhiên liệu và phòng thí nghiệm' : 'Fuel and laboratory analysis'}</h3>
+                <p>
+                  {language === 'vi'
+                    ? 'Thiết bị chưng cất, sắc ký khí, phân tích nguyên tố và kiểm tra tính chất nhiên liệu.'
+                    : 'Distillation, gas chromatography, elemental analysis and fuel property testing.'}
+                </p>
+                <span className="home-solution-link">
+                  {language === 'vi' ? 'Khám phá thiết bị PAC' : 'Explore PAC equipment'}
+                  <ArrowRight aria-hidden="true" />
+                </span>
+              </div>
+              <div className="home-solution-media home-solution-media-lab" aria-hidden="true">
+                <img src="/images/products/optidist-2-official.png" alt="" loading="lazy" decoding="async" />
+                <img src="/images/products/cid-510.png" alt="" loading="lazy" decoding="async" />
+              </div>
+            </Link>
+
+            <Link to="/baker-hughes" className="home-solution-path home-solution-valves">
+              <span className="home-solution-index">02</span>
+              <div className="home-solution-copy">
+                <span className="home-solution-kicker">BAKER HUGHES</span>
+                <h3>{language === 'vi' ? 'Điều khiển và bảo vệ áp suất' : 'Process control and pressure protection'}</h3>
+                <p>
+                  {language === 'vi'
+                    ? 'Van điều khiển Masoneilan, van an toàn Consolidated và thiết bị hỗ trợ vận hành.'
+                    : 'Masoneilan control valves, Consolidated safety valves and supporting equipment.'}
+                </p>
+                <span className="home-solution-link">
+                  {language === 'vi' ? 'Khám phá Baker Hughes' : 'Explore Baker Hughes'}
+                  <ArrowRight aria-hidden="true" />
+                </span>
+              </div>
+              <div className="home-solution-media home-solution-media-valves" aria-hidden="true">
+                <img src="/images/products/valve-21000.jpg" alt="" loading="lazy" decoding="async" />
+                <img src="/images/products/consolidated-2700.png" alt="" loading="lazy" decoding="async" />
+              </div>
+            </Link>
+          </div>
+
+          <div className="home-flow-bridge" aria-label={language === 'vi' ? 'Bước tiếp theo' : 'Next step'}>
+            <div>
+              <span>{language === 'vi' ? 'BƯỚC TIẾP THEO' : 'NEXT STEP'}</span>
+              <strong>{language === 'vi' ? 'Từ lựa chọn đến triển khai' : 'From selection to implementation'}</strong>
+            </div>
+            <p>
+              {language === 'vi'
+                ? 'Sau khi xác định nhóm thiết bị, đội ngũ kỹ thuật tiếp tục làm rõ yêu cầu, cấu hình và kế hoạch chuyển giao.'
+                : 'After identifying the equipment group, the technical team defines requirements, configuration and handover plan.'}
+            </p>
+            <ArrowDown aria-hidden="true" />
+          </div>
+        </div>
+      </section>
+
+      <section className="home-capability-section">
+        <div className="home-capability-media" aria-hidden="true">
+          <img
+            src="/images/hero/industrial-service-hero-v3.png"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div className="container home-capability-grid">
+          <div className="home-capability-copy">
+            <span className="eyebrow">{language === 'vi' ? '02 · QUY TRÌNH HỖ TRỢ' : '02 · SUPPORT PROCESS'}</span>
+            <h2>
+              {language === 'vi'
+                ? 'Một quy trình, rõ trách nhiệm ở từng bước'
+                : 'One process, clear responsibility at every step'}
+            </h2>
+            <p className="home-capability-lead">
+              {language === 'vi'
+                ? 'LT Việt Nam đồng hành xuyên suốt quá trình lựa chọn, triển khai và chuyển giao thiết bị cho phòng thí nghiệm và nhà máy.'
+                : 'LT Vietnam supports equipment selection, implementation and handover for laboratories and plants.'}
+            </p>
+            <ol className="home-support-steps">
+              {supportSteps.map(([title, description], index) => (
+                <li key={title}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <strong>{title}</strong>
+                    <p>{description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <Link to="/gioi-thieu" className="button button-capability">
+              {language === 'vi' ? 'Tìm hiểu về LT Việt Nam' : 'About LT Vietnam'}
+              <ArrowRight size={17} aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section home-news-section">
+        <div className="container">
+          <SectionHeading
+            eyebrow={language === 'vi' ? '03 · MINH CHỨNG THỰC TẾ' : '03 · PRACTICAL EVIDENCE'}
+            title={language === 'vi' ? 'Năng lực qua dự án và hoạt động kỹ thuật' : 'Capability through projects and technical activities'}
+            description={
+              language === 'vi'
+                ? 'Các hoạt động lắp đặt, chuyển giao và chia sẻ chuyên môn thể hiện cách đội ngũ LT Việt Nam đồng hành cùng khách hàng.'
+                : 'Installation, handover and knowledge-sharing activities show how LT Vietnam supports customers.'
+            }
+            action={
+              <Link to="/tin-tuc-su-kien" className="text-link">
+                {t('viewAll')} <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            }
+          />
+          <div className="news-grid home-news-grid">
+            {newsItems.slice(0, 3).map((item) => <NewsCard key={item.slug} item={item} />)}
+          </div>
+        </div>
+      </section>
+
+      <section className="contact-cta home-contact-cta">
+        <div className="container contact-cta-inner">
+          <div>
+            <span className="eyebrow">{language === 'vi' ? 'BẮT ĐẦU TỪ YÊU CẦU CỦA BẠN' : 'START WITH YOUR REQUIREMENT'}</span>
+            <h2>
+              {language === 'vi'
+                ? 'Cần chọn thiết bị cho một ứng dụng cụ thể?'
+                : 'Selecting equipment for a specific application?'}
+            </h2>
+            <p>
+              {language === 'vi'
+                ? 'Chia sẻ loại mẫu, tiêu chuẩn hoặc điều kiện vận hành để đội ngũ kỹ thuật hỗ trợ đúng trọng tâm.'
+                : 'Share the sample, standard or operating conditions so our technical team can focus on the right solution.'}
+            </p>
+            <a className="contact-email" href="mailto:Sales@ltvietnam.com.vn">Sales@ltvietnam.com.vn</a>
+          </div>
+          <Link to="/lien-he" className="button button-light">
+            {language === 'vi' ? 'Nhận tư vấn kỹ thuật' : 'Get technical advice'}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+    </>
+  )
+}
