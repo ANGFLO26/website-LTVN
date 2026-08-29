@@ -56,7 +56,8 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
   return (
     <>
       <PageIntro
-        className="catalog-page-intro"
+        className={`catalog-page-intro ${isPac ? 'page-intro-pac' : 'page-intro-baker'}`}
+        image={isPac ? '/images/hero/ltvietnam-selected-hero-v7.png' : '/images/hero/industrial-service-hero-v3.png'}
         eyebrow={title.toUpperCase()}
         title={
           isPac

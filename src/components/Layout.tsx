@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
+  ArrowRight,
   Languages,
   Mail,
   MapPin,
@@ -94,6 +95,7 @@ function Header() {
           </button>
         </div>
       </div>
+      <div className="site-scroll-progress" aria-hidden="true" />
     </header>
   )
 }
@@ -172,6 +174,40 @@ function Footer() {
   )
 }
 
+function PreFooterCta({ pathname }: { pathname: string }) {
+  const { language } = useLanguage()
+
+  if (pathname === '/' || pathname === '/lien-he' || pathname.startsWith('/san-pham/')) {
+    return null
+  }
+
+  return (
+    <section className="pre-footer-cta">
+      <div className="container pre-footer-cta-inner">
+        <div>
+          <span className="eyebrow">
+            {language === 'vi' ? 'HỖ TRỢ TỪ ĐỘI NGŨ KỸ THUẬT' : 'SUPPORT FROM OUR TECHNICAL TEAM'}
+          </span>
+          <h2>
+            {language === 'vi'
+              ? 'Trao đổi yêu cầu trước khi lựa chọn thiết bị'
+              : 'Discuss your requirements before selecting equipment'}
+          </h2>
+          <p>
+            {language === 'vi'
+              ? 'Cung cấp loại mẫu, tiêu chuẩn hoặc điều kiện vận hành để nhận tư vấn đúng trọng tâm.'
+              : 'Share the sample, standard or operating conditions for focused technical advice.'}
+          </p>
+        </div>
+        <Link to="/lien-he" className="button button-primary">
+          {language === 'vi' ? 'Gửi yêu cầu kỹ thuật' : 'Send a technical request'}
+          <ArrowRight size={18} aria-hidden="true" />
+        </Link>
+      </div>
+    </section>
+  )
+}
+
 export function Layout() {
   const location = useLocation()
 
@@ -179,12 +215,102 @@ export function Layout() {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [location.pathname])
 
+  useEffect(() => {
+    const progress = document.querySelector<HTMLElement>('.site-scroll-progress')
+    const header = document.querySelector<HTMLElement>('.site-header')
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let scrollFrame = 0
+
+    const updateScrollState = () => {
+      const scrollRange = document.documentElement.scrollHeight - window.innerHeight
+      const value = scrollRange > 0 ? Math.min(window.scrollY / scrollRange, 1) : 0
+      progress?.style.setProperty('--scroll-progress', String(value))
+      header?.classList.toggle('is-scrolled', window.scrollY > 12)
+      scrollFrame = 0
+    }
+
+    const requestScrollUpdate = () => {
+      if (!scrollFrame) scrollFrame = window.requestAnimationFrame(updateScrollState)
+    }
+
+    window.addEventListener('scroll', requestScrollUpdate, { passive: true })
+    window.addEventListener('resize', requestScrollUpdate)
+    updateScrollState()
+
+    const revealSelector = [
+      '.section-heading',
+      '.home-solution-path',
+      '.home-flow-bridge',
+      '.home-process-heading > *',
+      '.home-process-tabs',
+      '.home-process-panel',
+      '.home-news-grid > *',
+      '.contact-cta-inner > *',
+      '.about-overview-grid > *',
+      '.capability-grid > *',
+      '.values-grid > *',
+      '.office-grid > *',
+      '.inline-cta > *',
+      '.catalog-toolbar',
+      '.catalog-category-strip',
+      '.catalog-result-head',
+      '.product-grid > *',
+      '.featured-story-grid > *',
+      '.news-filter',
+      '.news-grid > *',
+      '.contact-layout > *',
+      '.product-detail-grid > *',
+      '.product-information-grid > *',
+      '.article-header > *',
+      '.article-image',
+      '.article-body > *',
+      '.article-related-inner > *',
+      '.pre-footer-cta-inner > *',
+    ].join(',')
+
+    const revealItems = Array.from(document.querySelectorAll<HTMLElement>(revealSelector))
+    let observer: IntersectionObserver | undefined
+
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      revealItems.forEach((item) => {
+        const siblings = item.parentElement ? Array.from(item.parentElement.children) : []
+        const siblingIndex = Math.max(siblings.indexOf(item), 0)
+        item.classList.add('scroll-reveal')
+        item.style.setProperty('--reveal-delay', `${Math.min(siblingIndex, 3) * 70}ms`)
+      })
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return
+            entry.target.classList.add('is-visible')
+            observer?.unobserve(entry.target)
+          })
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+      )
+
+      revealItems.forEach((item) => observer?.observe(item))
+    } else {
+      revealItems.forEach((item) => item.classList.add('is-visible'))
+    }
+
+    return () => {
+      window.removeEventListener('scroll', requestScrollUpdate)
+      window.removeEventListener('resize', requestScrollUpdate)
+      if (scrollFrame) window.cancelAnimationFrame(scrollFrame)
+      observer?.disconnect()
+    }
+  }, [location.pathname])
+
   return (
     <div className="site-shell">
+      <a className="skip-link" href="#main-content">Bỏ qua điều hướng</a>
       <Header />
-      <main>
+      <main id="main-content">
         <Outlet />
       </main>
+      <PreFooterCta pathname={location.pathname} />
       <Footer />
     </div>
   )

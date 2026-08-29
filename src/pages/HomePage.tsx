@@ -1,3 +1,4 @@
+import { useState, type KeyboardEvent } from 'react'
 import { ArrowDown, ArrowRight, ClipboardCheck, LifeBuoy, Wrench } from 'lucide-react'
 import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
@@ -8,19 +9,78 @@ import { useLanguage } from '../i18n'
 
 export function HomePage() {
   const { language, t } = useLanguage()
+  const [activeSupportStep, setActiveSupportStep] = useState(0)
   usePageTitle(t('home'))
 
   const supportSteps = language === 'vi'
     ? [
-        ['Làm rõ yêu cầu', 'Xác định loại mẫu, ứng dụng, tiêu chuẩn và điều kiện vận hành.'],
-        ['Lựa chọn và triển khai', 'Tư vấn cấu hình, chuẩn bị lắp đặt và phối hợp đưa thiết bị vào sử dụng.'],
-        ['Chuyển giao và hỗ trợ', 'Hướng dẫn vận hành, bàn giao tài liệu và tiếp tục hỗ trợ sau bán hàng.'],
+        {
+          label: 'KHẢO SÁT ỨNG DỤNG',
+          title: 'Làm rõ yêu cầu',
+          description: 'Xác định loại mẫu, ứng dụng, tiêu chuẩn và điều kiện vận hành.',
+          outcome: 'Thống nhất đúng bài toán kỹ thuật trước khi đề xuất thiết bị.',
+          image: '/images/hero/industrial-lab-plant-hero-v6.png',
+          imageAlt: 'Kỹ thuật viên vận hành thiết bị phân tích trong phòng thí nghiệm nhà máy',
+        },
+        {
+          label: 'CẤU HÌNH & TRIỂN KHAI',
+          title: 'Lựa chọn và triển khai',
+          description: 'Tư vấn cấu hình, chuẩn bị lắp đặt và phối hợp đưa thiết bị vào sử dụng.',
+          outcome: 'Cấu hình và kế hoạch triển khai bám sát điều kiện sử dụng thực tế.',
+          image: '/images/hero/ltvietnam-selected-hero-v7.png',
+          imageAlt: 'Kỹ thuật viên thao tác trên thiết bị OptiDist 2 tại nhà máy',
+        },
+        {
+          label: 'CHUYỂN GIAO & HẬU MÃI',
+          title: 'Chuyển giao và hỗ trợ',
+          description: 'Hướng dẫn vận hành, bàn giao tài liệu và tiếp tục hỗ trợ sau bán hàng.',
+          outcome: 'Người vận hành nắm quy trình và có đầu mối hỗ trợ kỹ thuật rõ ràng.',
+          image: '/images/hero/industrial-service-hero-v3.png',
+          imageAlt: 'Kỹ thuật viên kiểm tra van công nghiệp tại hiện trường',
+        },
       ]
     : [
-        ['Define the requirement', 'Identify the sample, application, standards and operating conditions.'],
-        ['Select and implement', 'Configure, prepare the installation and commission the equipment.'],
-        ['Handover and support', 'Provide operating guidance, documentation and after-sales support.'],
+        {
+          label: 'APPLICATION REVIEW',
+          title: 'Define the requirement',
+          description: 'Identify the sample, application, standards and operating conditions.',
+          outcome: 'Align on the technical requirement before recommending equipment.',
+          image: '/images/hero/industrial-lab-plant-hero-v6.png',
+          imageAlt: 'Technician operating analytical equipment in a plant laboratory',
+        },
+        {
+          label: 'CONFIGURATION & DELIVERY',
+          title: 'Select and implement',
+          description: 'Configure, prepare the installation and commission the equipment.',
+          outcome: 'Match the configuration and implementation plan to actual site conditions.',
+          image: '/images/hero/ltvietnam-selected-hero-v7.png',
+          imageAlt: 'Technician operating an OptiDist 2 instrument at an industrial site',
+        },
+        {
+          label: 'HANDOVER & SUPPORT',
+          title: 'Handover and support',
+          description: 'Provide operating guidance, documentation and after-sales support.',
+          outcome: 'Give operators a clear workflow and a reliable technical point of contact.',
+          image: '/images/hero/industrial-service-hero-v3.png',
+          imageAlt: 'Technician inspecting an industrial valve on site',
+        },
       ]
+
+  const activeStep = supportSteps[activeSupportStep]
+
+  const handleSupportKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    let nextIndex = index
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') nextIndex = (index + 1) % supportSteps.length
+    else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') nextIndex = (index - 1 + supportSteps.length) % supportSteps.length
+    else if (event.key === 'Home') nextIndex = 0
+    else if (event.key === 'End') nextIndex = supportSteps.length - 1
+    else return
+
+    event.preventDefault()
+    setActiveSupportStep(nextIndex)
+    window.requestAnimationFrame(() => document.getElementById(`support-step-${nextIndex}`)?.focus())
+  }
 
   const servicePromises = language === 'vi'
     ? [
@@ -84,7 +144,7 @@ export function HomePage() {
       <section id="giai-phap" className="section home-solution-section">
         <div className="container">
           <SectionHeading
-            eyebrow={language === 'vi' ? '01 · CHỌN NHÓM THIẾT BỊ' : '01 · CHOOSE EQUIPMENT GROUP'}
+            eyebrow={language === 'vi' ? 'NHÓM GIẢI PHÁP' : 'SOLUTION GROUPS'}
             title={language === 'vi' ? 'Thiết bị cho hai nhu cầu cốt lõi' : 'Equipment for two core needs'}
             description={
               language === 'vi'
@@ -95,7 +155,6 @@ export function HomePage() {
 
           <div className="home-solution-grid">
             <Link to="/pac" className="home-solution-path home-solution-lab">
-              <span className="home-solution-index">01</span>
               <div className="home-solution-copy">
                 <span className="home-solution-kicker">PAC · HERZOG</span>
                 <h3>{language === 'vi' ? 'Phân tích nhiên liệu và phòng thí nghiệm' : 'Fuel and laboratory analysis'}</h3>
@@ -116,7 +175,6 @@ export function HomePage() {
             </Link>
 
             <Link to="/baker-hughes" className="home-solution-path home-solution-valves">
-              <span className="home-solution-index">02</span>
               <div className="home-solution-copy">
                 <span className="home-solution-kicker">BAKER HUGHES</span>
                 <h3>{language === 'vi' ? 'Điều khiển và bảo vệ áp suất' : 'Process control and pressure protection'}</h3>
@@ -152,43 +210,91 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="home-capability-section">
-        <div className="home-capability-media" aria-hidden="true">
-          <img
-            src="/images/hero/industrial-service-hero-v3.png"
-            alt=""
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div className="container home-capability-grid">
-          <div className="home-capability-copy">
-            <span className="eyebrow">{language === 'vi' ? '02 · QUY TRÌNH HỖ TRỢ' : '02 · SUPPORT PROCESS'}</span>
-            <h2>
+      <section className="home-process-section" aria-labelledby="home-process-title">
+        <div className="container">
+          <div className="home-process-heading">
+            <div>
+              <span className="eyebrow">{language === 'vi' ? 'QUY TRÌNH HỖ TRỢ' : 'SUPPORT PROCESS'}</span>
+              <h2 id="home-process-title">
+                {language === 'vi'
+                  ? 'Một quy trình, rõ trách nhiệm ở từng bước'
+                  : 'One process, clear responsibility at every step'}
+              </h2>
+            </div>
+            <p>
               {language === 'vi'
-                ? 'Một quy trình, rõ trách nhiệm ở từng bước'
-                : 'One process, clear responsibility at every step'}
-            </h2>
-            <p className="home-capability-lead">
-              {language === 'vi'
-                ? 'LT Việt Nam đồng hành xuyên suốt quá trình lựa chọn, triển khai và chuyển giao thiết bị cho phòng thí nghiệm và nhà máy.'
-                : 'LT Vietnam supports equipment selection, implementation and handover for laboratories and plants.'}
+                ? 'Chọn từng bước để xem cách LT Việt Nam phối hợp từ yêu cầu ban đầu đến khi thiết bị được đưa vào vận hành.'
+                : 'Select each step to see how LT Vietnam works from the initial requirement through equipment operation.'}
             </p>
-            <ol className="home-support-steps">
-              {supportSteps.map(([title, description], index) => (
-                <li key={title}>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <div>
-                    <strong>{title}</strong>
-                    <p>{description}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <Link to="/gioi-thieu" className="button button-capability">
-              {language === 'vi' ? 'Tìm hiểu về LT Việt Nam' : 'About LT Vietnam'}
-              <ArrowRight size={17} aria-hidden="true" />
-            </Link>
+          </div>
+
+          <div className="home-process-layout">
+            <div
+              className="home-process-tabs"
+              role="tablist"
+              aria-label={language === 'vi' ? 'Các bước hỗ trợ kỹ thuật' : 'Technical support steps'}
+              aria-orientation="vertical"
+            >
+              {supportSteps.map((step, index) => {
+                const isActive = activeSupportStep === index
+
+                return (
+                  <button
+                    key={step.title}
+                    id={`support-step-${index}`}
+                    className={`home-process-tab${isActive ? ' is-active' : ''}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls="support-step-panel"
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => setActiveSupportStep(index)}
+                    onMouseEnter={() => setActiveSupportStep(index)}
+                    onKeyDown={(event) => handleSupportKeyDown(event, index)}
+                  >
+                    <span className="home-process-index">{String(index + 1).padStart(2, '0')}</span>
+                    <span className="home-process-tab-copy">
+                      <strong>{step.title}</strong>
+                      <small>{step.description}</small>
+                    </span>
+                    <ArrowRight className="home-process-arrow" size={20} aria-hidden="true" />
+                  </button>
+                )
+              })}
+            </div>
+
+            <article
+              id="support-step-panel"
+              className="home-process-panel"
+              role="tabpanel"
+              aria-labelledby={`support-step-${activeSupportStep}`}
+              aria-live="polite"
+            >
+              <div key={`visual-${activeSupportStep}-${language}`} className="home-process-visual">
+                <img
+                  src={activeStep.image}
+                  alt={activeStep.imageAlt}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className="home-process-step-count">
+                  {language === 'vi' ? 'BƯỚC' : 'STEP'} {String(activeSupportStep + 1).padStart(2, '0')} / {String(supportSteps.length).padStart(2, '0')}
+                </span>
+              </div>
+              <div key={`copy-${activeSupportStep}-${language}`} className="home-process-panel-copy">
+                <span className="home-process-label">{activeStep.label}</span>
+                <h3>{activeStep.title}</h3>
+                <p>{activeStep.description}</p>
+                <div className="home-process-outcome">
+                  <span>{language === 'vi' ? 'KẾT QUẢ CỦA BƯỚC' : 'STEP OUTCOME'}</span>
+                  <strong>{activeStep.outcome}</strong>
+                </div>
+                <Link to="/gioi-thieu" className="text-link home-process-link">
+                  {language === 'vi' ? 'Tìm hiểu cách LT Việt Nam làm việc' : 'How LT Vietnam works'}
+                  <ArrowRight size={17} aria-hidden="true" />
+                </Link>
+              </div>
+            </article>
           </div>
         </div>
       </section>
@@ -196,7 +302,7 @@ export function HomePage() {
       <section className="section home-news-section">
         <div className="container">
           <SectionHeading
-            eyebrow={language === 'vi' ? '03 · MINH CHỨNG THỰC TẾ' : '03 · PRACTICAL EVIDENCE'}
+            eyebrow={language === 'vi' ? 'DỰ ÁN & HOẠT ĐỘNG KỸ THUẬT' : 'PROJECTS & TECHNICAL ACTIVITIES'}
             title={language === 'vi' ? 'Năng lực qua dự án và hoạt động kỹ thuật' : 'Capability through projects and technical activities'}
             description={
               language === 'vi'

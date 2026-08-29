@@ -21,6 +21,8 @@ export function ContactPage() {
   return (
     <>
       <PageIntro
+        className="page-intro-contact"
+        image="/images/hero/industrial-lab-plant-hero-v6.png"
         eyebrow={language === 'vi' ? 'TRAO ĐỔI VỚI CHÚNG TÔI' : 'TALK TO OUR TEAM'}
         title={language === 'vi' ? 'Liên hệ LT Việt Nam' : 'Contact LT Vietnam'}
         description={language === 'vi' ? 'Gửi nhu cầu thiết bị hoặc liên hệ trực tiếp với đội ngũ kinh doanh và kỹ thuật.' : 'Send your equipment requirements or contact our sales and technical team directly.'}
@@ -52,7 +54,10 @@ export function ContactPage() {
       </section>
       <section className="section office-section">
         <div className="container">
-          <SectionHeading title={t('offices')} />
+          <SectionHeading
+            title={t('offices')}
+            description={language === 'vi' ? 'Liên hệ văn phòng gần nhất để được phối hợp nhanh hơn.' : 'Contact the nearest office for a faster response.'}
+          />
           <div className="office-grid">
             {offices.map((office) => <article key={office.city} className="office-card"><span>{office.label}</span><h3>{office.city}</h3><p>{office.address}</p><strong>{office.phone}</strong></article>)}
           </div>

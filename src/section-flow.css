@@ -1,0 +1,65 @@
+/* Continuous page flow: a sea-blue introduction blending into a light content surface. */
+:root {
+  --page-flow-surface: #f2f7f8;
+}
+
+.page-intro {
+  position: relative;
+  z-index: 2;
+  border-bottom: 2px solid #efbb54;
+  background: #0d5668;
+}
+
+.page-intro-inner {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 44px;
+}
+
+.page-intro .eyebrow {
+  color: #9bdce5;
+}
+
+.page-intro p {
+  color: #d6e7ea;
+}
+
+.page-intro + .section,
+.page-intro + .featured-story {
+  position: relative;
+  padding-top: 48px;
+  background: var(--page-flow-surface);
+}
+
+.page-intro + .catalog-section {
+  padding-top: 40px;
+}
+
+@media (min-width: 681px) {
+  .home-hero {
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .hero-trust-bar {
+    bottom: -36px;
+    width: min(1180px, calc(100% - 48px));
+    border-radius: 4px;
+  }
+
+  .home-solution-section {
+    padding-top: 88px;
+  }
+}
+
+@media (max-width: 760px) {
+  .page-intro-inner {
+    padding-bottom: 34px;
+  }
+
+  .page-intro + .section,
+  .page-intro + .featured-story,
+  .page-intro + .catalog-section {
+    padding-top: 38px;
+  }
+}

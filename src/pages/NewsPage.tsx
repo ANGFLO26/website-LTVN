@@ -27,6 +27,8 @@ export function NewsPage() {
   return (
     <>
       <PageIntro
+        className="page-intro-news"
+        image="/images/news/safety-valve-seminar.jpg"
         eyebrow={language === 'vi' ? 'CẬP NHẬT TỪ LT VIỆT NAM' : 'UPDATES FROM LT VIETNAM'}
         title={t('news')}
         description={

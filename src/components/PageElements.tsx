@@ -28,15 +28,28 @@ export function PageIntro({
   eyebrow,
   title,
   description,
+  image,
   className = '',
 }: {
   eyebrow: string
   title: string
   description: string
+  image?: string
   className?: string
 }) {
   return (
     <section className={`page-intro ${className}`.trim()}>
+      {image && (
+        <img
+          className="page-intro-media"
+          src={image}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          decoding="async"
+        />
+      )}
+      <div className="page-intro-shade" aria-hidden="true" />
       <div className="container page-intro-inner">
         <span className="eyebrow">{eyebrow}</span>
         <h1>{title}</h1>

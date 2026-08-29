@@ -12,6 +12,8 @@ export function AboutPage() {
   return (
     <>
       <PageIntro
+        className="page-intro-about"
+        image="/images/hero/industrial-service-hero-v3.png"
         eyebrow="LT VIỆT NAM TECHNOLOGY CO., LTD"
         title={language === 'vi' ? 'Năng lực kỹ thuật cho công nghiệp và phòng thí nghiệm' : 'Technical capability for industry and laboratories'}
         description={
@@ -50,6 +52,7 @@ export function AboutPage() {
         <div className="container">
           <SectionHeading
             title={language === 'vi' ? 'Một đầu mối cho toàn bộ vòng đời thiết bị' : 'One partner across the equipment lifecycle'}
+            description={language === 'vi' ? 'Từ lựa chọn cấu hình đến vận hành, mỗi giai đoạn đều có đầu mối kỹ thuật chịu trách nhiệm rõ ràng.' : 'From configuration selection to operation, every stage has a clear technical owner.'}
           />
           <div className="capability-grid">
             <article><Target aria-hidden="true" /><h3>{language === 'vi' ? 'Tư vấn lựa chọn' : 'Solution consultation'}</h3><p>{language === 'vi' ? 'Phân tích ứng dụng, phương pháp và cấu hình phù hợp.' : 'Review applications, methods and suitable configurations.'}</p></article>
@@ -61,7 +64,10 @@ export function AboutPage() {
 
       <section className="values-band">
         <div className="container">
-          <SectionHeading title={language === 'vi' ? 'Định hướng phát triển' : 'Our direction'} />
+          <SectionHeading
+            title={language === 'vi' ? 'Định hướng phát triển' : 'Our direction'}
+            description={language === 'vi' ? 'Giá trị được xây dựng từ năng lực kỹ thuật, trách nhiệm và hiệu quả vận hành dài hạn.' : 'Value built on technical capability, accountability and long-term operational performance.'}
+          />
           <div className="values-grid">
             <article>
               <Target aria-hidden="true" />
@@ -77,7 +83,10 @@ export function AboutPage() {
 
       <section className="section office-section">
         <div className="container">
-          <SectionHeading title={t('offices')} />
+          <SectionHeading
+            title={t('offices')}
+            description={language === 'vi' ? 'Ba điểm hỗ trợ giúp đội ngũ phối hợp nhanh hơn với khách hàng trên toàn quốc.' : 'Three offices help our team respond to customers nationwide.'}
+          />
           <div className="office-grid">
             {offices.map((office) => (
               <article key={office.city} className="office-card">
