@@ -7,7 +7,7 @@ export function ProductCard({ product, compact = false }: { product: Product; co
   const { content, t } = useLanguage()
 
   return (
-    <article className={`product-card ${compact ? 'product-card-compact' : ''}`}>
+    <article className={`product-card hover-scale ${compact ? 'product-card-compact' : ''}`}>
       <Link to={`/san-pham/${product.slug}`} className="product-image-link">
         <img
           src={product.image}

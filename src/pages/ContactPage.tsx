@@ -47,7 +47,7 @@ export function ContactPage() {
               <label className="form-wide"><span>{t('interest')}</span><select name="product" defaultValue={selectedProduct}><option value="">{t('selectProduct')}</option>{products.map((product) => <option key={product.slug} value={product.slug}>{product.brand} · {product.model}</option>)}</select></label>
               <label className="form-wide"><span>{t('message')} *</span><textarea name="message" rows={5} required /></label>
             </div>
-            <button type="submit" className="button button-primary">{t('sendRequest')}</button>
+            <button type="submit" className="button button-primary hover-scale">{t('sendRequest')}</button>
             {submitted && <p className="form-status" role="status"><CheckCircle2 aria-hidden="true" /> {t('formReady')}</p>}
           </form>
         </div>
@@ -59,7 +59,7 @@ export function ContactPage() {
             description={language === 'vi' ? 'Liên hệ văn phòng gần nhất để được phối hợp nhanh hơn.' : 'Contact the nearest office for a faster response.'}
           />
           <div className="office-grid">
-            {offices.map((office) => <article key={office.city} className="office-card"><span>{office.label}</span><h3>{office.city}</h3><p>{office.address}</p><strong>{office.phone}</strong></article>)}
+            {offices.map((office) => <article key={office.city} className="office-card hover-scale"><span>{office.label}</span><h3>{office.city}</h3><p>{office.address}</p><strong>{office.phone}</strong></article>)}
           </div>
         </div>
       </section>

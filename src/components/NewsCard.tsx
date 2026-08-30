@@ -7,7 +7,7 @@ export function NewsCard({ item }: { item: NewsItem }) {
   const { content, t } = useLanguage()
 
   return (
-    <article className={`news-card ${item.imageFit === 'contain' ? 'news-card-equipment' : ''}`}>
+    <article className={`news-card hover-scale ${item.imageFit === 'contain' ? 'news-card-equipment' : ''}`}>
       <Link
         to={`/tin-tuc/${item.slug}`}
         className="news-image-link"

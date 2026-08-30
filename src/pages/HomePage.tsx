@@ -154,7 +154,7 @@ export function HomePage() {
           />
 
           <div className="home-solution-grid">
-            <Link to="/pac" className="home-solution-path home-solution-lab">
+            <Link to="/pac" className="home-solution-path home-solution-lab hover-scale">
               <div className="home-solution-copy">
                 <span className="home-solution-kicker">PAC · HERZOG</span>
                 <h3>{language === 'vi' ? 'Phân tích nhiên liệu và phòng thí nghiệm' : 'Fuel and laboratory analysis'}</h3>
@@ -174,7 +174,7 @@ export function HomePage() {
               </div>
             </Link>
 
-            <Link to="/baker-hughes" className="home-solution-path home-solution-valves">
+            <Link to="/baker-hughes" className="home-solution-path home-solution-valves hover-scale">
               <div className="home-solution-copy">
                 <span className="home-solution-kicker">BAKER HUGHES</span>
                 <h3>{language === 'vi' ? 'Điều khiển và bảo vệ áp suất' : 'Process control and pressure protection'}</h3>

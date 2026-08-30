@@ -41,7 +41,7 @@ export function NewsPage() {
       <section className="featured-story">
         <div className="container featured-story-grid">
           <Link to={`/tin-tuc/${featured.slug}`} className="featured-story-image">
-            <img src={featured.image} alt={content(featured.title)} />
+            <img src={featured.image} alt={content(featured.title)} className="hover-scale-img" />
           </Link>
           <div className="featured-story-copy">
             <div className="news-meta"><span>{content(featured.type)}</span><span>{featured.year}</span></div>
