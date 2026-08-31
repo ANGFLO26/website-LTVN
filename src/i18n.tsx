@@ -55,6 +55,75 @@ const uiCopy = {
   copyright: ['Bản quyền thuộc LT Việt Nam.', 'Copyright LT Vietnam.'],
   menu: ['Mở menu', 'Open menu'],
   closeMenu: ['Đóng menu', 'Close menu'],
+
+  // --- New Keys added during Refactor ---
+  heroEyebrow: ['THIẾT BỊ PHÂN TÍCH · VAN CÔNG NGHIỆP', 'ANALYTICAL INSTRUMENTS · INDUSTRIAL VALVES'],
+  heroTitle: ['Giải pháp thiết bị cho phòng thí nghiệm và nhà máy.', 'Equipment solutions for laboratories and plants.'],
+  heroDesc: ['Thiết bị phân tích PAC, Herzog và van công nghiệp Baker Hughes, được tư vấn theo ứng dụng, lắp đặt và chuyển giao bởi đội ngũ kỹ thuật LT Việt Nam.', 'PAC and Herzog analytical instruments and Baker Hughes industrial valves, selected, installed and handed over by LT Vietnam\'s technical team.'],
+  exploreSolutions: ['Khám phá giải pháp', 'Explore solutions'],
+  talkToEngineer: ['Trao đổi với kỹ sư', 'Talk to an engineer'],
+  serviceCommitments: ['Cam kết dịch vụ', 'Service commitments'],
+
+  solutionGroups: ['NHÓM GIẢI PHÁP', 'SOLUTION GROUPS'],
+  equipmentTwoNeeds: ['Thiết bị cho hai nhu cầu cốt lõi', 'Equipment for two core needs'],
+  equipmentDesc: ['Đi thẳng đến nhóm thiết bị phù hợp với phòng thí nghiệm hoặc hệ thống công nghệ của nhà máy.', 'Go directly to equipment for your laboratory or plant process system.'],
+
+  labAnalysis: ['Phân tích nhiên liệu và phòng thí nghiệm', 'Fuel and laboratory analysis'],
+  labDesc: ['Thiết bị chưng cất, sắc ký khí, phân tích nguyên tố và kiểm tra tính chất nhiên liệu.', 'Distillation, gas chromatography, elemental analysis and fuel property testing.'],
+  explorePac: ['Khám phá thiết bị PAC', 'Explore PAC equipment'],
+
+  processControl: ['Điều khiển và bảo vệ áp suất', 'Process control and pressure protection'],
+  processDesc: ['Van điều khiển Masoneilan, van an toàn Consolidated và thiết bị hỗ trợ vận hành.', 'Masoneilan control valves, Consolidated safety valves and supporting equipment.'],
+  exploreBaker: ['Khám phá Baker Hughes', 'Explore Baker Hughes'],
+
+  nextStep: ['BƯỚC TIẾP THEO', 'NEXT STEP'],
+  nextStepTitle: ['Từ lựa chọn đến triển khai', 'From selection to implementation'],
+  nextStepDesc: ['Sau khi xác định nhóm thiết bị, đội ngũ kỹ thuật tiếp tục làm rõ yêu cầu, cấu hình và kế hoạch chuyển giao.', 'After identifying the equipment group, the technical team defines requirements, configuration and handover plan.'],
+
+  supportProcess: ['QUY TRÌNH HỖ TRỢ', 'SUPPORT PROCESS'],
+  supportProcessTitle: ['Một quy trình, rõ trách nhiệm ở từng bước', 'One process, clear responsibilities'],
+  supportProcessDesc: ['Từ khâu đầu tiên đến khi bảo dưỡng, chúng tôi định hình rõ công việc và cam kết đồng hành cùng nhà máy.', 'From initial inquiry to maintenance, we clearly define tasks and commit to partnering with your plant.'],
+
+  techSupportSteps: ['Các bước hỗ trợ kỹ thuật', 'Technical support steps'],
+  step: ['BƯỚC', 'STEP'],
+  stepOutcomes: ['KẾT QUẢ CỦA BƯỚC', 'STEP OUTCOME'],
+  howItWorks: ['Tìm hiểu cách LT Việt Nam làm việc', 'How LT Vietnam works'],
+
+  projectsActivities: ['DỰ ÁN & HOẠT ĐỘNG KỸ THUẬT', 'PROJECTS & TECHNICAL ACTIVITIES'],
+  capabilityTitle: ['Năng lực qua dự án và hoạt động kỹ thuật', 'Capability through projects and technical activities'],
+  capabilityDesc: ['Theo dõi các dự án nâng cấp, bảo dưỡng và chuyển giao thiết bị gần nhất tại các nhà máy.', 'Track our latest upgrade, maintenance and equipment handover projects.'],
+
+  startRequirement: ['BẮT ĐẦU TỪ YÊU CẦU CỦA BẠN', 'START WITH YOUR REQUIREMENT'],
+  readyToSupport: ['Sẵn sàng hỗ trợ và đề xuất giải pháp kỹ thuật', 'Ready to support and propose technical solutions'],
+  contactSalesDesc: ['Liên hệ với bộ phận kinh doanh và kỹ thuật để nhận thông tin sản phẩm và tư vấn lựa chọn.', 'Contact our sales and technical team for product information and selection advice.'],
+  getAdvice: ['Nhận tư vấn kỹ thuật', 'Get technical advice'],
+
+  talkToOurTeam: ['TRAO ĐỔI VỚI CHÚNG TÔI', 'TALK TO OUR TEAM'],
+  contactLTV: ['Liên hệ LT Việt Nam', 'Contact LT Vietnam'],
+  contactLTVDesc: ['Gửi nhu cầu thiết bị hoặc liên hệ trực tiếp với đội ngũ kinh doanh và kỹ thuật.', 'Send your equipment requirements or contact our sales and technical team directly.'],
+  reachRightTeam: ['Kết nối đúng người phụ trách', 'Reach the right team'],
+  reachRightTeamDesc: ['Thông tin sản phẩm, model và ứng dụng sẽ giúp chúng tôi định hướng yêu cầu nhanh hơn.', 'Product, model and application details help us route your request faster.'],
+  contactNearestOffice: ['Liên hệ văn phòng gần nhất để được phối hợp nhanh hơn.', 'Contact the nearest office for a faster response.'],
+
+  updatesEyebrow: ['CẬP NHẬT TỪ LT VIỆT NAM', 'UPDATES FROM LT VIETNAM'],
+  newsEvents: ['Tin tức và Sự kiện', 'News and Events'],
+  newsEventsDesc: ['Cập nhật thông tin về công nghệ, sản phẩm mới và các hoạt động triển khai dự án.', 'Updates on technology, new products and project implementation activities.'],
+  filterPosts: ['Lọc bài viết', 'Filter posts'],
+  noPosts: ['Chưa có bài viết trong nhóm này', 'No posts in this category'],
+  chooseAnotherCategory: ['Chọn nhóm khác để xem các nội dung hiện có.', 'Choose another category to view available posts.'],
+
+  pacDesc: ['Giải pháp phân tích toàn diện cho phòng thí nghiệm', 'Comprehensive analytical solutions for laboratories'],
+  bakerDesc: ['Giải pháp điều khiển và bảo vệ áp suất công nghiệp', 'Industrial process control and pressure protection solutions'],
+  browseByCategory: ['Duyệt theo nhóm sản phẩm', 'Browse by category'],
+  allProducts: ['Tất cả sản phẩm', 'All products'],
+  pacTitle: ['Thiết bị phân tích nhiên liệu và phòng thí nghiệm', 'Fuel and laboratory analysis instruments'],
+  bakerTitle: ['Giải pháp van điều khiển và van an toàn', 'Control valve and safety valve solutions'],
+  pacIntro: ['Tìm theo ứng dụng, nhóm thiết bị, phương pháp thử hoặc model.', 'Search by application, equipment group, test method or model.'],
+  bakerIntro: ['Tìm theo loại van, ứng dụng, thương hiệu hoặc model.', 'Search by valve type, application, brand or model.'],
+  productCategories: ['Nhóm sản phẩm', 'Product categories'],
+  productsCount: ['sản phẩm', 'products'],
+  noMatchingProducts: ['Chưa có sản phẩm phù hợp', 'No matching products'],
+  clearFilters: ['Xóa bộ lọc', 'Clear filters'],
 } as const
 
 export type UiKey = keyof typeof uiCopy

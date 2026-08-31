@@ -41,7 +41,7 @@ function Header() {
       <div className="header-inner">
         <div className="header-brand-zone">
           <Link to="/" className="brand" aria-label="LT Việt Nam - Trang chủ" onClick={() => setOpen(false)}>
-            <img src="/images/brand/ltv-logo.png" alt="" />
+            <img src="/images/brand/ltv-logo.png" alt="LT Việt Nam Logo" />
             <span>
               <strong>LT VIỆT NAM</strong>
               <small>TECHNOLOGY CO., LTD</small>
@@ -120,7 +120,7 @@ function Footer() {
       <div className="container footer-grid">
         <div className="footer-brand">
           <Link to="/" className="brand brand-footer">
-            <img src="/images/brand/ltv-logo.png" alt="" />
+            <img src="/images/brand/ltv-logo.png" alt="LT Việt Nam Logo" />
             <span>
               <strong>LT VIỆT NAM</strong>
               <small>TECHNOLOGY CO., LTD</small>

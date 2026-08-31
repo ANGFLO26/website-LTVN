@@ -23,15 +23,15 @@ export function ContactPage() {
       <PageIntro
         className="page-intro-contact"
         image="/images/hero/industrial-lab-plant-hero-v6.png"
-        eyebrow={language === 'vi' ? 'TRAO ĐỔI VỚI CHÚNG TÔI' : 'TALK TO OUR TEAM'}
-        title={language === 'vi' ? 'Liên hệ LT Việt Nam' : 'Contact LT Vietnam'}
-        description={language === 'vi' ? 'Gửi nhu cầu thiết bị hoặc liên hệ trực tiếp với đội ngũ kinh doanh và kỹ thuật.' : 'Send your equipment requirements or contact our sales and technical team directly.'}
+        eyebrow={t('talkToOurTeam')}
+        title={t('contactLTV')}
+        description={t('contactLTVDesc')}
       />
       <section className="section contact-section">
         <div className="container contact-layout">
           <div className="contact-direct">
-            <h2>{language === 'vi' ? 'Kết nối đúng người phụ trách' : 'Reach the right team'}</h2>
-            <p>{language === 'vi' ? 'Thông tin sản phẩm, model và ứng dụng sẽ giúp chúng tôi định hướng yêu cầu nhanh hơn.' : 'Product, model and application details help us route your request faster.'}</p>
+            <h2>{t('reachRightTeam')}</h2>
+            <p>{t('reachRightTeamDesc')}</p>
             <div className="direct-contact-list">
               <a href="tel:+842466506373"><Phone aria-hidden="true" /><span><small>{t('phone')}</small><strong>(84-24) 6650 6373</strong></span></a>
               <a href="mailto:Sales@ltvietnam.com.vn"><Mail aria-hidden="true" /><span><small>{t('salesEmail')}</small><strong>Sales@ltvietnam.com.vn</strong></span></a>
@@ -56,7 +56,7 @@ export function ContactPage() {
         <div className="container">
           <SectionHeading
             title={t('offices')}
-            description={language === 'vi' ? 'Liên hệ văn phòng gần nhất để được phối hợp nhanh hơn.' : 'Contact the nearest office for a faster response.'}
+            description={t('contactNearestOffice')}
           />
           <div className="office-grid">
             {offices.map((office) => <article key={office.city} className="office-card hover-scale"><span>{office.label}</span><h3>{office.city}</h3><p>{office.address}</p><strong>{office.phone}</strong></article>)}

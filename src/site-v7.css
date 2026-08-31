@@ -22,8 +22,8 @@
   --shadow-premium: 0 20px 40px -10px rgba(2, 132, 199, 0.15);
   --container: 1200px;
   --header-height: 80px;
-  --font-sans: 'Inter', 'Segoe UI Variable', 'Segoe UI', Arial, sans-serif;
-  --font-heading: 'Outfit', 'Inter', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Segoe UI Variable', 'Segoe UI', Arial, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Segoe UI Variable', 'Segoe UI', Arial, sans-serif;
   --font-mono: 'Cascadia Mono', 'SFMono-Regular', Consolas, monospace;
   color: var(--ink);
   background: var(--paper);
@@ -828,33 +828,34 @@ textarea:focus-visible {
 .home-solution-media img {
   position: absolute;
   object-fit: contain;
+  mix-blend-mode: multiply;
 }
 
 .home-solution-media-lab img:first-child {
-  right: 1%;
+  right: 0%;
   bottom: -3%;
-  width: 76%;
+  width: 60%;
   height: 94%;
 }
 
 .home-solution-media-lab img:last-child {
-  top: 22%;
-  left: -2%;
-  width: 42%;
+  top: 25%;
+  left: 5%;
+  width: 35%;
   height: 40%;
 }
 
 .home-solution-media-valves img:first-child {
-  right: -9%;
+  right: -5%;
   bottom: -4%;
-  width: 92%;
+  width: 65%;
   height: 86%;
 }
 
 .home-solution-media-valves img:last-child {
-  top: 10%;
-  left: -3%;
-  width: 49%;
+  top: 15%;
+  left: 5%;
+  width: 38%;
   height: 58%;
 }
 
@@ -953,7 +954,7 @@ textarea:focus-visible {
   cursor: pointer;
   text-align: left;
   touch-action: manipulation;
-  transition: background 180ms ease, color 180ms ease, padding 180ms ease;
+  transition: background 300ms ease, color 300ms ease, padding 300ms ease;
 }
 
 .home-process-tab:hover {
@@ -1002,7 +1003,7 @@ textarea:focus-visible {
   opacity: 0;
   color: var(--brand);
   transform: translateX(-8px);
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition: opacity 300ms ease, transform 300ms ease;
 }
 
 .home-process-tab.is-active .home-process-arrow {
@@ -1026,7 +1027,7 @@ textarea:focus-visible {
   overflow: hidden;
   aspect-ratio: 16 / 6.2;
   background: var(--brand-950);
-  animation: process-panel-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: process-panel-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .home-process-visual::after {
@@ -1059,7 +1060,7 @@ textarea:focus-visible {
 
 .home-process-panel-copy {
   padding: 22px 26px 24px;
-  animation: process-panel-enter 320ms 35ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: process-panel-enter 650ms 60ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .home-process-label {
@@ -1281,16 +1282,13 @@ textarea:focus-visible {
 }
 
 .home-contact-cta {
-  padding: 72px 0;
-  border-top: 1px solid var(--line);
-  background: var(--paper);
+  padding: 88px 0;
+  border-top: 3px solid var(--accent);
+  background: var(--surface);
 }
 
 .home-contact-cta .contact-cta-inner {
-  padding: 40px 46px;
-  border-top: 3px solid var(--accent);
-  background: var(--surface);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+  /* Không cần style background, padding, clip-path riêng nữa vì khối đã bung full width ra component cha */
 }
 
 .contact-cta-inner {
@@ -2248,8 +2246,8 @@ textarea:focus-visible {
 
 /* Conversion and footer */
 .pre-footer-cta {
-  padding: 72px 0;
-  border-top: 1px solid var(--line);
+  padding: 88px 0;
+  border-top: 3px solid var(--accent);
   background: var(--surface);
 }
 
@@ -2258,25 +2256,20 @@ textarea:focus-visible {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 64px;
-  padding: 42px 48px;
-  background: var(--brand-deep);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
 }
 
 .pre-footer-cta .eyebrow {
-  color: var(--accent);
+  /* color: var(--accent); */
 }
 
 .pre-footer-cta h2 {
   max-width: 780px;
   margin-bottom: 10px;
-  color: #ffffff;
 }
 
 .pre-footer-cta p {
   max-width: 720px;
   margin-bottom: 0;
-  color: #c9dadd;
 }
 
 .site-footer {
@@ -2771,11 +2764,6 @@ textarea:focus-visible {
   .pre-footer-cta-inner {
     grid-template-columns: 1fr;
     gap: 26px;
-  }
-
-  .home-contact-cta .contact-cta-inner,
-  .pre-footer-cta-inner {
-    padding: 32px 24px;
   }
 
   .contact-cta-inner .button,

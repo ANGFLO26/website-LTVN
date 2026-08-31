@@ -29,13 +29,9 @@ export function NewsPage() {
       <PageIntro
         className="page-intro-news"
         image="/images/news/safety-valve-seminar.jpg"
-        eyebrow={language === 'vi' ? 'CẬP NHẬT TỪ LT VIỆT NAM' : 'UPDATES FROM LT VIETNAM'}
-        title={t('news')}
-        description={
-          language === 'vi'
-            ? 'Tin sản phẩm, hoạt động kỹ thuật, hội thảo và những dự án tiêu biểu.'
-            : 'Product updates, technical activities, seminars and selected projects.'
-        }
+        eyebrow={t('updatesEyebrow')}
+        title={t('newsEvents')}
+        description={t('newsEventsDesc')}
       />
 
       <section className="featured-story">
@@ -54,7 +50,7 @@ export function NewsPage() {
 
       <section className="section news-list-section">
         <div className="container">
-          <div className="news-filter" aria-label={language === 'vi' ? 'Lọc bài viết' : 'Filter posts'}>
+          <div className="news-filter" aria-label={t('filterPosts')}>
             {filterOptions.map((option) => (
               <button
                 key={option.value}
@@ -73,9 +69,9 @@ export function NewsPage() {
             </div>
           ) : (
             <EmptyState
-              title={language === 'vi' ? 'Chưa có bài viết trong nhóm này' : 'No posts in this category'}
-              description={language === 'vi' ? 'Chọn nhóm khác để xem các nội dung hiện có.' : 'Choose another category to view available posts.'}
-              actionLabel={language === 'vi' ? 'Xem tất cả' : 'View all'}
+              title={t('noPosts')}
+              description={t('chooseAnotherCategory')}
+              actionLabel={t('viewAll')}
               onAction={() => setFilter('Tất cả')}
             />
           )}

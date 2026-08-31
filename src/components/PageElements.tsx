@@ -43,7 +43,7 @@ export function PageIntro({
         <img
           className="page-intro-media"
           src={image}
-          alt=""
+          alt="LT Việt Nam Logo"
           aria-hidden="true"
           loading="eager"
           decoding="async"

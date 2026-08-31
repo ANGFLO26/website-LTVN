@@ -13,7 +13,7 @@ export function NewsCard({ item }: { item: NewsItem }) {
         className="news-image-link"
         aria-label={`${t('readArticle')}: ${content(item.title)}`}
       >
-        <img src={item.image} alt="" loading="lazy" decoding="async" />
+        <img src={item.image} alt={content(item.title)} loading="lazy" decoding="async" />
       </Link>
       <div className="news-card-body">
         <div className="news-meta">

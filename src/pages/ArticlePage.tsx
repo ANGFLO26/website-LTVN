@@ -37,7 +37,7 @@ export function ArticlePage() {
       {relatedProduct && (
         <section className="article-related">
           <div className="container article-related-inner">
-            <img src={relatedProduct.image} alt="" />
+            <img src={relatedProduct.image} alt={relatedProduct.name} />
             <div><span className="eyebrow">{t('relatedEquipment')}</span><h2>{relatedProduct.model}</h2><p>{content(relatedProduct.name)}</p></div>
             <Link to={`/san-pham/${relatedProduct.slug}`} className="button button-secondary">{t('viewDetail')} <ArrowRight size={16} aria-hidden="true" /></Link>
           </div>

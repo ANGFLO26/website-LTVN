@@ -59,24 +59,8 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
         className={`catalog-page-intro ${isPac ? 'page-intro-pac' : 'page-intro-baker'}`}
         image={isPac ? '/images/hero/ltvietnam-selected-hero-v7.png' : '/images/hero/industrial-service-hero-v3.png'}
         eyebrow={title.toUpperCase()}
-        title={
-          isPac
-            ? language === 'vi'
-              ? 'Thiết bị phân tích nhiên liệu và phòng thí nghiệm'
-              : 'Fuel and laboratory analysis instruments'
-            : language === 'vi'
-              ? 'Giải pháp van điều khiển và van an toàn'
-              : 'Control valve and safety valve solutions'
-        }
-        description={
-          isPac
-            ? language === 'vi'
-              ? 'Tìm theo ứng dụng, nhóm thiết bị, phương pháp thử hoặc model.'
-              : 'Search by application, equipment group, test method or model.'
-            : language === 'vi'
-              ? 'Tìm theo loại van, ứng dụng, thương hiệu hoặc model.'
-              : 'Search by valve type, application, brand or model.'
-        }
+        title={isPac ? t('pacTitle') : t('bakerTitle')}
+        description={isPac ? t('pacIntro') : t('bakerIntro')}
       />
 
       <section className="section catalog-section">
@@ -108,7 +92,7 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
             )}
           </div>
 
-          <div className="catalog-category-strip" aria-label={language === 'vi' ? 'Nhóm sản phẩm' : 'Product categories'}>
+          <div className="catalog-category-strip" aria-label={t('productCategories')}>
             {categories.map((item) => (
               <button
                 key={item}
@@ -124,7 +108,7 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
 
           <div className="catalog-result-head">
             <h2>{isPac ? 'PAC' : 'Baker Hughes'}</h2>
-            <span>{filteredProducts.length} {language === 'vi' ? 'sản phẩm' : 'products'}</span>
+            <span>{filteredProducts.length} {t('productsCount')}</span>
           </div>
 
           {filteredProducts.length ? (
@@ -133,9 +117,9 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
             </div>
           ) : (
             <EmptyState
-              title={language === 'vi' ? 'Chưa có sản phẩm phù hợp' : 'No matching products'}
+              title={t('noMatchingProducts')}
               description={t('noResults')}
-              actionLabel={language === 'vi' ? 'Xóa bộ lọc' : 'Clear filters'}
+              actionLabel={t('clearFilters')}
               onAction={clearFilters}
             />
           )}
