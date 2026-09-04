@@ -2501,6 +2501,34 @@ textarea:focus-visible {
   margin-bottom: 5px;
 }
 
+.article-next-action {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 34px;
+  padding: 30px 34px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.article-next-action .eyebrow {
+  margin-bottom: 10px;
+}
+
+.article-next-action h2 {
+  max-width: 680px;
+  margin-bottom: 8px;
+  font-size: 26px;
+}
+
+.article-next-action p {
+  max-width: 700px;
+  margin: 0;
+}
+
 .article-back {
   padding-block: 34px 72px;
 }
@@ -3984,6 +4012,17 @@ textarea:focus-visible {
 
   .article-related .button {
     grid-column: 1 / -1;
+  }
+
+  .article-next-action {
+    width: calc(100% - 32px);
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 24px 22px;
+  }
+
+  .article-next-action .button {
+    width: 100%;
   }
 
   .footer-brand-strip {

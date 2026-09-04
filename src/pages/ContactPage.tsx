@@ -12,6 +12,12 @@ export function ContactPage() {
   const [searchParams] = useSearchParams()
   const [submitted, setSubmitted] = useState(false)
   const selectedProduct = searchParams.get('san-pham') ?? ''
+  const selectedGroup = searchParams.get('nhom') ?? ''
+  const selectedTopic = searchParams.get('chu-de') ?? ''
+  const selectedInterest = selectedProduct
+    || (selectedGroup === 'pac' ? 'group-pac' : '')
+    || (selectedGroup === 'baker-hughes' ? 'group-baker-hughes' : '')
+    || (selectedTopic === 'phase-70xi' ? 'topic-phase-70xi' : '')
   usePageTitle(t('contact'))
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -79,8 +85,11 @@ export function ContactPage() {
               </label>
               <label className="form-wide">
                 <span>{t('interest')}</span>
-                <select name="product" defaultValue={selectedProduct}>
+                <select name="product" defaultValue={selectedInterest}>
                   <option value="">{t('selectProduct')}</option>
+                  <option value="group-pac">{t('pacSolutionInterest')}</option>
+                  <option value="group-baker-hughes">{t('bakerSolutionInterest')}</option>
+                  <option value="topic-phase-70xi">{t('phase70XiInterest')}</option>
                   {products.map((product) => <option key={product.slug} value={product.slug}>{product.brand} · {product.model}</option>)}
                 </select>
               </label>

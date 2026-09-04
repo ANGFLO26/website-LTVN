@@ -175,38 +175,45 @@ function Footer() {
 
 function PreFooterCta({ pathname }: { pathname: string }) {
   const { language } = useLanguage()
+  const isPacCatalog = pathname === '/pac'
+  const isBakerCatalog = pathname === '/baker-hughes'
 
-  if (pathname === '/' || pathname === '/lien-he' || pathname.startsWith('/san-pham/')) {
-    return null
-  }
+  if (!isPacCatalog && !isBakerCatalog) return null
 
-  const followsMutedSurface = pathname === '/pac'
-    || pathname === '/baker-hughes'
-    || pathname === '/tin-tuc-su-kien'
-  const sectionClassName = followsMutedSurface
-    ? 'pre-footer-cta pre-footer-cta-paper'
-    : 'pre-footer-cta'
+  const copy = isPacCatalog
+    ? {
+        eyebrow: language === 'vi' ? 'HỖ TRỢ LỰA CHỌN THIẾT BỊ' : 'EQUIPMENT SELECTION SUPPORT',
+        title: language === 'vi'
+          ? 'Chưa xác định được thiết bị phù hợp với phương pháp thử?'
+          : 'Not sure which instrument fits your test method?',
+        description: language === 'vi'
+          ? 'Cung cấp loại mẫu, phương pháp hoặc tiêu chuẩn áp dụng để đội ngũ kỹ thuật đối chiếu cấu hình phù hợp.'
+          : 'Share the sample type, method or applicable standard so our technical team can help match the right configuration.',
+        action: language === 'vi' ? 'Nhờ tư vấn thiết bị phân tích' : 'Request analytical instrument advice',
+        to: '/lien-he?nhom=pac',
+      }
+    : {
+        eyebrow: language === 'vi' ? 'HỖ TRỢ LỰA CHỌN GIẢI PHÁP VAN' : 'VALVE SOLUTION SELECTION SUPPORT',
+        title: language === 'vi'
+          ? 'Cần lựa chọn van theo điều kiện vận hành?'
+          : 'Selecting a valve for specific operating conditions?',
+        description: language === 'vi'
+          ? 'Cung cấp môi chất, áp suất, nhiệt độ và yêu cầu ứng dụng để đội ngũ kỹ thuật hỗ trợ xác định giải pháp.'
+          : 'Share the process medium, pressure, temperature and application requirements so our technical team can help identify a suitable solution.',
+        action: language === 'vi' ? 'Nhờ tư vấn giải pháp van' : 'Request valve solution advice',
+        to: '/lien-he?nhom=baker-hughes',
+      }
 
   return (
-    <section className={sectionClassName}>
+    <section className="pre-footer-cta pre-footer-cta-paper">
       <div className="container pre-footer-cta-inner">
         <div>
-          <span className="eyebrow">
-            {language === 'vi' ? 'HỖ TRỢ TỪ ĐỘI NGŨ KỸ THUẬT' : 'SUPPORT FROM OUR TECHNICAL TEAM'}
-          </span>
-          <h2>
-            {language === 'vi'
-              ? 'Trao đổi yêu cầu trước khi lựa chọn thiết bị'
-              : 'Discuss your requirements before selecting equipment'}
-          </h2>
-          <p>
-            {language === 'vi'
-              ? 'Cung cấp loại mẫu, tiêu chuẩn hoặc điều kiện vận hành để nhận tư vấn đúng trọng tâm.'
-              : 'Share the sample, standard or operating conditions for focused technical advice.'}
-          </p>
+          <span className="eyebrow">{copy.eyebrow}</span>
+          <h2>{copy.title}</h2>
+          <p>{copy.description}</p>
         </div>
-        <Link to="/lien-he" className="button button-primary">
-          {language === 'vi' ? 'Gửi yêu cầu kỹ thuật' : 'Send a technical request'}
+        <Link to={copy.to} className="button button-primary">
+          {copy.action}
           <ArrowRight size={18} aria-hidden="true" />
         </Link>
       </div>

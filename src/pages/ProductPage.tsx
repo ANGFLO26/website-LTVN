@@ -128,7 +128,10 @@ export function ProductPage() {
           </div>
           <div className="product-consultation-actions">
             <Link to={`/lien-he?san-pham=${product.slug}`} className="button button-primary">
-              <Send size={17} aria-hidden="true" /> {t('sendRequirement')}
+              <Send size={17} aria-hidden="true" /> {content({
+                vi: `Trao đổi cấu hình ${product.model}`,
+                en: `Discuss the ${product.model} configuration`,
+              })}
             </Link>
             <a href="tel:+842466506373" className="button product-consultation-phone">
               <Phone size={17} aria-hidden="true" /> {t('callTechnicalTeam')}

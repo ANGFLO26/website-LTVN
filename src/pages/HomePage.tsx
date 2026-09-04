@@ -18,24 +18,24 @@ export function HomePage() {
       title: language === 'vi' ? 'Làm rõ yêu cầu' : 'Define the requirement',
       description: language === 'vi' ? 'Xác định loại mẫu, ứng dụng, tiêu chuẩn và điều kiện vận hành.' : 'Identify the sample, application, standards and operating conditions.',
       outcome: language === 'vi' ? 'Thống nhất đúng bài toán kỹ thuật trước khi đề xuất thiết bị.' : 'Align on the technical requirement before recommending equipment.',
-      image: '/images/hero/industrial-lab-plant-hero-v6.png',
-      imageAlt: language === 'vi' ? 'Kỹ thuật viên vận hành thiết bị phân tích trong phòng thí nghiệm nhà máy' : 'Technician operating analytical equipment in a plant laboratory',
+      image: '/images/process/clarify-requirements.png',
+      imageAlt: language === 'vi' ? 'Hai kỹ sư đối chiếu mẫu thử và yêu cầu kỹ thuật trong phòng thí nghiệm' : 'Two engineers reviewing a sample and technical requirements in an industrial laboratory',
     },
     {
       label: language === 'vi' ? 'CẤU HÌNH & TRIỂN KHAI' : 'CONFIGURATION & DELIVERY',
       title: language === 'vi' ? 'Lựa chọn và triển khai' : 'Select and implement',
       description: language === 'vi' ? 'Tư vấn cấu hình, chuẩn bị lắp đặt và phối hợp đưa thiết bị vào sử dụng.' : 'Configure, prepare the installation and commission the equipment.',
       outcome: language === 'vi' ? 'Cấu hình và kế hoạch triển khai bám sát điều kiện sử dụng thực tế.' : 'Match the configuration and implementation plan to actual site conditions.',
-      image: '/images/hero/ltvietnam-selected-hero-v7.png',
-      imageAlt: language === 'vi' ? 'Kỹ thuật viên thao tác trên thiết bị OptiDist 2 tại nhà máy' : 'Technician operating an OptiDist 2 instrument at an industrial site',
+      image: '/images/process/select-implement.png',
+      imageAlt: language === 'vi' ? 'Kỹ sư đấu nối và xác nhận cấu hình thiết bị phân tích trước khi vận hành' : 'Engineers connecting and verifying the configuration of an analytical instrument before operation',
     },
     {
       label: language === 'vi' ? 'CHUYỂN GIAO & HẬU MÃI' : 'HANDOVER & SUPPORT',
       title: language === 'vi' ? 'Chuyển giao và hỗ trợ' : 'Handover and support',
       description: language === 'vi' ? 'Hướng dẫn vận hành, bàn giao tài liệu và tiếp tục hỗ trợ sau bán hàng.' : 'Provide operating guidance, documentation and after-sales support.',
       outcome: language === 'vi' ? 'Người vận hành nắm quy trình và có đầu mối hỗ trợ kỹ thuật rõ ràng.' : 'Give operators a clear workflow and a reliable technical point of contact.',
-      image: '/images/hero/industrial-service-hero-v3.png',
-      imageAlt: language === 'vi' ? 'Kỹ thuật viên kiểm tra van công nghiệp tại hiện trường' : 'Technician inspecting an industrial valve on site',
+      image: '/images/process/handover-support.png',
+      imageAlt: language === 'vi' ? 'Kỹ sư hướng dẫn người vận hành sử dụng thiết bị và tài liệu kỹ thuật' : 'An engineer guiding operators through the instrument and technical documentation',
     },
   ]
 
@@ -78,7 +78,7 @@ export function HomePage() {
       <section className="home-hero">
         <img
           className="home-hero-backdrop"
-          src="/images/hero/ltvietnam-selected-hero-v7.png"
+          src="/images/hero/ltvietnam-selected-hero-v8.png"
           alt=""
           aria-hidden="true"
           width="1672"

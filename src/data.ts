@@ -44,6 +44,13 @@ export type NewsItem = {
   image: string
   imageFit?: 'cover' | 'contain'
   relatedProduct?: string
+  nextAction?: {
+    eyebrow: LocalizedText
+    title: LocalizedText
+    description: LocalizedText
+    label: LocalizedText
+    to: string
+  }
   paragraphs: LocalizedText[]
 }
 
@@ -511,6 +518,19 @@ export const newsItems: NewsItem[] = [
       'The Hanoi seminar was organized with the Ministry of Industry and Trade and Baker Hughes GE, with delegates from more than 20 industrial plants.',
     ),
     image: '/images/news/safety-valve-seminar.jpg',
+    nextAction: {
+      eyebrow: localized('GIẢI PHÁP LIÊN QUAN', 'RELATED SOLUTION'),
+      title: localized(
+        'Tìm hiểu giải pháp van an toàn cho nhà máy',
+        'Explore safety valve solutions for industrial plants',
+      ),
+      description: localized(
+        'Xem danh mục van an toàn Consolidated và các thiết bị hỗ trợ vận hành hiện có trên website.',
+        'Explore Consolidated safety valves and related operational support equipment available on the website.',
+      ),
+      label: localized('Xem giải pháp van Baker Hughes', 'Explore Baker Hughes valve solutions'),
+      to: '/baker-hughes',
+    },
     paragraphs: [
       localized(
         'Cuối năm 2019 tại Hà Nội, Bộ Công Thương, LT Việt Nam và Baker Hughes GE phối hợp tổ chức hội thảo về bảo dưỡng và kiểm định van an toàn trong nhà máy công nghiệp.',
@@ -540,6 +560,19 @@ export const newsItems: NewsItem[] = [
     ),
     image: '/images/news/phase-dfa-70xi-transparent.png',
     imageFit: 'contain',
+    nextAction: {
+      eyebrow: localized('TRAO ĐỔI THEO ỨNG DỤNG', 'APPLICATION-LED DISCUSSION'),
+      title: localized(
+        'Bạn đang cần thiết bị xác định điểm đông đặc?',
+        'Do you need an instrument for freezing-point determination?',
+      ),
+      description: localized(
+        'Chia sẻ loại mẫu, phương pháp hoặc tiêu chuẩn áp dụng để đội ngũ kỹ thuật tiếp nhận đúng nhu cầu.',
+        'Share the sample type, method or applicable standard so our technical team can review the right requirement.',
+      ),
+      label: localized('Trao đổi về ứng dụng này', 'Discuss this application'),
+      to: '/lien-he?chu-de=phase-70xi',
+    },
     paragraphs: [
       localized(
         'Trong hai ngày 7 và 8 tháng 7 năm 2025, đội ngũ LT Việt Nam triển khai thiết bị phân tích điểm đông đặc Phase Technology tại chi nhánh Hà Nội của Công ty Cổ phần Nhiên liệu bay Petrolimex (Skypec).',

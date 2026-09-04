@@ -45,6 +45,18 @@ export function ArticlePage() {
           </div>
         </section>
       )}
+      {item.nextAction && (
+        <section className="container article-next-action" aria-labelledby={`article-next-action-${item.slug}`}>
+          <div>
+            <span className="eyebrow">{content(item.nextAction.eyebrow)}</span>
+            <h2 id={`article-next-action-${item.slug}`}>{content(item.nextAction.title)}</h2>
+            <p>{content(item.nextAction.description)}</p>
+          </div>
+          <Link to={item.nextAction.to} className="button button-primary">
+            {content(item.nextAction.label)} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </section>
+      )}
       <div className="container article-back"><Link to="/tin-tuc-su-kien" className="text-link"><ArrowLeft size={16} aria-hidden="true" /> {t('news')}</Link></div>
     </article>
   )

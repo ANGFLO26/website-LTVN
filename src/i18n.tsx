@@ -30,7 +30,7 @@ const uiCopy = {
   relatedProducts: ['Sản phẩm liên quan', 'Related products'],
   brand: ['Thương hiệu', 'Brand'],
   category: ['Nhóm sản phẩm', 'Category'],
-  requestProduct: ['Yêu cầu tư vấn sản phẩm', 'Request product consultation'],
+  requestProduct: ['Tư vấn sản phẩm này', 'Discuss this product'],
   productAdviceHint: [
     'Chuẩn bị ứng dụng, tiêu chuẩn cần áp dụng và điều kiện vận hành để trao đổi đúng cấu hình.',
     'Prepare the application, required standards and operating conditions to discuss the right configuration.',
@@ -67,6 +67,9 @@ const uiCopy = {
   interest: ['Sản phẩm quan tâm', 'Product of interest'],
   message: ['Nội dung cần hỗ trợ', 'How can we help?'],
   selectProduct: ['Chọn sản phẩm', 'Select a product'],
+  pacSolutionInterest: ['PAC · Herzog — Thiết bị phân tích', 'PAC · Herzog — Analytical instruments'],
+  bakerSolutionInterest: ['Baker Hughes — Giải pháp van công nghiệp', 'Baker Hughes — Industrial valve solutions'],
+  phase70XiInterest: ['Phase Technology 70Xi — Thiết bị xác định điểm đông đặc', 'Phase Technology 70Xi — Freezing-point analyzer'],
   navigation: ['Điều hướng', 'Navigation'],
   salesEmail: ['Email kinh doanh', 'Sales email'],
   mainOffice: ['Trụ sở chính', 'Head office'],

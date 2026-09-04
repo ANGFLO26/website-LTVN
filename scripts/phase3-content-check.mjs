@@ -45,6 +45,7 @@ if (caseFacts !== 3) failures.push(`/gioi-thieu: case study có ${caseFacts} m�
 if (directionPrinciples !== 2) failures.push(`/gioi-thieu: định hướng có ${directionPrinciples} nguyên tắc, cần 2`)
 if (regionalPresenceItems !== 3) failures.push(`/gioi-thieu: hiện diện khu vực có ${regionalPresenceItems} địa điểm, cần 3`)
 if (officeDetailsLink !== 1) failures.push('/gioi-thieu: thiếu liên kết đến thông tin văn phòng đầy đủ')
+if (await page.locator('.pre-footer-cta').count()) failures.push('/gioi-thieu: vẫn còn CTA kỹ thuật dùng chung')
 if (!caseImageLoaded) failures.push('/gioi-thieu: ảnh thật của case study không tải được')
 if (aboutHeroHeight > 420) failures.push(`/gioi-thieu desktop: hero còn quá cao (${aboutHeroHeight}px)`)
 if (await hasHorizontalOverflow()) failures.push('/gioi-thieu desktop: giao diện bị tràn ngang')
@@ -71,12 +72,60 @@ const eventCards = await page.locator('.news-card').count()
 if (eventCards !== 1) failures.push(`/tin-tuc-su-kien: lọc sự kiện trả về ${eventCards} bài, cần 1`)
 if (newsHeroHeight > 480) failures.push(`/tin-tuc-su-kien desktop: hero còn quá cao (${newsHeroHeight}px)`)
 if (await hasHorizontalOverflow()) failures.push('/tin-tuc-su-kien desktop: giao diện bị tràn ngang')
+if (await page.locator('.pre-footer-cta').count()) failures.push('/tin-tuc-su-kien: vẫn còn CTA kỹ thuật dùng chung')
 await page.getByRole('button', { name: 'Tất cả', exact: true }).click()
 
 await page.screenshot({
   path: path.join(outputDir, 'ltvn-phase3-news-desktop.png'),
   fullPage: true,
 })
+
+for (const [route, actionLabel, selectedInterest] of [
+  ['/pac', 'Nhờ tư vấn thiết bị phân tích', 'group-pac'],
+  ['/baker-hughes', 'Nhờ tư vấn giải pháp van', 'group-baker-hughes'],
+]) {
+  await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' })
+  const catalogCta = page.locator('.pre-footer-cta')
+  if (await catalogCta.count() !== 1) failures.push(`${route}: thiếu CTA tư vấn riêng của danh mục`)
+  const action = catalogCta.getByRole('link', { name: actionLabel, exact: true })
+  if (await action.count() !== 1) failures.push(`${route}: CTA không có nội dung đúng ngữ cảnh`)
+  else {
+    await action.click()
+    await page.waitForURL(/\/lien-he\?nhom=/)
+    const value = await page.locator('select[name="product"]').inputValue()
+    if (value !== selectedInterest) failures.push(`${route}: nhóm giải pháp chưa được chọn sẵn trong form`)
+  }
+}
+
+await page.goto(`${baseUrl}/tin-tuc/ban-giao-pac-optidist-2`, { waitUntil: 'networkidle' })
+if (await page.locator('.pre-footer-cta').count()) failures.push('/tin-tuc/ban-giao-pac-optidist-2: vẫn còn CTA dùng chung')
+if (await page.locator('.article-related').count() !== 1) failures.push('/tin-tuc/ban-giao-pac-optidist-2: thiếu sản phẩm liên quan')
+if (await page.locator('.article-next-action').count()) failures.push('/tin-tuc/ban-giao-pac-optidist-2: xuất hiện thêm CTA không cần thiết')
+
+await page.goto(`${baseUrl}/tin-tuc/hoi-thao-van-an-toan`, { waitUntil: 'networkidle' })
+if (await page.locator('.pre-footer-cta').count()) failures.push('/tin-tuc/hoi-thao-van-an-toan: vẫn còn CTA dùng chung')
+if (await page.getByRole('link', { name: 'Xem giải pháp van Baker Hughes', exact: true }).count() !== 1) {
+  failures.push('/tin-tuc/hoi-thao-van-an-toan: thiếu hành động dẫn đến giải pháp van')
+}
+
+await page.goto(`${baseUrl}/tin-tuc/chuyen-giao-dfa-70xi`, { waitUntil: 'networkidle' })
+await loadImages()
+const phaseAction = page.getByRole('link', { name: 'Trao đổi về ứng dụng này', exact: true })
+if (await page.locator('.pre-footer-cta').count()) failures.push('/tin-tuc/chuyen-giao-dfa-70xi: vẫn còn CTA dùng chung')
+if (await phaseAction.count() !== 1) failures.push('/tin-tuc/chuyen-giao-dfa-70xi: thiếu CTA theo ứng dụng')
+else {
+  await page.screenshot({
+    path: path.join(outputDir, 'ltvn-phase3-article-action-desktop.png'),
+    fullPage: true,
+  })
+  await phaseAction.click()
+  await page.waitForURL(/\/lien-he\?chu-de=phase-70xi/)
+  const phaseInterest = await page.locator('select[name="product"]').inputValue()
+  if (phaseInterest !== 'topic-phase-70xi') failures.push('/tin-tuc/chuyen-giao-dfa-70xi: chủ đề chưa được chọn sẵn trong form')
+}
+
+await page.goto(`${baseUrl}/duong-dan-khong-ton-tai`, { waitUntil: 'networkidle' })
+if (await page.locator('.pre-footer-cta').count()) failures.push('/404: vẫn còn CTA kỹ thuật dùng chung')
 
 await page.goto(`${baseUrl}/lien-he?san-pham=optidist`, { waitUntil: 'networkidle' })
 const contactHeroHeight = await page.locator('.page-intro').evaluate((element) =>
@@ -90,6 +139,7 @@ if (formControls !== 4) failures.push(`/lien-he: form có ${formControls} trư�
 if (selectedProduct !== 'optidist') failures.push('/lien-he: sản phẩm từ CTA chưa được chọn sẵn')
 if (contactHeroActions !== 2) failures.push(`/lien-he: hero có ${contactHeroActions} kênh trực tiếp, cần 2`)
 if (contactOffices !== 3) failures.push(`/lien-he: danh sách văn phòng có ${contactOffices} mục, cần 3`)
+if (await page.locator('.pre-footer-cta').count()) failures.push('/lien-he: xuất hiện CTA phụ bên ngoài form')
 if (contactHeroHeight > 420) failures.push(`/lien-he desktop: hero còn quá cao (${contactHeroHeight}px)`)
 if (await hasHorizontalOverflow()) failures.push('/lien-he desktop: giao diện bị tràn ngang')
 
@@ -133,6 +183,19 @@ const mobileLifecycleColumns = await page.locator('.capability-lifecycle').evalu
 )
 if (mobileLifecycleColumns !== 1) failures.push(`/gioi-thieu mobile: lifecycle có ${mobileLifecycleColumns} cột, cần 1`)
 
+await page.goto(`${baseUrl}/tin-tuc/chuyen-giao-dfa-70xi`, { waitUntil: 'networkidle' })
+await loadImages()
+if (await hasHorizontalOverflow()) failures.push('/tin-tuc/chuyen-giao-dfa-70xi mobile: giao diện bị tràn ngang')
+const phaseActionHeight = await page.getByRole('link', { name: 'Trao đổi về ứng dụng này', exact: true }).evaluate((element) =>
+  Math.round(element.getBoundingClientRect().height),
+)
+if (phaseActionHeight < 44) failures.push(`/tin-tuc/chuyen-giao-dfa-70xi mobile: CTA chỉ cao ${phaseActionHeight}px`)
+await page.screenshot({
+  path: path.join(outputDir, 'ltvn-phase3-article-action-mobile.png'),
+  fullPage: true,
+})
+
+await page.goto(`${baseUrl}/gioi-thieu`, { waitUntil: 'networkidle' })
 await page.getByRole('button', { name: 'EN', exact: true }).click()
 await page.getByRole('heading', { name: 'One partner across four coordinated stages' }).waitFor()
 await page.goto(`${baseUrl}/tin-tuc-su-kien`, { waitUntil: 'networkidle' })
@@ -151,4 +214,4 @@ if (failures.length) {
   process.exit(1)
 }
 
-console.log('Kiểm tra Giai đoạn 3 đạt: lifecycle, case study ảnh thật, hero theo mục đích, form và văn phòng rút gọn.')
+console.log('Kiểm tra Giai đoạn 3 đạt: nội dung, CTA theo ngữ cảnh, form và luồng chuyển trang VI/EN.')
