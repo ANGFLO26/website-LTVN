@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
+    "build": "npm run check:i18n && tsc -b && vite build",
+    "check:i18n": "node scripts/validate-i18n.mjs",
+    "lint": "oxlint src scripts vite.config.ts",
+    "preview": "vite preview",
+    "test:smoke": "node scripts/smoke-test.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.33.0",

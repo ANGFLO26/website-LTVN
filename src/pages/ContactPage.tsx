@@ -7,7 +7,7 @@ import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function ContactPage() {
-  const { language, t } = useLanguage()
+  const { content, t } = useLanguage()
   const [searchParams] = useSearchParams()
   const [submitted, setSubmitted] = useState(false)
   const selectedProduct = searchParams.get('san-pham') ?? ''
@@ -35,7 +35,7 @@ export function ContactPage() {
             <div className="direct-contact-list">
               <a href="tel:+842466506373"><Phone aria-hidden="true" /><span><small>{t('phone')}</small><strong>(84-24) 6650 6373</strong></span></a>
               <a href="mailto:Sales@ltvietnam.com.vn"><Mail aria-hidden="true" /><span><small>{t('salesEmail')}</small><strong>Sales@ltvietnam.com.vn</strong></span></a>
-              <div><MapPin aria-hidden="true" /><span><small>{t('mainOffice')}</small><strong>{offices[0].address}</strong></span></div>
+              <div><MapPin aria-hidden="true" /><span><small>{t('mainOffice')}</small><strong>{content(offices[0].address)}</strong></span></div>
             </div>
           </div>
           <form className="contact-form" onSubmit={handleSubmit}>
@@ -59,7 +59,7 @@ export function ContactPage() {
             description={t('contactNearestOffice')}
           />
           <div className="office-grid">
-            {offices.map((office) => <article key={office.city} className="office-card hover-scale"><span>{office.label}</span><h3>{office.city}</h3><p>{office.address}</p><strong>{office.phone}</strong></article>)}
+            {offices.map((office) => <article key={office.city.vi} className="office-card"><span>{content(office.label)}</span><h3>{content(office.city)}</h3><p>{content(office.address)}</p><strong>{office.phone}</strong></article>)}
           </div>
         </div>
       </section>

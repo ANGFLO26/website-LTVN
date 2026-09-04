@@ -1,5 +1,6 @@
 // oxlint-disable react/only-export-components -- Provider and its hook share one private context.
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import type { LocalizedText } from './data'
 
 export type Language = 'vi' | 'en'
 
@@ -59,7 +60,7 @@ const uiCopy = {
   // --- New Keys added during Refactor ---
   heroEyebrow: ['THIẾT BỊ PHÂN TÍCH · VAN CÔNG NGHIỆP', 'ANALYTICAL INSTRUMENTS · INDUSTRIAL VALVES'],
   heroTitle: ['Giải pháp thiết bị cho phòng thí nghiệm và nhà máy.', 'Equipment solutions for laboratories and plants.'],
-  heroDesc: ['Thiết bị phân tích PAC, Herzog và van công nghiệp Baker Hughes, được tư vấn theo ứng dụng, lắp đặt và chuyển giao bởi đội ngũ kỹ thuật LT Việt Nam.', 'PAC and Herzog analytical instruments and Baker Hughes industrial valves, selected, installed and handed over by LT Vietnam\'s technical team.'],
+  heroDesc: ['Thiết bị phân tích và van công nghiệp, được tư vấn, triển khai và hỗ trợ bởi đội ngũ kỹ thuật LT Việt Nam.', 'Analytical instruments and industrial valves, configured, commissioned and supported by LT Vietnam\'s technical team.'],
   exploreSolutions: ['Khám phá giải pháp', 'Explore solutions'],
   talkToEngineer: ['Trao đổi với kỹ sư', 'Talk to an engineer'],
   serviceCommitments: ['Cam kết dịch vụ', 'Service commitments'],
@@ -82,7 +83,7 @@ const uiCopy = {
 
   supportProcess: ['QUY TRÌNH HỖ TRỢ', 'SUPPORT PROCESS'],
   supportProcessTitle: ['Một quy trình, rõ trách nhiệm ở từng bước', 'One process, clear responsibilities'],
-  supportProcessDesc: ['Từ khâu đầu tiên đến khi bảo dưỡng, chúng tôi định hình rõ công việc và cam kết đồng hành cùng nhà máy.', 'From initial inquiry to maintenance, we clearly define tasks and commit to partnering with your plant.'],
+  supportProcessDesc: ['Chọn từng bước để xem cách LT Việt Nam phối hợp từ yêu cầu ban đầu đến khi thiết bị được đưa vào vận hành.', 'Select each step to see how LT Vietnam works from the initial requirement through equipment operation.'],
 
   techSupportSteps: ['Các bước hỗ trợ kỹ thuật', 'Technical support steps'],
   step: ['BƯỚC', 'STEP'],
@@ -91,7 +92,7 @@ const uiCopy = {
 
   projectsActivities: ['DỰ ÁN & HOẠT ĐỘNG KỸ THUẬT', 'PROJECTS & TECHNICAL ACTIVITIES'],
   capabilityTitle: ['Năng lực qua dự án và hoạt động kỹ thuật', 'Capability through projects and technical activities'],
-  capabilityDesc: ['Theo dõi các dự án nâng cấp, bảo dưỡng và chuyển giao thiết bị gần nhất tại các nhà máy.', 'Track our latest upgrade, maintenance and equipment handover projects.'],
+  capabilityDesc: ['Các hoạt động lắp đặt, chuyển giao và chia sẻ chuyên môn thể hiện cách đội ngũ LT Việt Nam đồng hành cùng khách hàng.', 'Installation, handover and knowledge-sharing activities show how LT Vietnam supports customers.'],
 
   startRequirement: ['BẮT ĐẦU TỪ YÊU CẦU CỦA BẠN', 'START WITH YOUR REQUIREMENT'],
   readyToSupport: ['Sẵn sàng hỗ trợ và đề xuất giải pháp kỹ thuật', 'Ready to support and propose technical solutions'],
@@ -124,62 +125,75 @@ const uiCopy = {
   productsCount: ['sản phẩm', 'products'],
   noMatchingProducts: ['Chưa có sản phẩm phù hợp', 'No matching products'],
   clearFilters: ['Xóa bộ lọc', 'Clear filters'],
+  productFallbackTitle: ['Sản phẩm', 'Product'],
+  productNotFound: ['Không tìm thấy sản phẩm', 'Product not found'],
+  articleNotFound: ['Không tìm thấy bài viết', 'Article not found'],
+  pageNotFoundTitle: ['Không tìm thấy trang', 'Page not found'],
+  pageNotFoundDescription: [
+    'Đường dẫn bạn truy cập không tồn tại hoặc đã được thay đổi.',
+    'The page you requested does not exist or has been moved.',
+  ],
+  backHome: ['Về trang chủ', 'Back to home'],
+  skipNavigation: ['Bỏ qua điều hướng', 'Skip navigation'],
+  brandHomeLabel: ['LT Việt Nam - Trang chủ', 'LT Vietnam - Home'],
+  aboutSeminarAlt: ['Hội thảo kỹ thuật LT Việt Nam', 'LT Vietnam technical seminar'],
+  languageLabel: ['Ngôn ngữ hiển thị', 'Display language'],
+  siteMetaDescription: [
+    'LT Việt Nam cung cấp thiết bị phân tích PAC, van điều khiển Masoneilan, van an toàn Consolidated và dịch vụ kỹ thuật.',
+    'LT Vietnam supplies PAC analytical instruments, Masoneilan control valves, Consolidated safety valves and technical services.',
+  ],
+  customersEyebrow: ['DẤU ẤN HỢP TÁC', 'CUSTOMER REFERENCES'],
+  customersTitle: ['Khách hàng tiêu biểu', 'Selected customers'],
+  customersDescription: [
+    'Một số doanh nghiệp và đơn vị công nghiệp đã tin tưởng lựa chọn thiết bị, dịch vụ và hỗ trợ kỹ thuật từ LT Việt Nam.',
+    'Selected industrial organizations that have chosen equipment, services and technical support from LT Vietnam.',
+  ],
+  customersListLabel: [
+    'Danh sách logo khách hàng tiêu biểu',
+    'Selected customer logo list',
+  ],
 } as const
 
 export type UiKey = keyof typeof uiCopy
-
-const contentTranslations: Record<string, string> = {
-  'Thiết bị chưng cất tự động tại áp suất khí quyển':
-    'Automatic atmospheric distillation analyzer',
-  'Thiết bị xác định trị số cetane dẫn xuất': 'Derived cetane number analyzer',
-  'Thiết bị đo độ nhớt động học tự động': 'Automatic kinematic viscosity analyzer',
-  'Thiết bị đo điểm chớp cháy cốc kín Pensky-Martens':
-    'Pensky-Martens closed cup flash point analyzer',
-  'Thiết bị chưng cất tự động ở áp suất chân không':
-    'Automatic vacuum distillation analyzer',
-  'Thiết bị đo áp suất hơi bão hòa tự động': 'Automatic vapor pressure analyzer',
-  'Van điều khiển globe hiệu suất cao': 'High-performance globe control valve',
-  'Bộ định vị van thông minh': 'Smart digital valve positioner',
-  'Bộ truyền động màng lò xo khí nén': 'Pneumatic spring diaphragm actuator',
-  'Van điều khiển cho ứng dụng hơi': 'Control valve for steam service',
-  'Van an toàn cho ứng dụng công nghiệp': 'Industrial safety valve',
-  'Van an toàn và xả áp': 'Safety relief valve',
-  'Thiết bị kiểm tra van điện tử': 'Electronic valve tester',
-  'Chưng cất': 'Distillation',
-  'Chỉ số cetane': 'Cetane number',
-  'Độ nhớt': 'Viscosity',
-  'Điểm chớp cháy': 'Flash point',
-  'Áp suất hơi': 'Vapor pressure',
-  'Van điều khiển': 'Control valves',
-  'Bộ định vị': 'Positioners',
-  'Bộ truyền động': 'Actuators',
-  'Van an toàn': 'Safety valves',
-  'Thiết bị kiểm tra': 'Test equipment',
-  'Tin tức': 'News',
-  'Sự kiện': 'Events',
-  'Dự án': 'Projects',
-  'LT Việt Nam hoàn thành lắp đặt và bàn giao PAC OptiDist 2 tại Quatest 2':
-    'LT Vietnam completes PAC OptiDist 2 installation and handover at Quatest 2',
-  'Hội thảo bảo dưỡng và kiểm định van an toàn trong nhà máy công nghiệp':
-    'Industrial safety valve maintenance and inspection seminar',
-  'Chuyển giao thiết bị xác định điểm đông đặc Phase Technology DFA-70Xi':
-    'Phase Technology DFA-70Xi analyzer handover',
-}
 
 type LanguageContextValue = {
   language: Language
   setLanguage: (language: Language) => void
   t: (key: UiKey) => string
-  content: (text: string) => string
+  content: (text: LocalizedText) => string
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null)
 
+const LANGUAGE_STORAGE_KEY = 'ltv-language'
+
+function getInitialLanguage(): Language {
+  try {
+    const savedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
+    if (savedLanguage === 'vi' || savedLanguage === 'en') return savedLanguage
+  } catch {
+    // Storage can be unavailable in privacy-restricted browser contexts.
+  }
+
+  return 'vi'
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('vi')
+  const [language, setLanguage] = useState<Language>(getInitialLanguage)
 
   useEffect(() => {
     document.documentElement.lang = language
+    const copyIndex = language === 'vi' ? 0 : 1
+    const description = uiCopy.siteMetaDescription[copyIndex]
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description)
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description)
+    document.querySelector('meta[property="og:locale"]')?.setAttribute('content', language === 'vi' ? 'vi_VN' : 'en_US')
+
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
+    } catch {
+      // The selected language still applies for the current session.
+    }
   }, [language])
 
   const value = useMemo<LanguageContextValue>(
@@ -187,8 +201,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       language,
       setLanguage,
       t: (key) => uiCopy[key][language === 'vi' ? 0 : 1],
-      content: (text) =>
-        language === 'vi' ? text : (contentTranslations[text] ?? text),
+      content: (text) => text[language],
     }),
     [language],
   )

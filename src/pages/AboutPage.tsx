@@ -1,12 +1,13 @@
 import { Award, Building2, CheckCircle2, Handshake, Target, Wrench } from 'lucide-react'
 import { Link } from 'react-router'
+import { CustomerShowcase } from '../components/CustomerShowcase'
 import { PageIntro, SectionHeading } from '../components/PageElements'
 import { offices } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function AboutPage() {
-  const { language, t } = useLanguage()
+  const { content, language, t } = useLanguage()
   usePageTitle(t('about'))
 
   return (
@@ -43,7 +44,7 @@ export function AboutPage() {
             </p>
           </div>
           <div className="about-overview-image fade-in-up">
-            <img src="/images/news/safety-valve-seminar.jpg" alt="Hội thảo kỹ thuật LT Việt Nam" loading="lazy" decoding="async" className="hover-scale-img" />
+            <img src="/images/news/safety-valve-seminar.jpg" alt={t('aboutSeminarAlt')} loading="lazy" decoding="async" className="hover-scale-img" />
             <div className="floating-badge glass-panel fade-in-up" style={{ animationDelay: '0.2s' }}>
               <Award className="badge-icon" />
               <div>
@@ -62,12 +63,14 @@ export function AboutPage() {
             description={language === 'vi' ? 'Từ lựa chọn cấu hình đến vận hành, mỗi giai đoạn đều có đầu mối kỹ thuật chịu trách nhiệm rõ ràng.' : 'From configuration selection to operation, every stage has a clear technical owner.'}
           />
           <div className="capability-grid">
-            <article className="hover-scale"><Target aria-hidden="true" /><h3>{language === 'vi' ? 'Tư vấn lựa chọn' : 'Solution consultation'}</h3><p>{language === 'vi' ? 'Phân tích ứng dụng, phương pháp và cấu hình phù hợp.' : 'Review applications, methods and suitable configurations.'}</p></article>
-            <article className="hover-scale"><Building2 aria-hidden="true" /><h3>{language === 'vi' ? 'Cung cấp thiết bị' : 'Equipment supply'}</h3><p>{language === 'vi' ? 'PAC, Masoneilan, Consolidated và phụ kiện liên quan.' : 'PAC, Masoneilan, Consolidated and related accessories.'}</p></article>
-            <article className="hover-scale"><Wrench aria-hidden="true" /><h3>{language === 'vi' ? 'Hỗ trợ kỹ thuật' : 'Technical support'}</h3><p>{language === 'vi' ? 'Lắp đặt, chạy thử, hướng dẫn vận hành và hậu mãi.' : 'Installation, commissioning, operation guidance and after-sales support.'}</p></article>
+            <article><Target aria-hidden="true" /><h3>{language === 'vi' ? 'Tư vấn lựa chọn' : 'Solution consultation'}</h3><p>{language === 'vi' ? 'Phân tích ứng dụng, phương pháp và cấu hình phù hợp.' : 'Review applications, methods and suitable configurations.'}</p></article>
+            <article><Building2 aria-hidden="true" /><h3>{language === 'vi' ? 'Cung cấp thiết bị' : 'Equipment supply'}</h3><p>{language === 'vi' ? 'PAC, Masoneilan, Consolidated và phụ kiện liên quan.' : 'PAC, Masoneilan, Consolidated and related accessories.'}</p></article>
+            <article><Wrench aria-hidden="true" /><h3>{language === 'vi' ? 'Hỗ trợ kỹ thuật' : 'Technical support'}</h3><p>{language === 'vi' ? 'Lắp đặt, chạy thử, hướng dẫn vận hành và hậu mãi.' : 'Installation, commissioning, operation guidance and after-sales support.'}</p></article>
           </div>
         </div>
       </section>
+
+      <CustomerShowcase />
 
       <section className="values-band">
         <div className="container">
@@ -76,11 +79,11 @@ export function AboutPage() {
             description={language === 'vi' ? 'Giá trị được xây dựng từ năng lực kỹ thuật, trách nhiệm và hiệu quả vận hành dài hạn.' : 'Value built on technical capability, accountability and long-term operational performance.'}
           />
           <div className="values-grid">
-            <article className="hover-scale">
+            <article>
               <Target aria-hidden="true" />
               <div><h3>{language === 'vi' ? 'Tầm nhìn' : 'Vision'}</h3><p>{language === 'vi' ? 'Trở thành đối tác được khách hàng ưu tiên lựa chọn nhờ chất lượng sản phẩm, năng lực kỹ thuật và trách nhiệm.' : 'Become a preferred partner through product quality, technical capability and accountability.'}</p></div>
             </article>
-            <article className="hover-scale">
+            <article>
               <Handshake aria-hidden="true" />
               <div><h3>{language === 'vi' ? 'Sứ mệnh' : 'Mission'}</h3><p>{language === 'vi' ? 'Cung cấp giải pháp phù hợp, hỗ trợ rõ ràng và tạo hiệu quả vận hành lâu dài.' : 'Provide suitable solutions, clear support and lasting operational value.'}</p></div>
             </article>
@@ -96,10 +99,10 @@ export function AboutPage() {
           />
           <div className="office-grid">
             {offices.map((office) => (
-              <article key={office.city} className="office-card hover-scale">
-                <span>{office.label}</span>
-                <h3>{office.city}</h3>
-                <p>{office.address}</p>
+              <article key={office.city.vi} className="office-card">
+                <span>{content(office.label)}</span>
+                <h3>{content(office.city)}</h3>
+                <p>{content(office.address)}</p>
                 <strong>{office.phone}</strong>
               </article>
             ))}

@@ -3,25 +3,25 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
 import { EmptyState, PageIntro } from '../components/PageElements'
-import { newsItems } from '../data'
+import { newsItems, newsTypeLabels, type NewsType } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function NewsPage() {
-  const { content, language, t } = useLanguage()
-  const [filter, setFilter] = useState('Tất cả')
+  const { content, t } = useLanguage()
+  const [filter, setFilter] = useState<'all' | NewsType>('all')
   usePageTitle(t('news'))
 
   const filteredItems = useMemo(
-    () => filter === 'Tất cả' ? newsItems : newsItems.filter((item) => item.type === filter),
+    () => filter === 'all' ? newsItems : newsItems.filter((item) => item.type === filter),
     [filter],
   )
   const featured = newsItems[0]
   const filterOptions = [
-    { value: 'Tất cả', label: t('updatesAll') },
-    { value: 'Tin tức', label: t('updatesNews') },
-    { value: 'Sự kiện', label: t('updatesEvents') },
-    { value: 'Dự án', label: t('updatesProjects') },
+    { value: 'all' as const, label: t('updatesAll') },
+    { value: 'news' as const, label: content(newsTypeLabels.news) },
+    { value: 'event' as const, label: content(newsTypeLabels.event) },
+    { value: 'project' as const, label: content(newsTypeLabels.project) },
   ]
 
   return (
@@ -40,9 +40,9 @@ export function NewsPage() {
             <img src={featured.image} alt={content(featured.title)} className="hover-scale-img" />
           </Link>
           <div className="featured-story-copy">
-            <div className="news-meta"><span>{content(featured.type)}</span><span>{featured.year}</span></div>
+            <div className="news-meta"><span>{content(newsTypeLabels[featured.type])}</span><span>{featured.year}</span></div>
             <h2><Link to={`/tin-tuc/${featured.slug}`}>{content(featured.title)}</Link></h2>
-            <p>{featured.excerpt}</p>
+            <p>{content(featured.excerpt)}</p>
             <Link to={`/tin-tuc/${featured.slug}`} className="text-link">{t('readArticle')} <ArrowRight size={16} aria-hidden="true" /></Link>
           </div>
         </div>
@@ -72,7 +72,7 @@ export function NewsPage() {
               title={t('noPosts')}
               description={t('chooseAnotherCategory')}
               actionLabel={t('viewAll')}
-              onAction={() => setFilter('Tất cả')}
+              onAction={() => setFilter('all')}
             />
           )}
         </div>

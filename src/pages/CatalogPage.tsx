@@ -2,20 +2,24 @@ import { Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { EmptyState, PageIntro } from '../components/PageElements'
 import { ProductCard } from '../components/ProductCard'
-import { products, type ProductFamily } from '../data'
+import { products, type LocalizedText, type ProductFamily } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
-const ALL_FILTER = 'Tất cả'
+const ALL_FILTER = 'all'
+
+const searchableText = (value: LocalizedText) => `${value.vi} ${value.en}`
 
 export function CatalogPage({ family }: { family: ProductFamily }) {
-  const { content, language, t } = useLanguage()
+  const { content, t } = useLanguage()
   const [query, setQuery] = useState('')
   const [brand, setBrand] = useState(ALL_FILTER)
   const [category, setCategory] = useState(ALL_FILTER)
   const familyProducts = useMemo(() => products.filter((product) => product.family === family), [family])
   const brands = [ALL_FILTER, ...new Set(familyProducts.map((product) => product.brand))]
-  const categories = [ALL_FILTER, ...new Set(familyProducts.map((product) => product.category))]
+  const categories = Array.from(
+    new Map(familyProducts.map((product) => [product.category.vi, product.category])).values(),
+  )
   const isPac = family === 'pac'
 
   const title = isPac ? 'PAC' : 'Baker Hughes'
@@ -26,26 +30,21 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
 
     return familyProducts.filter((product) => {
       const matchesBrand = brand === ALL_FILTER || product.brand === brand
-      const matchesCategory = category === ALL_FILTER || product.category === category
+      const matchesCategory = category === ALL_FILTER || product.category.vi === category
       const searchable = [
         product.model,
-        product.name,
-        content(product.name),
-        product.category,
-        content(product.category),
-        product.summary,
-        content(product.summary),
-        product.applications.join(' '),
-        product.applications.map(content).join(' '),
-        product.highlights.join(' '),
-        product.highlights.map(content).join(' '),
-        product.specifications.flatMap((item) => [item.label, item.value, content(item.label), content(item.value)]).join(' '),
+        searchableText(product.name),
+        searchableText(product.category),
+        searchableText(product.summary),
+        product.applications.map(searchableText).join(' '),
+        product.highlights.map(searchableText).join(' '),
+        product.specifications.flatMap((item) => [searchableText(item.label), searchableText(item.value)]).join(' '),
         product.standards.join(' '),
       ].join(' ').toLocaleLowerCase('vi')
 
       return matchesBrand && matchesCategory && (!normalizedQuery || searchable.includes(normalizedQuery))
     })
-  }, [brand, category, content, familyProducts, query])
+  }, [brand, category, familyProducts, query])
 
   const clearFilters = () => {
     setQuery('')
@@ -93,15 +92,23 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
           </div>
 
           <div className="catalog-category-strip" aria-label={t('productCategories')}>
+            <button
+              type="button"
+              className={category === ALL_FILTER ? 'active' : ''}
+              onClick={() => setCategory(ALL_FILTER)}
+              aria-pressed={category === ALL_FILTER}
+            >
+              {t('all')}
+            </button>
             {categories.map((item) => (
               <button
-                key={item}
+                key={item.vi}
                 type="button"
-                className={category === item ? 'active' : ''}
-                onClick={() => setCategory(item)}
-                aria-pressed={category === item}
+                className={category === item.vi ? 'active' : ''}
+                onClick={() => setCategory(item.vi)}
+                aria-pressed={category === item.vi}
               >
-                {item === ALL_FILTER ? t('all') : content(item)}
+                {content(item)}
               </button>
             ))}
           </div>

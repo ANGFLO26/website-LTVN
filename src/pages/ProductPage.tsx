@@ -9,13 +9,13 @@ export function ProductPage() {
   const { slug } = useParams()
   const product = getProductBySlug(slug)
   const { content, t } = useLanguage()
-  usePageTitle(product?.model ?? 'Sản phẩm')
+  usePageTitle(product?.model ?? t('productFallbackTitle'))
 
   if (!product) {
     return (
       <section className="not-found container">
         <span className="eyebrow">404</span>
-        <h1>Không tìm thấy sản phẩm</h1>
+        <h1>{t('productNotFound')}</h1>
         <Link to="/pac" className="button button-primary">{t('backToCatalog')}</Link>
       </section>
     )
@@ -70,7 +70,7 @@ export function ProductPage() {
             <h2>{t('highlights')}</h2>
             <ul className="detail-highlight-list">
               {product.highlights.map((highlight) => (
-                <li key={highlight}><Check size={18} aria-hidden="true" /> {content(highlight)}</li>
+                <li key={highlight.vi}><Check size={18} aria-hidden="true" /> {content(highlight)}</li>
               ))}
             </ul>
           </div>
@@ -78,7 +78,7 @@ export function ProductPage() {
             <h2>{t('specifications')}</h2>
             <dl className="spec-table">
             {product.specifications.map((specification) => (
-              <div key={specification.label} className="spec-row">
+              <div key={specification.label.vi} className="spec-row">
                 <dt>{content(specification.label)}</dt>
                 <dd>{content(specification.value)}</dd>
               </div>

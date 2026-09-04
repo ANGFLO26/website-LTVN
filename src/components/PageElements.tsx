@@ -4,11 +4,13 @@ import type { ReactNode } from 'react'
 export function SectionHeading({
   eyebrow,
   title,
+  titleId,
   description,
   action,
 }: {
   eyebrow?: string
   title: string
+  titleId?: string
   description?: string
   action?: ReactNode
 }) {
@@ -16,7 +18,7 @@ export function SectionHeading({
     <div className="section-heading">
       <div>
         {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         {description && <p>{description}</p>}
       </div>
       {action}
@@ -43,7 +45,7 @@ export function PageIntro({
         <img
           className="page-intro-media"
           src={image}
-          alt="LT Việt Nam Logo"
+          alt=""
           aria-hidden="true"
           loading="eager"
           decoding="async"

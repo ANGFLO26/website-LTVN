@@ -1,5 +1,5 @@
 import { useState, type KeyboardEvent } from 'react'
-import { ArrowDown, ArrowRight, ClipboardCheck, LifeBuoy, Wrench } from 'lucide-react'
+import { ArrowRight, ClipboardCheck, LifeBuoy, Wrench } from 'lucide-react'
 import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
 import { SectionHeading } from '../components/PageElements'
@@ -58,17 +58,17 @@ export function HomePage() {
   const servicePromises = [
     { 
       title: language === 'vi' ? 'Tư vấn đúng ứng dụng' : 'Application-led advice', 
-      detail: language === 'vi' ? 'Mẫu thử · tiêu chuẩn · điều kiện vận hành' : 'Sample · standard · operating conditions', 
+      detail: language === 'vi' ? 'Mẫu thử, tiêu chuẩn, điều kiện vận hành' : 'Sample, standard and operating conditions',
       Icon: ClipboardCheck 
     },
     { 
       title: language === 'vi' ? 'Triển khai tại hiện trường' : 'On-site implementation', 
-      detail: language === 'vi' ? 'Lắp đặt · hướng dẫn · chuyển giao' : 'Installation · guidance · handover', 
+      detail: language === 'vi' ? 'Lắp đặt, hướng dẫn và chuyển giao' : 'Installation, guidance and handover',
       Icon: Wrench 
     },
     { 
       title: language === 'vi' ? 'Hỗ trợ sau bán hàng' : 'After-sales support', 
-      detail: language === 'vi' ? 'Tài liệu · vận hành · kỹ thuật' : 'Documentation · operation · technical support', 
+      detail: language === 'vi' ? 'Tài liệu, vận hành và hỗ trợ kỹ thuật' : 'Documentation, operation and technical support',
       Icon: LifeBuoy 
     },
   ]
@@ -99,27 +99,29 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="hero-trust-bar" aria-label={t('serviceCommitments')}>
-            {servicePromises.map(({ title, detail, Icon }) => (
-              <div key={title}>
-                <Icon aria-hidden="true" />
-                <span><strong>{title}</strong><small>{detail}</small></span>
-              </div>
-            ))}
-          </div>
+        </div>
+      </section>
+
+      <section className="home-trust-strip" aria-label={t('serviceCommitments')}>
+        <div className="container home-trust-grid">
+          {servicePromises.map(({ title, detail, Icon }) => (
+            <div key={title}>
+              <Icon aria-hidden="true" />
+              <span><strong>{title}</strong><small>{detail}</small></span>
+            </div>
+          ))}
         </div>
       </section>
 
       <section id="giai-phap" className="section home-solution-section">
         <div className="container">
           <SectionHeading
-            eyebrow={t('solutionGroups')}
             title={t('equipmentTwoNeeds')}
             description={t('equipmentDesc')}
           />
 
           <div className="home-solution-grid">
-            <Link to="/pac" className="home-solution-path home-solution-lab hover-scale">
+            <Link to="/pac" className="home-solution-path home-solution-lab">
               <div className="home-solution-copy">
                 <span className="home-solution-kicker">PAC · HERZOG</span>
                 <h3>{t('labAnalysis')}</h3>
@@ -135,7 +137,7 @@ export function HomePage() {
               </div>
             </Link>
 
-            <Link to="/baker-hughes" className="home-solution-path home-solution-valves hover-scale">
+            <Link to="/baker-hughes" className="home-solution-path home-solution-valves">
               <div className="home-solution-copy">
                 <span className="home-solution-kicker">BAKER HUGHES</span>
                 <h3>{t('processControl')}</h3>
@@ -158,7 +160,6 @@ export function HomePage() {
               <strong>{t('nextStepTitle')}</strong>
             </div>
             <p>{t('nextStepDesc')}</p>
-            <ArrowDown aria-hidden="true" />
           </div>
         </div>
       </section>
@@ -170,98 +171,111 @@ export function HomePage() {
               <span className="eyebrow">{t('supportProcess')}</span>
               <h2 id="home-process-title">{t('supportProcessTitle')}</h2>
             </div>
-            <p className="lead">{t('supportProcessDesc')}</p>
+            <p>{t('supportProcessDesc')}</p>
           </div>
 
-          <div className="home-process-grid">
+          <div className="home-process-layout">
             <div
-              className="home-process-steps"
+              className="home-process-tabs"
               role="tablist"
               aria-label={t('techSupportSteps')}
+              aria-orientation="vertical"
             >
-              {supportSteps.map((step, index) => (
-                <button
-                  key={step.title}
-                  id={`support-step-${index}`}
-                  role="tab"
-                  aria-selected={activeSupportStep === index}
-                  aria-controls={`support-panel-${index}`}
-                  tabIndex={activeSupportStep === index ? 0 : -1}
-                  className={`home-process-step ${activeSupportStep === index ? 'active' : ''}`}
-                  onClick={() => setActiveSupportStep(index)}
-                  onKeyDown={(e) => handleSupportKeyDown(e, index)}
-                >
-                  <div className="step-indicator" aria-hidden="true"></div>
-                  <div className="step-content">
-                    <span className="step-label">{step.label}</span>
-                    <strong className="step-title">{step.title}</strong>
-                    <p className="step-desc" id={`support-desc-${index}`}>
-                      {step.description}
-                    </p>
-                  </div>
-                </button>
-              ))}
+              {supportSteps.map((step, index) => {
+                const isActive = activeSupportStep === index
+
+                return (
+                  <button
+                    key={step.title}
+                    id={`support-step-${index}`}
+                    className={`home-process-tab${isActive ? ' is-active' : ''}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls="support-step-panel"
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => setActiveSupportStep(index)}
+                    onKeyDown={(event) => handleSupportKeyDown(event, index)}
+                  >
+                    <span className="home-process-tab-copy">
+                      <strong>{step.title}</strong>
+                      <small>{step.description}</small>
+                    </span>
+                    <ArrowRight className="home-process-arrow" size={20} aria-hidden="true" />
+                  </button>
+                )
+              })}
             </div>
 
-            <div className="home-process-display">
-              <div
-                id={`support-panel-${activeSupportStep}`}
-                role="tabpanel"
-                aria-labelledby={`support-step-${activeSupportStep}`}
-                className="home-process-panel"
-                tabIndex={0}
-              >
+            <article
+              id="support-step-panel"
+              className="home-process-panel"
+              role="tabpanel"
+              aria-labelledby={`support-step-${activeSupportStep}`}
+              aria-live="polite"
+            >
+              <div key={`visual-${activeSupportStep}-${language}`} className="home-process-visual">
                 <img
                   src={activeStep.image}
                   alt={activeStep.imageAlt}
-                  key={activeStep.image}
                   loading="lazy"
                   decoding="async"
                 />
+              </div>
+              <div key={`copy-${activeSupportStep}-${language}`} className="home-process-panel-copy">
+                <span className="home-process-label">{activeStep.label}</span>
+                <h3>{activeStep.title}</h3>
+                <p>{activeStep.description}</p>
                 <div className="home-process-outcome">
                   <span>{t('stepOutcomes')}</span>
-                  <p>{activeStep.outcome}</p>
+                  <strong>{activeStep.outcome}</strong>
                 </div>
+                <Link to="/gioi-thieu" className="text-link home-process-link">
+                  {t('howItWorks')}
+                  <ArrowRight size={17} aria-hidden="true" />
+                </Link>
               </div>
-            </div>
+            </article>
           </div>
         </div>
       </section>
 
-      <section className="section bg-light">
+      <section className="section home-news-section">
         <div className="container">
           <SectionHeading
-            eyebrow={t('projectsActivities')}
             title={t('capabilityTitle')}
             description={t('capabilityDesc')}
+            action={
+              <Link to="/tin-tuc-su-kien" className="text-link">
+                {t('viewAll')} <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            }
           />
-          <div className="news-grid">
-            {newsItems.slice(0, 3).map((item) => (
-              <NewsCard key={item.slug} item={item} />
-            ))}
-          </div>
-          <div className="section-footer">
-            <Link to="/tin-tuc-su-kien" className="button button-secondary">
-              {t('viewAll')}
-              <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+          <div className="news-grid home-news-grid">
+            {newsItems.slice(0, 3).map((item) => <NewsCard key={item.slug} item={item} />)}
           </div>
         </div>
       </section>
 
-      <section className="home-cta-section">
-        <div className="container">
-          <div className="home-cta-inner">
-            <span className="eyebrow">{t('startRequirement')}</span>
-            <h2>{t('readyToSupport')}</h2>
-            <p className="lead">{t('contactSalesDesc')}</p>
-            <div className="home-cta-actions">
-              <Link to="/lien-he" className="button button-primary">
-                {t('getAdvice')}
-                <ArrowRight size={17} aria-hidden="true" />
-              </Link>
-            </div>
+      <section className="contact-cta home-contact-cta">
+        <div className="container contact-cta-inner">
+          <div>
+            <h2>
+              {language === 'vi'
+                ? 'Cần chọn thiết bị cho một ứng dụng cụ thể?'
+                : 'Selecting equipment for a specific application?'}
+            </h2>
+            <p>
+              {language === 'vi'
+                ? 'Chia sẻ loại mẫu, tiêu chuẩn hoặc điều kiện vận hành để đội ngũ kỹ thuật hỗ trợ đúng trọng tâm.'
+                : 'Share the sample, standard or operating conditions so our technical team can focus on the right solution.'}
+            </p>
+            <a className="contact-email" href="mailto:Sales@ltvietnam.com.vn">Sales@ltvietnam.com.vn</a>
           </div>
+          <Link to="/lien-he" className="button button-light">
+            {t('getAdvice')}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </>
