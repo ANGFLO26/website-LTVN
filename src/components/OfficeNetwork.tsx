@@ -7,7 +7,7 @@ export function OfficeNetwork({ description }: { description: string }) {
   const { content, t } = useLanguage()
 
   return (
-    <section className="section office-section">
+    <section id="office-network" className="section office-section">
       <div className="container">
         <SectionHeading title={t('offices')} description={description} />
         <ul className="office-list">

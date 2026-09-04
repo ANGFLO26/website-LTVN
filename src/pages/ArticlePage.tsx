@@ -29,7 +29,9 @@ export function ArticlePage() {
         <h1>{content(item.title)}</h1>
         <p>{content(item.excerpt)}</p>
       </div>
-      <div className="container article-image"><img src={item.image} alt={content(item.title)} /></div>
+      <div className={`container article-image${item.imageFit === 'contain' ? ' article-image-equipment' : ''}`}>
+        <img src={item.image} alt={content(item.title)} />
+      </div>
       <div className="article-body">
         <h2>{language === 'vi' ? 'Thông tin hoạt động' : 'Activity overview'}</h2>
         {item.paragraphs.map((paragraph) => <p key={paragraph.vi}>{content(paragraph)}</p>)}

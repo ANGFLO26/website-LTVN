@@ -180,8 +180,15 @@ function PreFooterCta({ pathname }: { pathname: string }) {
     return null
   }
 
+  const followsMutedSurface = pathname === '/pac'
+    || pathname === '/baker-hughes'
+    || pathname === '/tin-tuc-su-kien'
+  const sectionClassName = followsMutedSurface
+    ? 'pre-footer-cta pre-footer-cta-paper'
+    : 'pre-footer-cta'
+
   return (
-    <section className="pre-footer-cta">
+    <section className={sectionClassName}>
       <div className="container pre-footer-cta-inner">
         <div>
           <span className="eyebrow">
@@ -212,8 +219,24 @@ export function Layout() {
   const { t } = useLanguage()
 
   useEffect(() => {
+    if (location.hash) {
+      const targetId = decodeURIComponent(location.hash.slice(1))
+      const frame = window.requestAnimationFrame(() => {
+        const target = document.getElementById(targetId)
+        const header = document.querySelector<HTMLElement>('.site-header')
+
+        if (!target) return
+
+        const headerOffset = header?.getBoundingClientRect().height ?? 0
+        const targetTop = window.scrollY + target.getBoundingClientRect().top - headerOffset - 16
+        window.scrollTo({ top: Math.max(0, targetTop), behavior: 'instant' })
+      })
+
+      return () => window.cancelAnimationFrame(frame)
+    }
+
     window.scrollTo({ top: 0, behavior: 'instant' })
-  }, [location.pathname])
+  }, [location.hash, location.pathname])
 
   return (
     <div className="site-shell">

@@ -35,14 +35,16 @@ const aboutHeroHeight = await page.locator('.page-intro').evaluate((element) =>
 const lifecycleSteps = await page.locator('.capability-lifecycle > li').count()
 const caseFacts = await page.locator('.case-study-facts > div').count()
 const directionPrinciples = await page.locator('.direction-principles > li').count()
-const aboutOffices = await page.locator('.office-list-item').count()
+const regionalPresenceItems = await page.locator('.regional-presence-list > li').count()
+const officeDetailsLink = await page.locator('a[href="/lien-he#office-network"]').count()
 const caseImageLoaded = await page.locator('.case-study-media img').evaluate((image) =>
   image.complete && image.naturalWidth > 0 && image.naturalHeight > 0,
 )
 if (lifecycleSteps !== 4) failures.push(`/gioi-thieu: lifecycle có ${lifecycleSteps} bước, cần 4`)
 if (caseFacts !== 3) failures.push(`/gioi-thieu: case study có ${caseFacts} mục, cần 3`)
 if (directionPrinciples !== 2) failures.push(`/gioi-thieu: định hướng có ${directionPrinciples} nguyên tắc, cần 2`)
-if (aboutOffices !== 3) failures.push(`/gioi-thieu: danh sách văn phòng có ${aboutOffices} mục, cần 3`)
+if (regionalPresenceItems !== 3) failures.push(`/gioi-thieu: hiện diện khu vực có ${regionalPresenceItems} địa điểm, cần 3`)
+if (officeDetailsLink !== 1) failures.push('/gioi-thieu: thiếu liên kết đến thông tin văn phòng đầy đủ')
 if (!caseImageLoaded) failures.push('/gioi-thieu: ảnh thật của case study không tải được')
 if (aboutHeroHeight > 420) failures.push(`/gioi-thieu desktop: hero còn quá cao (${aboutHeroHeight}px)`)
 if (await hasHorizontalOverflow()) failures.push('/gioi-thieu desktop: giao diện bị tràn ngang')

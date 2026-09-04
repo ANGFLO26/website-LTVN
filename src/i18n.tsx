@@ -206,10 +206,13 @@ const uiCopy = {
   ],
   directionPrincipleOne: ['Liên tục đào tạo và phát triển năng lực đội ngũ.', 'Continuously train and empower our team.'],
   directionPrincipleTwo: ['Xây dựng quan hệ lâu dài với khách hàng và nhà cung cấp.', 'Build lasting relationships with customers and key suppliers.'],
-  aboutOfficeSummary: [
-    'Ba điểm liên hệ giúp khách hàng kết nối với khu vực phụ trách phù hợp.',
-    'Three contact points help customers reach the appropriate regional office.',
+  regionalPresenceEyebrow: ['HIỆN DIỆN KHU VỰC', 'REGIONAL PRESENCE'],
+  regionalPresenceTitle: ['Ba điểm kết nối trên toàn quốc', 'Three points of contact across Vietnam'],
+  regionalPresenceDesc: [
+    'LT Việt Nam hiện có các điểm liên hệ tại Hà Nội, TP. Hồ Chí Minh và Quảng Ngãi, giúp khách hàng kết nối với khu vực phụ trách phù hợp.',
+    'LT Vietnam has contact points in Hanoi, Ho Chi Minh City and Quang Ngai, helping customers reach the appropriate regional team.',
   ],
+  viewOfficeDetails: ['Xem địa chỉ và thông tin liên hệ', 'View addresses and contact details'],
   newsEventsPurposeDesc: [
     'Theo dõi các dự án chuyển giao, hoạt động kỹ thuật và cập nhật thiết bị từ LT Việt Nam.',
     'Follow LT Vietnam\'s handover projects, technical activities and equipment updates.',

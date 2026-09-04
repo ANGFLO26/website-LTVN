@@ -8,8 +8,8 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router'
 import { CustomerShowcase } from '../components/CustomerShowcase'
-import { OfficeNetwork } from '../components/OfficeNetwork'
 import { PageIntro, SectionHeading } from '../components/PageElements'
+import { RegionalPresence } from '../components/RegionalPresence'
 import { newsItems } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
@@ -164,7 +164,7 @@ export function AboutPage() {
         </div>
       </section>
 
-      <OfficeNetwork description={t('aboutOfficeSummary')} />
+      <RegionalPresence />
     </>
   )
 }
