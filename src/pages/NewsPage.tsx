@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
-import { EmptyState, PageIntro } from '../components/PageElements'
+import { EmptyState, PageIntro, SectionHeading } from '../components/PageElements'
 import { newsItems, newsTypeLabels, type NewsType } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
@@ -12,11 +12,13 @@ export function NewsPage() {
   const [filter, setFilter] = useState<'all' | NewsType>('all')
   usePageTitle(t('news'))
 
+  const featured = newsItems.find((item) => item.slug === 'hoi-thao-van-an-toan') ?? newsItems[0]
   const filteredItems = useMemo(
-    () => filter === 'all' ? newsItems : newsItems.filter((item) => item.type === filter),
-    [filter],
+    () => filter === 'all'
+      ? newsItems.filter((item) => item.slug !== featured.slug)
+      : newsItems.filter((item) => item.type === filter),
+    [featured.slug, filter],
   )
-  const featured = newsItems[0]
   const filterOptions = [
     { value: 'all' as const, label: t('updatesAll') },
     { value: 'news' as const, label: content(newsTypeLabels.news) },
@@ -28,40 +30,48 @@ export function NewsPage() {
     <>
       <PageIntro
         className="page-intro-news"
-        image="/images/news/safety-valve-seminar.jpg"
+        image="/images/hero/portfolio-hero-v5.png"
         eyebrow={t('updatesEyebrow')}
         title={t('newsEvents')}
-        description={t('newsEventsDesc')}
+        description={t('newsEventsPurposeDesc')}
+        actions={
+          <a href="#news-feed" className="button button-primary">{t('browseUpdates')} <ArrowRight size={17} aria-hidden="true" /></a>
+        }
+        aside={
+          <Link to={`/tin-tuc/${featured.slug}`} className="news-hero-feature">
+            <img src={featured.image} alt="" aria-hidden="true" />
+            <div>
+              <span>{t('featuredFieldStory')}</span>
+              <strong>{content(featured.title)}</strong>
+              <small>{content(newsTypeLabels[featured.type])} · {featured.year}</small>
+            </div>
+          </Link>
+        }
       />
 
-      <section className="featured-story">
-        <div className="container featured-story-grid">
-          <Link to={`/tin-tuc/${featured.slug}`} className="featured-story-image">
-            <img src={featured.image} alt={content(featured.title)} className="hover-scale-img" />
-          </Link>
-          <div className="featured-story-copy">
-            <div className="news-meta"><span>{content(newsTypeLabels[featured.type])}</span><span>{featured.year}</span></div>
-            <h2><Link to={`/tin-tuc/${featured.slug}`}>{content(featured.title)}</Link></h2>
-            <p>{content(featured.excerpt)}</p>
-            <Link to={`/tin-tuc/${featured.slug}`} className="text-link">{t('readArticle')} <ArrowRight size={16} aria-hidden="true" /></Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="section news-list-section">
+      <section id="news-feed" className="section news-list-section" aria-labelledby="news-feed-title">
         <div className="container">
-          <div className="news-filter" aria-label={t('filterPosts')}>
-            {filterOptions.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={filter === option.value ? 'active' : ''}
-                onClick={() => setFilter(option.value)}
-                aria-pressed={filter === option.value}
-              >
-                {option.label}
-              </button>
-            ))}
+          <SectionHeading
+            eyebrow={t('newsFeedEyebrow')}
+            titleId="news-feed-title"
+            title={t('newsFeedTitle')}
+            description={t('newsFeedDesc')}
+          />
+          <div className="news-filter-row">
+            <div className="news-filter" aria-label={t('filterPosts')}>
+              {filterOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={filter === option.value ? 'active' : ''}
+                  onClick={() => setFilter(option.value)}
+                  aria-pressed={filter === option.value}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+            <span className="news-result-count" aria-live="polite">{filteredItems.length} {t('postsCount')}</span>
           </div>
           {filteredItems.length ? (
             <div className="news-grid">

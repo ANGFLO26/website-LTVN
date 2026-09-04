@@ -1,14 +1,54 @@
-import { Award, Building2, CheckCircle2, Handshake, Target, Wrench } from 'lucide-react'
+import {
+  ArrowRight,
+  CheckCircle2,
+  Headphones,
+  PackageCheck,
+  ScanSearch,
+  Settings2,
+} from 'lucide-react'
 import { Link } from 'react-router'
 import { CustomerShowcase } from '../components/CustomerShowcase'
+import { OfficeNetwork } from '../components/OfficeNetwork'
 import { PageIntro, SectionHeading } from '../components/PageElements'
-import { offices } from '../data'
+import { newsItems } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function AboutPage() {
   const { content, language, t } = useLanguage()
   usePageTitle(t('about'))
+
+  const lifecycle = [
+    {
+      icon: ScanSearch,
+      title: language === 'vi' ? 'Làm rõ yêu cầu' : 'Clarify requirements',
+      description: language === 'vi'
+        ? 'Xác định ứng dụng, phương pháp, tiêu chuẩn và điều kiện vận hành.'
+        : 'Define the application, method, standards and operating conditions.',
+    },
+    {
+      icon: Settings2,
+      title: language === 'vi' ? 'Lựa chọn cấu hình' : 'Select configuration',
+      description: language === 'vi'
+        ? 'Đối chiếu model, tùy chọn và phạm vi cung cấp phù hợp.'
+        : 'Match the model, options and suitable supply scope.',
+    },
+    {
+      icon: PackageCheck,
+      title: language === 'vi' ? 'Triển khai & chuyển giao' : 'Implement & hand over',
+      description: language === 'vi'
+        ? 'Phối hợp lắp đặt, chạy thử và hướng dẫn người sử dụng.'
+        : 'Coordinate installation, trial operation and user guidance.',
+    },
+    {
+      icon: Headphones,
+      title: language === 'vi' ? 'Hỗ trợ vận hành' : 'Support operation',
+      description: language === 'vi'
+        ? 'Tiếp nhận nhu cầu kỹ thuật, phụ tùng và hỗ trợ sau bán hàng.'
+        : 'Handle technical, spare-parts and after-sales requirements.',
+    },
+  ]
+  const caseStudy = newsItems.find((item) => item.slug === 'hoi-thao-van-an-toan')
 
   return (
     <>
@@ -19,101 +59,112 @@ export function AboutPage() {
         title={language === 'vi' ? 'Năng lực kỹ thuật cho công nghiệp và phòng thí nghiệm' : 'Technical capability for industry and laboratories'}
         description={
           language === 'vi'
-            ? 'Tổng quan về lĩnh vực hoạt động, năng lực hỗ trợ và hệ thống văn phòng của LT Việt Nam.'
-            : 'An overview of LT Vietnam, our technical capabilities and office network.'
+            ? 'Thiết bị phù hợp chỉ là điểm bắt đầu. Giá trị nằm ở cách yêu cầu được làm rõ, triển khai và hỗ trợ trong suốt vòng đời vận hành.'
+            : 'Suitable equipment is only the starting point. Value comes from how requirements are clarified, implemented and supported throughout operation.'
+        }
+        actions={
+          <>
+            <a href="#capability-lifecycle" className="button button-primary">{t('aboutExploreCapabilities')} <ArrowRight size={17} aria-hidden="true" /></a>
+            <Link to="/lien-he" className="button button-secondary">{t('discussRequirement')}</Link>
+          </>
+        }
+        aside={
+          <div className="about-hero-scope">
+            <span>{t('supportScope')}</span>
+            <ul>
+              <li>{t('laboratoryEquipment')}</li>
+              <li>{t('plantEquipment')}</li>
+              <li>{t('lifecycleSupport')}</li>
+            </ul>
+          </div>
         }
       />
 
-      <section className="section">
+      <section className="section about-overview-section">
         <div className="container about-overview-grid">
           <div className="about-overview-copy fade-in-up">
-            <h2>
-              {language === 'vi'
-                ? 'Đối tác cung cấp thiết bị và dịch vụ kỹ thuật'
-                : 'Equipment and technical service partner'}
-            </h2>
-            <p>
-              {language === 'vi'
-                ? 'LT Việt Nam cung cấp thiết bị, phụ tùng và vật tư tiêu hao cho các nhà máy công nghiệp nặng tại Việt Nam, bao gồm lọc hóa dầu, khí, phân bón, điện, xi măng và phòng thí nghiệm.'
-                : 'LT Vietnam supplies equipment, spare parts and consumables to heavy industrial plants across Vietnam, including refining, gas, fertilizer, power, cement and laboratory operations.'}
-            </p>
-            <p>
-              {language === 'vi'
-                ? 'Danh mục trọng tâm gồm thiết bị PAC, van Masoneilan, van an toàn Consolidated cùng dịch vụ tư vấn, lắp đặt và hỗ trợ sau bán hàng.'
-                : 'Our core portfolio covers PAC instruments, Masoneilan valves, Consolidated safety valves, installation and after-sales support.'}
-            </p>
+            <span className="eyebrow">{t('aboutOverviewEyebrow')}</span>
+            <h2>{t('aboutOverviewTitle')}</h2>
+            <p>{t('aboutOverviewDesc')}</p>
           </div>
-          <div className="about-overview-image fade-in-up">
-            <img src="/images/news/safety-valve-seminar.jpg" alt={t('aboutSeminarAlt')} loading="lazy" decoding="async" className="hover-scale-img" />
-            <div className="floating-badge glass-panel fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <Award className="badge-icon" />
-              <div>
-                <strong>{language === 'vi' ? 'Chuyên môn hóa' : 'Specialized'}</strong>
-                <span>{language === 'vi' ? 'Kỹ thuật sâu rộng' : 'Deep technical expertise'}</span>
-              </div>
+          <dl className="about-scope-list fade-in-up">
+            <div>
+              <dt>{t('solutionPortfolio')}</dt>
+              <dd>PAC · Masoneilan · Consolidated</dd>
             </div>
-          </div>
+            <div>
+              <dt>{t('servedEnvironments')}</dt>
+              <dd>{t('servedEnvironmentsValue')}</dd>
+            </div>
+            <div>
+              <dt>{t('technicalScope')}</dt>
+              <dd>{t('technicalScopeValue')}</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
-      <section className="section capabilities-section">
+      <section id="capability-lifecycle" className="section capability-lifecycle-section">
         <div className="container">
           <SectionHeading
-            title={language === 'vi' ? 'Một đầu mối cho toàn bộ vòng đời thiết bị' : 'One partner across the equipment lifecycle'}
-            description={language === 'vi' ? 'Từ lựa chọn cấu hình đến vận hành, mỗi giai đoạn đều có đầu mối kỹ thuật chịu trách nhiệm rõ ràng.' : 'From configuration selection to operation, every stage has a clear technical owner.'}
+            eyebrow={t('lifecycleEyebrow')}
+            title={t('lifecycleTitle')}
+            description={t('lifecycleDesc')}
           />
-          <div className="capability-grid">
-            <article><Target aria-hidden="true" /><h3>{language === 'vi' ? 'Tư vấn lựa chọn' : 'Solution consultation'}</h3><p>{language === 'vi' ? 'Phân tích ứng dụng, phương pháp và cấu hình phù hợp.' : 'Review applications, methods and suitable configurations.'}</p></article>
-            <article><Building2 aria-hidden="true" /><h3>{language === 'vi' ? 'Cung cấp thiết bị' : 'Equipment supply'}</h3><p>{language === 'vi' ? 'PAC, Masoneilan, Consolidated và phụ kiện liên quan.' : 'PAC, Masoneilan, Consolidated and related accessories.'}</p></article>
-            <article><Wrench aria-hidden="true" /><h3>{language === 'vi' ? 'Hỗ trợ kỹ thuật' : 'Technical support'}</h3><p>{language === 'vi' ? 'Lắp đặt, chạy thử, hướng dẫn vận hành và hậu mãi.' : 'Installation, commissioning, operation guidance and after-sales support.'}</p></article>
-          </div>
+          <ol className="capability-lifecycle">
+            {lifecycle.map((step, index) => {
+              const Icon = step.icon
+              return (
+                <li key={step.title}>
+                  <div className="lifecycle-marker"><Icon aria-hidden="true" /><span>{String(index + 1).padStart(2, '0')}</span></div>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </li>
+              )
+            })}
+          </ol>
         </div>
       </section>
+
+      {caseStudy && (
+        <section className="section about-case-study-section" aria-labelledby="case-study-title">
+          <div className="container about-case-study-grid">
+            <figure className="case-study-media">
+              <img src={caseStudy.image} alt={content(caseStudy.title)} loading="lazy" decoding="async" />
+              <figcaption>{t('realActivityPhoto')}</figcaption>
+            </figure>
+            <div className="case-study-copy">
+              <span className="eyebrow">{t('realCaseStudy')}</span>
+              <h2 id="case-study-title">{content(caseStudy.title)}</h2>
+              <p className="case-study-lead">{content(caseStudy.excerpt)}</p>
+              <dl className="case-study-facts">
+                <div><dt>{t('caseContext')}</dt><dd>{content(caseStudy.paragraphs[0])}</dd></div>
+                <div><dt>{t('caseApproach')}</dt><dd>{content(caseStudy.paragraphs[2])}</dd></div>
+                <div><dt>{t('caseValue')}</dt><dd>{content(caseStudy.paragraphs[1])}</dd></div>
+              </dl>
+              <Link to={`/tin-tuc/${caseStudy.slug}`} className="text-link">{t('viewCaseStudy')} <ArrowRight size={16} aria-hidden="true" /></Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       <CustomerShowcase />
 
       <section className="values-band">
-        <div className="container">
-          <SectionHeading
-            title={language === 'vi' ? 'Định hướng phát triển' : 'Our direction'}
-            description={language === 'vi' ? 'Giá trị được xây dựng từ năng lực kỹ thuật, trách nhiệm và hiệu quả vận hành dài hạn.' : 'Value built on technical capability, accountability and long-term operational performance.'}
-          />
-          <div className="values-grid">
-            <article>
-              <Target aria-hidden="true" />
-              <div><h3>{language === 'vi' ? 'Tầm nhìn' : 'Vision'}</h3><p>{language === 'vi' ? 'Trở thành đối tác được khách hàng ưu tiên lựa chọn nhờ chất lượng sản phẩm, năng lực kỹ thuật và trách nhiệm.' : 'Become a preferred partner through product quality, technical capability and accountability.'}</p></div>
-            </article>
-            <article>
-              <Handshake aria-hidden="true" />
-              <div><h3>{language === 'vi' ? 'Sứ mệnh' : 'Mission'}</h3><p>{language === 'vi' ? 'Cung cấp giải pháp phù hợp, hỗ trợ rõ ràng và tạo hiệu quả vận hành lâu dài.' : 'Provide suitable solutions, clear support and lasting operational value.'}</p></div>
-            </article>
+        <div className="container direction-layout">
+          <div>
+            <span className="eyebrow">{t('directionEyebrow')}</span>
+            <h2>{t('directionTitle')}</h2>
+            <p>{t('directionDesc')}</p>
           </div>
+          <ul className="direction-principles">
+            <li><CheckCircle2 aria-hidden="true" /><span>{t('directionPrincipleOne')}</span></li>
+            <li><CheckCircle2 aria-hidden="true" /><span>{t('directionPrincipleTwo')}</span></li>
+          </ul>
         </div>
       </section>
 
-      <section className="section office-section">
-        <div className="container">
-          <SectionHeading
-            title={t('offices')}
-            description={language === 'vi' ? 'Ba điểm hỗ trợ giúp đội ngũ phối hợp nhanh hơn với khách hàng trên toàn quốc.' : 'Three offices help our team respond to customers nationwide.'}
-          />
-          <div className="office-grid">
-            {offices.map((office) => (
-              <article key={office.city.vi} className="office-card">
-                <span>{content(office.label)}</span>
-                <h3>{content(office.city)}</h3>
-                <p>{content(office.address)}</p>
-                <strong>{office.phone}</strong>
-              </article>
-            ))}
-          </div>
-          <div className="inline-cta">
-            <CheckCircle2 aria-hidden="true" />
-            <span>{language === 'vi' ? 'Bạn cần trao đổi với văn phòng gần nhất?' : 'Need to contact the nearest office?'}</span>
-            <Link to="/lien-he" className="text-link">{t('contact')}</Link>
-          </div>
-        </div>
-      </section>
+      <OfficeNetwork description={t('aboutOfficeSummary')} />
     </>
   )
 }

@@ -1,0 +1,152 @@
+import os from 'node:os'
+import path from 'node:path'
+import process from 'node:process'
+import { chromium } from 'playwright'
+
+const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4173'
+const outputDir = process.env.PHASE3_SCREENSHOT_DIR ?? os.tmpdir()
+const browser = await chromium.launch({ headless: true })
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+const failures = []
+const browserErrors = []
+
+page.on('console', (message) => {
+  if (message.type() === 'error') browserErrors.push(message.text())
+})
+page.on('pageerror', (error) => browserErrors.push(error.message))
+
+const hasHorizontalOverflow = () => page.evaluate(
+  () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+)
+
+const loadImages = () => page.locator('img').evaluateAll(async (images) => {
+  images.forEach((image) => {
+    image.loading = 'eager'
+  })
+  await Promise.all(images.map((image) => image.decode().catch(() => undefined)))
+})
+
+await page.goto(`${baseUrl}/gioi-thieu`, { waitUntil: 'networkidle' })
+await loadImages()
+
+const aboutHeroHeight = await page.locator('.page-intro').evaluate((element) =>
+  Math.round(element.getBoundingClientRect().height),
+)
+const lifecycleSteps = await page.locator('.capability-lifecycle > li').count()
+const caseFacts = await page.locator('.case-study-facts > div').count()
+const directionPrinciples = await page.locator('.direction-principles > li').count()
+const aboutOffices = await page.locator('.office-list-item').count()
+const caseImageLoaded = await page.locator('.case-study-media img').evaluate((image) =>
+  image.complete && image.naturalWidth > 0 && image.naturalHeight > 0,
+)
+if (lifecycleSteps !== 4) failures.push(`/gioi-thieu: lifecycle có ${lifecycleSteps} bước, cần 4`)
+if (caseFacts !== 3) failures.push(`/gioi-thieu: case study có ${caseFacts} mục, cần 3`)
+if (directionPrinciples !== 2) failures.push(`/gioi-thieu: định hướng có ${directionPrinciples} nguyên tắc, cần 2`)
+if (aboutOffices !== 3) failures.push(`/gioi-thieu: danh sách văn phòng có ${aboutOffices} mục, cần 3`)
+if (!caseImageLoaded) failures.push('/gioi-thieu: ảnh thật của case study không tải được')
+if (aboutHeroHeight > 420) failures.push(`/gioi-thieu desktop: hero còn quá cao (${aboutHeroHeight}px)`)
+if (await hasHorizontalOverflow()) failures.push('/gioi-thieu desktop: giao diện bị tràn ngang')
+
+await page.screenshot({
+  path: path.join(outputDir, 'ltvn-phase3-about-desktop.png'),
+  fullPage: true,
+})
+
+await page.goto(`${baseUrl}/tin-tuc-su-kien`, { waitUntil: 'networkidle' })
+await loadImages()
+const newsHeroHeight = await page.locator('.page-intro').evaluate((element) =>
+  Math.round(element.getBoundingClientRect().height),
+)
+const featuredFieldStory = await page.locator('.news-hero-feature').count()
+const initialNewsCards = await page.locator('.news-card').count()
+if (featuredFieldStory !== 1) failures.push('/tin-tuc-su-kien: thiếu bài nổi bật trong hero')
+if (initialNewsCards !== 2) failures.push(`/tin-tuc-su-kien: danh sách mặc định có ${initialNewsCards} bài, cần 2 ngoài bài nổi bật`)
+await page.getByRole('button', { name: 'Dự án', exact: true }).click()
+const projectCards = await page.locator('.news-card').count()
+if (projectCards !== 2) failures.push(`/tin-tuc-su-kien: lọc dự án trả về ${projectCards} bài, cần 2`)
+await page.getByRole('button', { name: 'Sự kiện', exact: true }).click()
+const eventCards = await page.locator('.news-card').count()
+if (eventCards !== 1) failures.push(`/tin-tuc-su-kien: lọc sự kiện trả về ${eventCards} bài, cần 1`)
+if (newsHeroHeight > 480) failures.push(`/tin-tuc-su-kien desktop: hero còn quá cao (${newsHeroHeight}px)`)
+if (await hasHorizontalOverflow()) failures.push('/tin-tuc-su-kien desktop: giao diện bị tràn ngang')
+await page.getByRole('button', { name: 'Tất cả', exact: true }).click()
+
+await page.screenshot({
+  path: path.join(outputDir, 'ltvn-phase3-news-desktop.png'),
+  fullPage: true,
+})
+
+await page.goto(`${baseUrl}/lien-he?san-pham=optidist`, { waitUntil: 'networkidle' })
+const contactHeroHeight = await page.locator('.page-intro').evaluate((element) =>
+  Math.round(element.getBoundingClientRect().height),
+)
+const formControls = await page.locator('.contact-form input, .contact-form select, .contact-form textarea').count()
+const selectedProduct = await page.locator('select[name="product"]').inputValue()
+const contactHeroActions = await page.locator('.page-intro-contact .page-intro-actions a').count()
+const contactOffices = await page.locator('.office-list-item').count()
+if (formControls !== 4) failures.push(`/lien-he: form có ${formControls} trường, cần 4`)
+if (selectedProduct !== 'optidist') failures.push('/lien-he: sản phẩm từ CTA chưa được chọn sẵn')
+if (contactHeroActions !== 2) failures.push(`/lien-he: hero có ${contactHeroActions} kênh trực tiếp, cần 2`)
+if (contactOffices !== 3) failures.push(`/lien-he: danh sách văn phòng có ${contactOffices} mục, cần 3`)
+if (contactHeroHeight > 420) failures.push(`/lien-he desktop: hero còn quá cao (${contactHeroHeight}px)`)
+if (await hasHorizontalOverflow()) failures.push('/lien-he desktop: giao diện bị tràn ngang')
+
+await page.screenshot({
+  path: path.join(outputDir, 'ltvn-phase3-contact-desktop.png'),
+  fullPage: true,
+})
+
+await page.locator('input[name="name"]').fill('Nguyen Van A')
+await page.locator('input[name="contact"]').fill('contact@example.com')
+await page.locator('textarea[name="message"]').fill('Yeu cau tu van thiet bi')
+await page.getByRole('button', { name: 'Gửi yêu cầu', exact: true }).click()
+if (!await page.locator('.form-status').isVisible()) failures.push('/lien-he: form không hiển thị trạng thái sau khi gửi')
+
+await page.setViewportSize({ width: 375, height: 812 })
+for (const [route, fileName] of [
+  ['/gioi-thieu', 'about'],
+  ['/tin-tuc-su-kien', 'news'],
+  ['/lien-he', 'contact'],
+]) {
+  await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' })
+  await loadImages()
+  if (await hasHorizontalOverflow()) failures.push(`${route} mobile: giao diện bị tràn ngang`)
+  const actionHeights = await page.locator('.page-intro-actions .button').evaluateAll((elements) =>
+    elements.map((element) => Math.round(element.getBoundingClientRect().height)),
+  )
+  const mobileHeroHeight = await page.locator('.page-intro').evaluate((element) =>
+    Math.round(element.getBoundingClientRect().height),
+  )
+  if (actionHeights.some((height) => height < 44)) failures.push(`${route} mobile: CTA hero nhỏ hơn 44px`)
+  if (mobileHeroHeight > 660) failures.push(`${route} mobile: hero còn quá cao (${mobileHeroHeight}px)`)
+  await page.screenshot({
+    path: path.join(outputDir, `ltvn-phase3-${fileName}-mobile.png`),
+    fullPage: true,
+  })
+}
+
+await page.goto(`${baseUrl}/gioi-thieu`, { waitUntil: 'networkidle' })
+const mobileLifecycleColumns = await page.locator('.capability-lifecycle').evaluate((element) =>
+  getComputedStyle(element).gridTemplateColumns.split(' ').length,
+)
+if (mobileLifecycleColumns !== 1) failures.push(`/gioi-thieu mobile: lifecycle có ${mobileLifecycleColumns} cột, cần 1`)
+
+await page.getByRole('button', { name: 'EN', exact: true }).click()
+await page.getByRole('heading', { name: 'One partner across four coordinated stages' }).waitFor()
+await page.goto(`${baseUrl}/tin-tuc-su-kien`, { waitUntil: 'networkidle' })
+await page.getByRole('heading', { name: 'Projects, events and technical updates' }).waitFor()
+await page.goto(`${baseUrl}/lien-he`, { waitUntil: 'networkidle' })
+await page.getByRole('heading', { name: 'Send a short requirement brief' }).waitFor()
+if (await hasHorizontalOverflow()) failures.push('/lien-he mobile EN: giao diện bị tràn ngang')
+
+await browser.close()
+
+for (const error of browserErrors) failures.push(`Browser console: ${error}`)
+
+if (failures.length) {
+  console.error('Kiểm tra Giai đoạn 3 không đạt:')
+  failures.forEach((failure) => console.error(`- ${failure}`))
+  process.exit(1)
+}
+
+console.log('Kiểm tra Giai đoạn 3 đạt: lifecycle, case study ảnh thật, hero theo mục đích, form và văn phòng rút gọn.')

@@ -81,6 +81,8 @@ export function HomePage() {
           src="/images/hero/ltvietnam-selected-hero-v7.png"
           alt=""
           aria-hidden="true"
+          width="1672"
+          height="941"
           fetchPriority="high"
         />
         <div className="container home-hero-inner">
@@ -133,7 +135,7 @@ export function HomePage() {
               </div>
               <div className="home-solution-media home-solution-media-lab" aria-hidden="true">
                 <img src="/images/products/optidist-2-official.png" alt="PAC OptiDist 2" loading="lazy" decoding="async" />
-                <img src="/images/products/cid-510.png" alt="Herzog CID 510" loading="lazy" decoding="async" />
+                <img src="/images/products/cid-510-transparent.png" alt="Herzog CID 510" loading="lazy" decoding="async" />
               </div>
             </Link>
 
@@ -148,8 +150,8 @@ export function HomePage() {
                 </span>
               </div>
               <div className="home-solution-media home-solution-media-valves" aria-hidden="true">
-                <img src="/images/products/valve-21000.jpg" alt="Masoneilan Valve" loading="lazy" decoding="async" />
-                <img src="/images/products/consolidated-2700.png" alt="Consolidated Safety Valve" loading="lazy" decoding="async" />
+                <img src="/images/products/valve-21000-transparent.png" alt="Masoneilan Valve" loading="lazy" decoding="async" />
+                <img src="/images/products/consolidated-2700-transparent.png" alt="Consolidated Safety Valve" loading="lazy" decoding="async" />
               </div>
             </Link>
           </div>

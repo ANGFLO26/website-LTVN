@@ -1,7 +1,8 @@
-import { CheckCircle2, Mail, MapPin, Phone } from 'lucide-react'
+import { CheckCircle2, ClipboardList, Mail, MapPin, Phone } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router'
-import { PageIntro, SectionHeading } from '../components/PageElements'
+import { OfficeNetwork } from '../components/OfficeNetwork'
+import { PageIntro } from '../components/PageElements'
 import { offices, products } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
@@ -25,11 +26,32 @@ export function ContactPage() {
         image="/images/hero/industrial-lab-plant-hero-v6.png"
         eyebrow={t('talkToOurTeam')}
         title={t('contactLTV')}
-        description={t('contactLTVDesc')}
+        description={t('contactPurposeDesc')}
+        actions={
+          <>
+            <a href="tel:+842466506373" className="button button-primary"><Phone size={17} aria-hidden="true" /> {t('callTechnicalTeam')}</a>
+            <a href="mailto:Sales@ltvietnam.com.vn" className="button button-secondary"><Mail size={17} aria-hidden="true" /> {t('sendEmail')}</a>
+          </>
+        }
+        aside={
+          <div className="contact-hero-brief">
+            <ClipboardList aria-hidden="true" />
+            <div>
+              <span>{t('prepareBeforeContact')}</span>
+              <ul>
+                <li>{t('contactBriefApplication')}</li>
+                <li>{t('contactBriefStandard')}</li>
+                <li>{t('contactBriefCondition')}</li>
+              </ul>
+            </div>
+          </div>
+        }
       />
+
       <section className="section contact-section">
         <div className="container contact-layout">
           <div className="contact-direct">
+            <span className="eyebrow">{t('directChannels')}</span>
             <h2>{t('reachRightTeam')}</h2>
             <p>{t('reachRightTeamDesc')}</p>
             <div className="direct-contact-list">
@@ -39,30 +61,41 @@ export function ContactPage() {
             </div>
           </div>
           <form className="contact-form" onSubmit={handleSubmit}>
-            <div className="form-grid">
-              <label><span>{t('fullName')} *</span><input name="name" required autoComplete="name" /></label>
-              <label><span>{t('company')}</span><input name="company" autoComplete="organization" /></label>
-              <label><span>{t('email')} *</span><input name="email" type="email" required autoComplete="email" /></label>
-              <label><span>{t('phone')}</span><input name="phone" type="tel" autoComplete="tel" /></label>
-              <label className="form-wide"><span>{t('interest')}</span><select name="product" defaultValue={selectedProduct}><option value="">{t('selectProduct')}</option>{products.map((product) => <option key={product.slug} value={product.slug}>{product.brand} · {product.model}</option>)}</select></label>
-              <label className="form-wide"><span>{t('message')} *</span><textarea name="message" rows={5} required /></label>
+            <div className="contact-form-heading">
+              <span className="eyebrow">{t('contactFormEyebrow')}</span>
+              <h2>{t('contactFormTitle')}</h2>
+              <p>{t('contactFormDesc')}</p>
+              <small>{t('requiredFieldsNote')}</small>
             </div>
-            <button type="submit" className="button button-primary hover-scale">{t('sendRequest')}</button>
+            <div className="form-grid contact-form-grid">
+              <label>
+                <span>{t('fullName')} *</span>
+                <input name="name" required autoComplete="name" />
+              </label>
+              <label>
+                <span>{t('contactMethod')} *</span>
+                <input name="contact" required autoComplete="email" aria-describedby="contact-method-hint" />
+                <small id="contact-method-hint">{t('contactMethodHint')}</small>
+              </label>
+              <label className="form-wide">
+                <span>{t('interest')}</span>
+                <select name="product" defaultValue={selectedProduct}>
+                  <option value="">{t('selectProduct')}</option>
+                  {products.map((product) => <option key={product.slug} value={product.slug}>{product.brand} · {product.model}</option>)}
+                </select>
+              </label>
+              <label className="form-wide">
+                <span>{t('message')} *</span>
+                <textarea name="message" rows={5} required />
+              </label>
+            </div>
+            <button type="submit" className="button button-primary">{t('sendRequest')}</button>
             {submitted && <p className="form-status" role="status"><CheckCircle2 aria-hidden="true" /> {t('formReady')}</p>}
           </form>
         </div>
       </section>
-      <section className="section office-section">
-        <div className="container">
-          <SectionHeading
-            title={t('offices')}
-            description={t('contactNearestOffice')}
-          />
-          <div className="office-grid">
-            {offices.map((office) => <article key={office.city.vi} className="office-card"><span>{content(office.label)}</span><h3>{content(office.city)}</h3><p>{content(office.address)}</p><strong>{office.phone}</strong></article>)}
-          </div>
-        </div>
-      </section>
+
+      <OfficeNetwork description={t('contactNearestOffice')} />
     </>
   )
 }

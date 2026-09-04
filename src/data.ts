@@ -16,10 +16,21 @@ export type Product = {
   summary: LocalizedText
   category: LocalizedText
   image: string
-  standards: string[]
+  technicalBasis: {
+    label: LocalizedText
+    values: LocalizedText[]
+  }
   applications: LocalizedText[]
   highlights: LocalizedText[]
   specifications: Array<{ label: LocalizedText; value: LocalizedText }>
+}
+
+export type Office = {
+  city: LocalizedText
+  label: LocalizedText
+  address: LocalizedText
+  phone?: string
+  email: string
 }
 
 export type NewsType = 'news' | 'event' | 'project'
@@ -55,7 +66,10 @@ export const products: Product[] = [
     ),
     category: localized('Chưng cất', 'Distillation'),
     image: '/images/products/optidist-2-official.png',
-    standards: ['ASTM D86', 'ISO 3405', 'IP 123'],
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASTM D86', 'ASTM D86'), localized('ISO 3405', 'ISO 3405'), localized('IP 123', 'IP 123')],
+    },
     applications: [
       localized('Xăng', 'Gasoline'),
       localized('Diesel', 'Diesel'),
@@ -83,8 +97,11 @@ export const products: Product[] = [
       'Evaluates diesel fuel ignition quality by measuring ignition delay.',
     ),
     category: localized('Chỉ số cetane', 'Cetane number'),
-    image: '/images/products/cid-510.png',
-    standards: ['ASTM D7668'],
+    image: '/images/products/cid-510-transparent.png',
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASTM D7668', 'ASTM D7668')],
+    },
     applications: [localized('Diesel', 'Diesel'), localized('Nhiên liệu sinh học', 'Biofuels')],
     highlights: [
       localized('Thời gian phân tích ngắn', 'Short analysis time'),
@@ -109,7 +126,10 @@ export const products: Product[] = [
     ),
     category: localized('Độ nhớt', 'Viscosity'),
     image: '/images/products/hvm-472.jpg',
-    standards: ['ASTM D445', 'ISO 3104'],
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASTM D445', 'ASTM D445'), localized('ISO 3104', 'ISO 3104')],
+    },
     applications: [
       localized('Dầu nhờn', 'Lubricating oils'),
       localized('Nhiên liệu', 'Fuels'),
@@ -138,7 +158,10 @@ export const products: Product[] = [
     ),
     category: localized('Điểm chớp cháy', 'Flash point'),
     image: '/images/products/optiflash.jpg',
-    standards: ['ASTM D93', 'ISO 2719'],
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASTM D93', 'ASTM D93'), localized('ISO 2719', 'ISO 2719')],
+    },
     applications: [
       localized('Dầu nhờn', 'Lubricating oils'),
       localized('Diesel', 'Diesel'),
@@ -167,7 +190,10 @@ export const products: Product[] = [
     ),
     category: localized('Chưng cất', 'Distillation'),
     image: '/images/products/hdv-632.jpg',
-    standards: ['ASTM D1160'],
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASTM D1160', 'ASTM D1160'), localized('ISO 6616', 'ISO 6616')],
+    },
     applications: [
       localized('Dầu nặng', 'Heavy oils'),
       localized('Dầu nhờn', 'Lubricating oils'),
@@ -196,7 +222,10 @@ export const products: Product[] = [
     ),
     category: localized('Áp suất hơi', 'Vapor pressure'),
     image: '/images/products/hvp-972.jpg',
-    standards: ['ASTM D5191'],
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASTM D5191', 'ASTM D5191')],
+    },
     applications: [
       localized('Xăng', 'Gasoline'),
       localized('Nhiên liệu', 'Fuels'),
@@ -224,8 +253,11 @@ export const products: Product[] = [
       'A general-purpose control valve series for liquid, gas and steam applications in industrial plants.',
     ),
     category: localized('Van điều khiển', 'Control valves'),
-    image: '/images/products/valve-21000.jpg',
-    standards: ['ASME B16.34'],
+    image: '/images/products/valve-21000-transparent.png',
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASME B16.34', 'ASME B16.34')],
+    },
     applications: [
       localized('Hơi', 'Steam'),
       localized('Khí', 'Gas'),
@@ -254,7 +286,10 @@ export const products: Product[] = [
     ),
     category: localized('Bộ định vị', 'Positioners'),
     image: '/images/products/svi-ii-ap.png',
-    standards: ['HART communication'],
+    technicalBasis: {
+      label: localized('Giao thức', 'Protocol'),
+      values: [localized('HART hai chiều', 'Bidirectional HART')],
+    },
     applications: [
       localized('Van điều khiển', 'Control valves'),
       localized('Chẩn đoán van', 'Valve diagnostics'),
@@ -283,7 +318,10 @@ export const products: Product[] = [
     ),
     category: localized('Bộ truyền động', 'Actuators'),
     image: '/images/products/actuator-87-88.png',
-    standards: ['Pneumatic actuation'],
+    technicalBasis: {
+      label: localized('Cấu hình tác động', 'Actuation configuration'),
+      values: [localized('87: khí đóng', '87: air to close'), localized('88: khí mở', '88: air to open')],
+    },
     applications: [
       localized('Van điều khiển tuyến tính', 'Linear control valves'),
       localized('Hệ thống khí nén', 'Pneumatic systems'),
@@ -311,7 +349,10 @@ export const products: Product[] = [
     ),
     category: localized('Van điều khiển', 'Control valves'),
     image: '/images/products/valve-84000.png',
-    standards: ['ASME B16.34'],
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASME B16.34', 'ASME B16.34')],
+    },
     applications: [
       localized('Hơi', 'Steam'),
       localized('Năng lượng', 'Power generation'),
@@ -333,28 +374,31 @@ export const products: Product[] = [
     family: 'baker-hughes',
     brand: 'Consolidated',
     model: '2700 Series',
-    name: localized('Van an toàn cho ứng dụng công nghiệp', 'Industrial safety valve'),
+    name: localized('Van an toàn cho hệ thống CCGT', 'Safety valve for CCGT applications'),
     summary: localized(
-      'Dòng van an toàn lò xo cho bảo vệ thiết bị và đường ống trong các hệ thống áp suất.',
-      'A spring-loaded safety valve series for protecting equipment and piping in pressurized systems.',
+      'Dòng van an toàn được thiết kế cho các hệ thống phát điện tuabin khí chu trình hỗn hợp và dịch vụ hơi.',
+      'A safety valve series designed for combined-cycle gas turbine power systems and steam service.',
     ),
     category: localized('Van an toàn', 'Safety valves'),
-    image: '/images/products/consolidated-2700.png',
-    standards: ['ASME Section VIII'],
+    image: '/images/products/consolidated-2700-transparent.png',
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASME Section I', 'ASME Section I'), localized('ASME Section VIII', 'ASME Section VIII')],
+    },
     applications: [
       localized('Hơi', 'Steam'),
-      localized('Khí', 'Gas'),
-      localized('Thiết bị áp lực', 'Pressure equipment'),
+      localized('Phát điện', 'Power generation'),
+      localized('Hệ thống CCGT', 'CCGT systems'),
     ],
     highlights: [
       localized('Thiết kế bảo vệ quá áp', 'Designed for overpressure protection'),
-      localized('Nhiều lựa chọn vật liệu', 'Multiple material options'),
-      localized('Phù hợp dịch vụ công nghiệp nặng', 'Suitable for heavy industrial service'),
+      localized('Thiết kế hướng đến ứng dụng CCGT', 'Designed for CCGT applications'),
+      localized('Cấu trúc lò xo cho dịch vụ hơi', 'Spring-loaded construction for steam service'),
     ],
     specifications: [
       { label: localized('Kiểu van', 'Valve type'), value: localized('Van an toàn lò xo', 'Spring-loaded safety valve') },
       { label: localized('Thương hiệu', 'Brand'), value: localized('Consolidated', 'Consolidated') },
-      { label: localized('Chức năng', 'Function'), value: localized('Bảo vệ quá áp', 'Overpressure protection') },
+      { label: localized('Ứng dụng chính', 'Primary application'), value: localized('Phát điện tuabin khí chu trình hỗn hợp', 'Combined-cycle gas turbine power generation') },
     ],
   },
   {
@@ -364,26 +408,29 @@ export const products: Product[] = [
     model: '1900/P Series',
     name: localized('Van an toàn và xả áp', 'Safety relief valve'),
     summary: localized(
-      'Van xả áp cho các ứng dụng khí, hơi và chất lỏng trong nhà máy lọc hóa dầu và hóa chất.',
-      'A pressure relief valve for gas, steam and liquid applications in refining and chemical plants.',
+      'Dòng van an toàn và xả áp cho ứng dụng hơi, nước bốc hơi và hơi hữu cơ theo ASME Section I.',
+      'A safety relief valve series for steam, flashing water and organic vapor service under ASME Section I.',
     ),
     category: localized('Van an toàn', 'Safety valves'),
     image: '/images/products/consolidated-1900.png',
-    standards: ['ASME Section VIII'],
+    technicalBasis: {
+      label: localized('Tiêu chuẩn', 'Standards'),
+      values: [localized('ASME Section I', 'ASME Section I')],
+    },
     applications: [
-      localized('Lọc hóa dầu', 'Refining and petrochemicals'),
-      localized('Hóa chất', 'Chemical processing'),
-      localized('Khí công nghệ', 'Process gas'),
+      localized('Hơi', 'Steam'),
+      localized('Nước bốc hơi', 'Flashing water'),
+      localized('Hơi hữu cơ', 'Organic vapor service'),
     ],
     highlights: [
-      localized('Dải ứng dụng rộng', 'Wide application range'),
-      localized('Hỗ trợ nhiều loại lưu chất', 'Supports multiple process media'),
-      localized('Thiết kế cho môi trường công nghiệp', 'Designed for industrial environments'),
+      localized('Đế Thermodisc hỗ trợ độ kín trong dịch vụ hơi', 'Thermodisc seat supports tightness in steam service'),
+      localized('Có cấu hình thông thường và balanced bellows', 'Available in conventional and balanced-bellows configurations'),
+      localized('Có cấu hình lò xo lộ thiên để làm mát', 'Available with an exposed-spring configuration for cooling'),
     ],
     specifications: [
       { label: localized('Kiểu van', 'Valve type'), value: localized('Van an toàn và xả áp', 'Safety relief valve') },
       { label: localized('Thương hiệu', 'Brand'), value: localized('Consolidated', 'Consolidated') },
-      { label: localized('Lưu chất', 'Process media'), value: localized('Khí, hơi và chất lỏng', 'Gas, steam and liquids') },
+      { label: localized('Lưu chất', 'Process media'), value: localized('Hơi, nước bốc hơi và hơi hữu cơ', 'Steam, flashing water and organic vapor') },
     ],
   },
   {
@@ -398,7 +445,10 @@ export const products: Product[] = [
     ),
     category: localized('Thiết bị kiểm tra', 'Test equipment'),
     image: '/images/products/evt-pro.png',
-    standards: ['In-situ valve testing'],
+    technicalBasis: {
+      label: localized('Phương pháp kiểm tra', 'Test method'),
+      values: [localized('Kiểm tra tại vị trí lắp đặt', 'In-situ valve testing')],
+    },
     applications: [
       localized('Kiểm định van', 'Valve testing'),
       localized('Bảo trì nhà máy', 'Plant maintenance'),
@@ -451,72 +501,72 @@ export const newsItems: NewsItem[] = [
   {
     slug: 'hoi-thao-van-an-toan',
     type: 'event',
-    year: '2026',
+    year: '2019',
     title: localized(
-      'Hội thảo bảo dưỡng và kiểm định van an toàn trong nhà máy công nghiệp',
-      'Seminar on industrial safety valve maintenance and inspection',
+      'LT Việt Nam phối hợp tổ chức hội thảo bảo dưỡng và kiểm định van an toàn',
+      'LT Vietnam co-organizes a seminar on safety valve maintenance and inspection',
     ),
     excerpt: localized(
-      'Chương trình trao đổi chuyên môn về vận hành, bảo dưỡng và đánh giá tình trạng van an toàn.',
-      'A technical seminar on safety valve operation, maintenance and condition assessment.',
+      'Hội thảo được tổ chức tại Hà Nội cùng Bộ Công Thương và Baker Hughes GE, với đại biểu từ hơn 20 nhà máy công nghiệp.',
+      'The Hanoi seminar was organized with the Ministry of Industry and Trade and Baker Hughes GE, with delegates from more than 20 industrial plants.',
     ),
     image: '/images/news/safety-valve-seminar.jpg',
-    relatedProduct: 'consolidated-2700',
     paragraphs: [
       localized(
-        'Hội thảo cung cấp góc nhìn thực tế về yêu cầu kiểm tra và bảo dưỡng van an toàn trong các nhà máy công nghiệp.',
-        'The seminar provided practical insight into safety valve inspection and maintenance requirements in industrial plants.',
+        'Cuối năm 2019 tại Hà Nội, Bộ Công Thương, LT Việt Nam và Baker Hughes GE phối hợp tổ chức hội thảo về bảo dưỡng và kiểm định van an toàn trong nhà máy công nghiệp.',
+        'At the end of 2019 in Hanoi, the Ministry of Industry and Trade, LT Vietnam and Baker Hughes GE jointly organized a seminar on industrial safety valve maintenance and inspection.',
       ),
       localized(
-        'Các nội dung chính gồm nhận diện rủi ro, lập kế hoạch bảo trì và lựa chọn phương pháp kiểm tra phù hợp.',
-        'Key topics included risk identification, maintenance planning and selection of suitable inspection methods.',
+        'Hội thảo do lãnh đạo Cục An toàn và Môi trường Công nghiệp chủ trì, với đại biểu đến từ hơn 20 nhà máy lọc dầu, nhiệt điện, phân bón và công nghiệp lớn.',
+        'The seminar was chaired by the Industrial Safety and Environment Agency and attended by delegates from more than 20 major refining, power, fertilizer and industrial plants.',
       ),
       localized(
-        'Nội dung trao đổi được tổ chức theo nhu cầu vận hành, kiểm định và bảo trì thực tế tại nhà máy.',
-        'The discussion was structured around actual plant operation, inspection and maintenance needs.',
+        'Các chuyên gia trình bày quy trình bảo dưỡng, sửa chữa và kiểm định van an toàn, đồng thời trao đổi kinh nghiệm vận hành trong những điều kiện làm việc khắc nghiệt.',
+        'Experts presented safety valve maintenance, repair and inspection practices and exchanged operating experience for severe-service conditions.',
       ),
     ],
   },
   {
     slug: 'chuyen-giao-dfa-70xi',
     type: 'project',
-    year: '2026',
+    year: '2025',
     title: localized(
-      'Chuyển giao thiết bị xác định điểm đông đặc Phase Technology DFA-70Xi',
-      'Handover of the Phase Technology DFA-70Xi freezing point analyzer',
+      'Chuyển giao thiết bị xác định điểm đông đặc Phase Technology 70Xi tại Skypec',
+      'Handover of a Phase Technology 70Xi freezing point analyzer at Skypec',
     ),
     excerpt: localized(
-      'Hoàn thành cung cấp và hướng dẫn sử dụng hệ thống phân tích tính chất lạnh của nhiên liệu.',
-      'Completed the supply and user training for a fuel cold-flow property analysis system.',
+      'LT Việt Nam hoàn thành giao hàng, lắp đặt, chạy thử và đào tạo chuyển giao công nghệ tại chi nhánh Skypec Hà Nội.',
+      'LT Vietnam completed delivery, installation, commissioning and technology-transfer training at Skypec\'s Hanoi branch.',
     ),
-    image: '/images/news/phase-dfa-70xi.jpg',
+    image: '/images/news/phase-dfa-70xi-transparent.png',
     imageFit: 'contain',
     paragraphs: [
       localized(
-        'Đội ngũ kỹ thuật phối hợp cùng khách hàng kiểm tra cấu hình, điều kiện lắp đặt và chức năng của thiết bị.',
-        'The technical team worked with the customer to verify the configuration, installation conditions and instrument functions.',
+        'Trong hai ngày 7 và 8 tháng 7 năm 2025, đội ngũ LT Việt Nam triển khai thiết bị phân tích điểm đông đặc Phase Technology tại chi nhánh Hà Nội của Công ty Cổ phần Nhiên liệu bay Petrolimex (Skypec).',
+        'On July 7 and 8, 2025, LT Vietnam deployed the Phase Technology freezing point analyzer at the Hanoi branch of Petrolimex Aviation Fuel Joint Stock Company (Skypec).',
       ),
       localized(
-        'Quá trình chuyển giao tập trung vào thao tác vận hành, chăm sóc thiết bị và xử lý các tình huống cơ bản.',
-        'The handover focused on operation, instrument care and handling basic operating situations.',
+        'Phạm vi công việc gồm lắp đặt tại hiện trường, tích hợp, hiệu chuẩn, chạy thử và xác nhận khả năng hoạt động của thiết bị.',
+        'The scope included on-site installation, integration, calibration, trial operation and performance verification.',
       ),
       localized(
-        'Sau phần hướng dẫn, người sử dụng có thể theo dõi quy trình đo và các bước kiểm tra thiết bị trước khi vận hành.',
-        'After the training, users could follow the measurement procedure and pre-operation inspection steps.',
+        'Chương trình chuyển giao bao gồm đào tạo lý thuyết và thực hành, hướng dẫn bảo trì, xử lý sự cố và bàn giao tài liệu kỹ thuật cùng hướng dẫn sử dụng.',
+        'The handover included theory and hands-on training, maintenance and troubleshooting guidance, plus technical documentation and operating manuals.',
       ),
     ],
   },
 ]
 
-export const offices = [
+export const offices: Office[] = [
   {
     city: localized('Hà Nội', 'Hanoi'),
     label: localized('Trụ sở chính', 'Head office'),
     address: localized(
-      'Tầng 7, Tòa nhà A-B, 203 Nguyễn Huy Tưởng, Thanh Xuân, Hà Nội',
-      '7th Floor, A-B Building, 203 Nguyen Huy Tuong Street, Thanh Xuan District, Hanoi',
+      'Tầng 7, Tòa nhà A-B, số 203 Nguyễn Huy Tưởng, phường Thanh Xuân, Hà Nội',
+      '7th Floor, A-B Office Building, No. 203 Nguyen Huy Tuong, Thanh Xuan Ward, Hanoi, Vietnam',
     ),
     phone: '(84-24) 6650 6373',
+    email: 'Sales@ltvietnam.com.vn',
   },
   {
     city: localized('TP. Hồ Chí Minh', 'Ho Chi Minh City'),
@@ -526,15 +576,16 @@ export const offices = [
       '2nd Floor, C.T Building, 56 Yen The Street, Tan Binh District, Ho Chi Minh City',
     ),
     phone: '(84-28) 983 870 357',
+    email: 'Sales@ltvietnam.com.vn',
   },
   {
     city: localized('Quảng Ngãi', 'Quang Ngai'),
     label: localized('Văn phòng miền Trung', 'Central Vietnam office'),
     address: localized(
-      'Đường Võ Văn Kiệt, xã Vạn Tường, tỉnh Quảng Ngãi',
-      'Vo Van Kiet Street, Van Tuong Commune, Quang Ngai Province',
+      'Không gian văn phòng - Khách sạn Hoàng Mai, đường Võ Văn Kiệt, thôn Đông Lỗ, xã Vạn Tường, tỉnh Quảng Ngãi',
+      'Office Space - Hoang Mai Hotel, Vo Van Kiet Street, Dong Lo Village, Van Tuong Commune, Quang Ngai Province, Vietnam',
     ),
-    phone: '(84-24) 6650 6373',
+    email: 'Sales@ltvietnam.com.vn',
   },
 ]
 

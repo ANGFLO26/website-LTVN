@@ -36,9 +36,21 @@ export function ProductPage() {
             <span>{product.model}</span>
           </div>
           <div className="product-detail-grid">
-            <div className="product-gallery">
-              <img src={product.image} alt={`${product.model} - ${content(product.name)}`} />
-            </div>
+            <figure className="product-gallery">
+              <div className="product-gallery-stage">
+                <img
+                  src={product.image}
+                  alt={`${product.model} - ${content(product.name)}`}
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+              <figcaption>
+                <span>{product.brand}</span>
+                <strong>{product.model}</strong>
+                <small>{content(product.category)}</small>
+              </figcaption>
+            </figure>
             <div className="product-detail-copy">
               <div className="product-detail-meta">
                 <span>{product.brand}</span><span>{content(product.category)}</span>
@@ -48,15 +60,30 @@ export function ProductPage() {
               <p>{content(product.summary)}</p>
               <dl className="product-facts">
                 <div><dt>{t('brand')}</dt><dd>{product.brand}</dd></div>
-                <div><dt>{t('applications')}</dt><dd>{product.applications.map((application) => content(application)).join(', ')}</dd></div>
-                <div><dt>{t('standards')}</dt><dd>{product.standards.join(', ')}</dd></div>
+                <div>
+                  <dt>{t('applications')}</dt>
+                  <dd>
+                    <ul className="product-fact-tags">
+                      {product.applications.map((application) => <li key={application.vi}>{content(application)}</li>)}
+                    </ul>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{content(product.technicalBasis.label)}</dt>
+                  <dd>
+                    <ul className="product-fact-tags product-standard-tags">
+                      {product.technicalBasis.values.map((value) => <li key={value.vi}>{content(value)}</li>)}
+                    </ul>
+                  </dd>
+                </div>
               </dl>
-              <div className="hero-actions">
+              <p className="product-advice-hint">{t('productAdviceHint')}</p>
+              <div className="hero-actions product-hero-actions">
                 <Link to={`/lien-he?san-pham=${product.slug}`} className="button button-primary">
                   <Send size={17} aria-hidden="true" /> {t('requestProduct')}
                 </Link>
                 <a href="tel:+842466506373" className="button button-secondary product-phone-button">
-                  <Phone size={17} aria-hidden="true" /> {t('phone')}
+                  <Phone size={17} aria-hidden="true" /> {t('callTechnicalTeam')}
                 </a>
               </div>
             </div>
@@ -84,15 +111,33 @@ export function ProductPage() {
               </div>
             ))}
             <div className="spec-row">
-              <dt>{t('standards')}</dt>
-              <dd>{product.standards.join(', ')}</dd>
+              <dt>{content(product.technicalBasis.label)}</dt>
+              <dd>{product.technicalBasis.values.map((value) => content(value)).join(', ')}</dd>
             </div>
             </dl>
           </div>
         </div>
       </section>
 
-      <section className="section">
+      <section className="product-consultation-cta" aria-labelledby="product-consultation-title">
+        <div className="container product-consultation-inner">
+          <div>
+            <span className="eyebrow">{t('productConsultEyebrow')}</span>
+            <h2 id="product-consultation-title">{t('productConsultTitle')}</h2>
+            <p>{t('productConsultDesc')}</p>
+          </div>
+          <div className="product-consultation-actions">
+            <Link to={`/lien-he?san-pham=${product.slug}`} className="button button-primary">
+              <Send size={17} aria-hidden="true" /> {t('sendRequirement')}
+            </Link>
+            <a href="tel:+842466506373" className="button product-consultation-phone">
+              <Phone size={17} aria-hidden="true" /> {t('callTechnicalTeam')}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="section product-related-section">
         <div className="container">
           <div className="section-heading">
             <div><h2>{t('relatedProducts')}</h2></div>

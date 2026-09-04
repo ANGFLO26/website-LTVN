@@ -32,15 +32,19 @@ export function PageIntro({
   description,
   image,
   className = '',
+  actions,
+  aside,
 }: {
   eyebrow: string
   title: string
   description: string
   image?: string
   className?: string
+  actions?: ReactNode
+  aside?: ReactNode
 }) {
   return (
-    <section className={`page-intro ${className}`.trim()}>
+    <section className={`page-intro ${aside ? 'page-intro-has-aside' : ''} ${className}`.trim()}>
       {image && (
         <img
           className="page-intro-media"
@@ -53,9 +57,13 @@ export function PageIntro({
       )}
       <div className="page-intro-shade" aria-hidden="true" />
       <div className="container page-intro-inner">
-        <span className="eyebrow">{eyebrow}</span>
-        <h1>{title}</h1>
-        <p>{description}</p>
+        <div className="page-intro-copy">
+          <span className="eyebrow">{eyebrow}</span>
+          <h1>{title}</h1>
+          <p>{description}</p>
+          {actions && <div className="page-intro-actions">{actions}</div>}
+        </div>
+        {aside && <div className="page-intro-aside">{aside}</div>}
       </div>
     </section>
   )

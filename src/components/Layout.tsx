@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   ArrowRight,
-  ChevronDown,
   Languages,
   Mail,
   MapPin,
@@ -133,22 +132,16 @@ function Footer() {
           </p>
         </div>
 
-        <details className="footer-group">
-          <summary>
-            <span role="heading" aria-level={2}>{language === 'vi' ? 'Giải pháp' : 'Solutions'}</span>
-            <ChevronDown size={18} aria-hidden="true" />
-          </summary>
+        <div className="footer-group">
+          <h2>{language === 'vi' ? 'Giải pháp' : 'Solutions'}</h2>
           <div className="footer-links">
             <Link to="/pac">PAC · Herzog</Link>
             <Link to="/baker-hughes">Baker Hughes</Link>
           </div>
-        </details>
+        </div>
 
-        <details className="footer-group">
-          <summary>
-            <span role="heading" aria-level={2}>{language === 'vi' ? 'Công ty' : 'Company'}</span>
-            <ChevronDown size={18} aria-hidden="true" />
-          </summary>
+        <div className="footer-group">
+          <h2>{language === 'vi' ? 'Công ty' : 'Company'}</h2>
           <div className="footer-links">
             {companyLinks.map((item) => (
               <Link key={item.to} to={item.to}>
@@ -156,13 +149,10 @@ function Footer() {
               </Link>
             ))}
           </div>
-        </details>
+        </div>
 
-        <details className="footer-group">
-          <summary>
-            <span role="heading" aria-level={2}>{t('contact')}</span>
-            <ChevronDown size={18} aria-hidden="true" />
-          </summary>
+        <div className="footer-group footer-group-contact">
+          <h2>{t('contact')}</h2>
           <div className="footer-contact">
             <a href="tel:+842466506373">
               <Phone size={16} aria-hidden="true" /> {mainOffice.phone}
@@ -174,7 +164,7 @@ function Footer() {
               <MapPin size={16} aria-hidden="true" /> {content(mainOffice.address)}
             </span>
           </div>
-        </details>
+        </div>
       </div>
       <div className="footer-bottom">
         <div className="container">© 2026 LT Việt Nam. {t('copyright')}</div>

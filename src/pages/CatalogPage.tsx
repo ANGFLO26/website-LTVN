@@ -1,5 +1,5 @@
-import { Search } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react'
+import { useDeferredValue, useMemo, useState } from 'react'
 import { EmptyState, PageIntro } from '../components/PageElements'
 import { ProductCard } from '../components/ProductCard'
 import { products, type LocalizedText, type ProductFamily } from '../data'
@@ -15,6 +15,7 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
   const [query, setQuery] = useState('')
   const [brand, setBrand] = useState(ALL_FILTER)
   const [category, setCategory] = useState(ALL_FILTER)
+  const deferredQuery = useDeferredValue(query)
   const familyProducts = useMemo(() => products.filter((product) => product.family === family), [family])
   const brands = [ALL_FILTER, ...new Set(familyProducts.map((product) => product.brand))]
   const categories = Array.from(
@@ -26,7 +27,7 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
   usePageTitle(title)
 
   const filteredProducts = useMemo(() => {
-    const normalizedQuery = query.trim().toLocaleLowerCase('vi')
+    const normalizedQuery = deferredQuery.trim().toLocaleLowerCase('vi')
 
     return familyProducts.filter((product) => {
       const matchesBrand = brand === ALL_FILTER || product.brand === brand
@@ -39,12 +40,16 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
         product.applications.map(searchableText).join(' '),
         product.highlights.map(searchableText).join(' '),
         product.specifications.flatMap((item) => [searchableText(item.label), searchableText(item.value)]).join(' '),
-        product.standards.join(' '),
+        searchableText(product.technicalBasis.label),
+        product.technicalBasis.values.map(searchableText).join(' '),
       ].join(' ').toLocaleLowerCase('vi')
 
       return matchesBrand && matchesCategory && (!normalizedQuery || searchable.includes(normalizedQuery))
     })
-  }, [brand, category, familyProducts, query])
+  }, [brand, category, deferredQuery, familyProducts])
+
+  const hasActiveFilters = query.trim().length > 0 || brand !== ALL_FILTER || category !== ALL_FILTER
+  const searchId = `catalog-search-${family}`
 
   const clearFilters = () => {
     setQuery('')
@@ -65,15 +70,28 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
       <section className="section catalog-section">
         <div className="container">
           <div className="catalog-toolbar">
-            <label className="catalog-search">
+            <div className="catalog-search" role="search">
               <Search size={18} aria-hidden="true" />
-              <span className="sr-only">{t('searchPlaceholder')}</span>
+              <label className="sr-only" htmlFor={searchId}>{t('searchPlaceholder')}</label>
               <input
+                id={searchId}
+                type="search"
+                enterKeyHint="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder={t('searchPlaceholder')}
               />
-            </label>
+              {query && (
+                <button
+                  type="button"
+                  className="catalog-search-clear"
+                  onClick={() => setQuery('')}
+                  aria-label={t('clearSearch')}
+                >
+                  <X size={17} aria-hidden="true" />
+                </button>
+              )}
+            </div>
             {brands.length > 2 && (
               <div className="filter-group" aria-label={t('brand')}>
                 {brands.map((item) => (
@@ -89,6 +107,30 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
                 ))}
               </div>
             )}
+          </div>
+
+          <div className="catalog-mobile-filters" aria-label={t('filterProducts')}>
+            <div className="catalog-mobile-filter-heading">
+              <SlidersHorizontal size={18} aria-hidden="true" />
+              <strong>{t('filterProducts')}</strong>
+            </div>
+            <label>
+              <span>{t('brand')}</span>
+              <select value={brand} onChange={(event) => setBrand(event.target.value)}>
+                {brands.map((item) => (
+                  <option key={item} value={item}>{item === ALL_FILTER ? t('all') : item}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              <span>{t('category')}</span>
+              <select value={category} onChange={(event) => setCategory(event.target.value)}>
+                <option value={ALL_FILTER}>{t('all')}</option>
+                {categories.map((item) => (
+                  <option key={item.vi} value={item.vi}>{content(item)}</option>
+                ))}
+              </select>
+            </label>
           </div>
 
           <div className="catalog-category-strip" aria-label={t('productCategories')}>
@@ -115,7 +157,15 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
 
           <div className="catalog-result-head">
             <h2>{isPac ? 'PAC' : 'Baker Hughes'}</h2>
-            <span>{filteredProducts.length} {t('productsCount')}</span>
+            <div className="catalog-result-meta">
+              <span aria-live="polite">{filteredProducts.length} {t('productsCount')}</span>
+              {hasActiveFilters && (
+                <button type="button" className="catalog-clear-button" onClick={clearFilters}>
+                  <RotateCcw size={15} aria-hidden="true" />
+                  {t('clearFilters')}
+                </button>
+              )}
+            </div>
           </div>
 
           {filteredProducts.length ? (
