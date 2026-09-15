@@ -21,7 +21,8 @@
     "test:smoke": "node scripts/smoke-test.mjs",
     "test:visual": "node scripts/phase1-visual-check.mjs",
     "test:phase2": "node scripts/phase2-product-check.mjs",
-    "test:phase3": "node scripts/phase3-content-check.mjs"
+    "test:phase3": "node scripts/phase3-content-check.mjs",
+    "test:admin-drizzle": "node scripts/verify-drizzle-admin.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.33.0",

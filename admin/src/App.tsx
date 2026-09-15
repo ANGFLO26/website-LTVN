@@ -41,13 +41,25 @@ export function App() {
   };
 
   // Load initial data
-  const loadData = () => {
-    setMachines(api.getMachines());
-    setStandards(api.getStandards());
-    setMedia(api.getMedia());
-    setNews(api.getNewsEvents());
-    setContacts(api.getContacts());
-    setUsers(api.getUsers());
+  const loadData = async () => {
+    try {
+      const [m, s, med, n, c, u] = await Promise.all([
+        api.getMachines(),
+        api.getStandards(),
+        api.getMedia(),
+        api.getNewsEvents(),
+        api.getContacts(),
+        api.getUsers(),
+      ]);
+      setMachines(m);
+      setStandards(s);
+      setMedia(med);
+      setNews(n);
+      setContacts(c);
+      setUsers(u);
+    } catch (err) {
+      console.error('Failed to load data:', err);
+    }
   };
 
   useEffect(() => {
@@ -63,86 +75,86 @@ export function App() {
   }, []);
 
   // Handlers for Machines
-  const handleSaveMachine = (m: Machine) => {
-    api.saveMachine(m);
-    setMachines(api.getMachines());
+  const handleSaveMachine = async (m: Machine) => {
+    await api.saveMachine(m);
+    setMachines(await api.getMachines());
     showToast('Đã lưu thông tin Máy PAC thành công!');
   };
 
-  const handleDeleteMachine = (id: string) => {
-    api.deleteMachine(id);
-    setMachines(api.getMachines());
+  const handleDeleteMachine = async (id: string) => {
+    await api.deleteMachine(id);
+    setMachines(await api.getMachines());
     showToast('Đã xóa máy PAC khỏi danh mục!');
   };
 
   // Handlers for Standards
-  const handleSaveStandard = (s: Standard) => {
-    api.saveStandard(s);
-    setStandards(api.getStandards());
+  const handleSaveStandard = async (s: Standard) => {
+    await api.saveStandard(s);
+    setStandards(await api.getStandards());
     showToast('Đã lưu tiêu chuẩn quốc tế thành công!');
   };
 
-  const handleDeleteStandard = (id: string) => {
-    api.deleteStandard(id);
-    setStandards(api.getStandards());
+  const handleDeleteStandard = async (id: string) => {
+    await api.deleteStandard(id);
+    setStandards(await api.getStandards());
     showToast('Đã xóa tiêu chuẩn!');
   };
 
   // Handlers for Media
-  const handleSaveMedia = (asset: MediaAsset) => {
-    api.saveMedia(asset);
-    setMedia(api.getMedia());
+  const handleSaveMedia = async (asset: MediaAsset) => {
+    await api.saveMedia(asset);
+    setMedia(await api.getMedia());
     showToast('Đã thêm tệp vào thư viện Media!');
   };
 
-  const handleDeleteMedia = (id: string) => {
-    api.deleteMedia(id);
-    setMedia(api.getMedia());
+  const handleDeleteMedia = async (id: string) => {
+    await api.deleteMedia(id);
+    setMedia(await api.getMedia());
     showToast('Đã xóa tệp media!');
   };
 
   // Handlers for News
-  const handleSaveNews = (item: NewsEvent) => {
-    api.saveNewsEvent(item);
-    setNews(api.getNewsEvents());
+  const handleSaveNews = async (item: NewsEvent) => {
+    await api.saveNewsEvent(item);
+    setNews(await api.getNewsEvents());
     showToast('Đã cập nhật bài viết tin tức / sự kiện!');
   };
 
-  const handleDeleteNews = (id: string) => {
-    api.deleteNewsEvent(id);
-    setNews(api.getNewsEvents());
+  const handleDeleteNews = async (id: string) => {
+    await api.deleteNewsEvent(id);
+    setNews(await api.getNewsEvents());
     showToast('Đã xóa bài viết!');
   };
 
   // Handlers for Contacts
-  const handleUpdateContactStatus = (id: string, status: Contact['status'], note?: string) => {
-    api.updateContactStatus(id, status, note);
-    setContacts(api.getContacts());
+  const handleUpdateContactStatus = async (id: string, status: Contact['status'], note?: string) => {
+    await api.updateContactStatus(id, status, note);
+    setContacts(await api.getContacts());
     showToast('Đã cập nhật trạng thái liên hệ!');
   };
 
-  const handleDeleteContact = (id: string) => {
-    api.deleteContact(id);
-    setContacts(api.getContacts());
+  const handleDeleteContact = async (id: string) => {
+    await api.deleteContact(id);
+    setContacts(await api.getContacts());
     showToast('Đã xóa yêu cầu liên hệ!');
   };
 
   // Handlers for Users
-  const handleSaveUser = (u: User) => {
-    api.saveUser(u);
-    setUsers(api.getUsers());
+  const handleSaveUser = async (u: User) => {
+    await api.saveUser(u);
+    setUsers(await api.getUsers());
     showToast('Đã lưu tài khoản quản trị!');
   };
 
-  const handleDeleteUser = (id: string) => {
-    api.deleteUser(id);
-    setUsers(api.getUsers());
+  const handleDeleteUser = async (id: string) => {
+    await api.deleteUser(id);
+    setUsers(await api.getUsers());
     showToast('Đã xóa tài khoản!');
   };
 
-  const handleResetData = () => {
+  const handleResetData = async () => {
     localStorage.clear();
-    loadData();
+    await loadData();
     showToast('Đã khôi phục dữ liệu mẫu gốc!');
   };
 

@@ -7,7 +7,12 @@ import type {
   User,
 } from '../types';
 
-// Initial Seed Data
+// Helper UUID validation
+export function isValidUuid(id?: string | null): boolean {
+  return typeof id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+}
+
+// Initial Seed Data with valid UUID v4 compliant hex strings
 const INITIAL_USERS: User[] = [
   {
     id: '11111111-1111-1111-1111-111111111111',
@@ -33,7 +38,7 @@ const INITIAL_USERS: User[] = [
 
 const INITIAL_MEDIA: MediaAsset[] = [
   {
-    id: 'm1111111-1111-1111-1111-111111111111',
+    id: 'c1111111-1111-1111-1111-111111111111',
     fileName: 'ac-nga-gpa-2286.jpg',
     storageKey: 'machines/ac-nga-gpa-2286.jpg',
     publicUrl: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80',
@@ -45,7 +50,7 @@ const INITIAL_MEDIA: MediaAsset[] = [
     createdAt: '2026-03-01T10:00:00Z',
   },
   {
-    id: 'm2222222-2222-2222-2222-222222222222',
+    id: 'c2222222-2222-2222-2222-222222222222',
     fileName: 'sense-sulfur-analyzer.jpg',
     storageKey: 'machines/sense-sulfur-analyzer.jpg',
     publicUrl: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop&q=80',
@@ -57,7 +62,7 @@ const INITIAL_MEDIA: MediaAsset[] = [
     createdAt: '2026-03-05T11:20:00Z',
   },
   {
-    id: 'm3333333-3333-3333-3333-333333333333',
+    id: 'c3333333-3333-3333-3333-333333333333',
     fileName: 'optidist-distillation.jpg',
     storageKey: 'machines/optidist-distillation.jpg',
     publicUrl: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&auto=format&fit=crop&q=80',
@@ -72,7 +77,7 @@ const INITIAL_MEDIA: MediaAsset[] = [
 
 const INITIAL_STANDARDS: Standard[] = [
   {
-    id: 's1111111-1111-1111-1111-111111111111',
+    id: 'a1111111-1111-1111-1111-111111111111',
     code: 'ASTM D3588',
     organization: 'ASTM',
     year: 2020,
@@ -81,7 +86,7 @@ const INITIAL_STANDARDS: Standard[] = [
     createdAt: '2026-01-01T00:00:00Z',
   },
   {
-    id: 's2222222-2222-2222-2222-222222222222',
+    id: 'a2222222-2222-2222-2222-222222222222',
     code: 'ISO 6976:2016',
     organization: 'ISO',
     year: 2016,
@@ -90,7 +95,7 @@ const INITIAL_STANDARDS: Standard[] = [
     createdAt: '2026-01-01T00:00:00Z',
   },
   {
-    id: 's3333333-3333-3333-3333-333333333333',
+    id: 'a3333333-3333-3333-3333-333333333333',
     code: 'ASTM D5504-12',
     organization: 'ASTM',
     year: 2012,
@@ -99,7 +104,7 @@ const INITIAL_STANDARDS: Standard[] = [
     createdAt: '2026-01-01T00:00:00Z',
   },
   {
-    id: 's4444444-4444-4444-4444-444444444444',
+    id: 'a4444444-4444-4444-4444-444444444444',
     code: 'GPA 2286',
     organization: 'GPA',
     year: 2014,
@@ -111,91 +116,91 @@ const INITIAL_STANDARDS: Standard[] = [
 
 const INITIAL_MACHINES: Machine[] = [
   {
-    id: 'mac11111-1111-1111-1111-111111111111',
+    id: 'b1111111-1111-1111-1111-111111111111',
     name: 'AC NGA GPA 2286 Extended Gas Analyzer',
     slug: 'ac-nga-gpa-2286-extended',
     model: 'AC NGA Extended C14+',
     shortDescription: 'Giải pháp sắc ký khí chuyên sâu phân tích thành phần khí thiên nhiên, LNG, CNG và tính toán nhiệt trị chính xác.',
     description: 'Hệ thống sắc ký khí chuyên dụng của PAC AC Analytical Controls được thiết kế cấu hình tối ưu để phân tích khí thiên nhiên mở rộng đến hợp chất C14+. Phù hợp cho các nhà máy lọc dầu, trạm xử lý khí, và kho cảng LNG.',
-    mainImageId: 'm1111111-1111-1111-1111-111111111111',
+    mainImageId: 'c1111111-1111-1111-1111-111111111111',
     status: 'published',
     sortOrder: 1,
     publishedAt: '2026-03-01T12:00:00Z',
     createdAt: '2026-03-01T10:00:00Z',
     updatedAt: '2026-09-14T10:00:00Z',
     applications: [
-      { id: 'app1', machineId: 'mac11111-1111-1111-1111-111111111111', title: 'Natural Gas Analysis', description: 'Phân tích khí thiên nhiên thương mại', sortOrder: 1 },
-      { id: 'app2', machineId: 'mac11111-1111-1111-1111-111111111111', title: 'LNG Analysis', description: 'Phân tích thành phần khí hóa lỏng LNG tại cảng nhập/xuất', sortOrder: 2 },
-      { id: 'app3', machineId: 'mac11111-1111-1111-1111-111111111111', title: 'Heating Value Calculation', description: 'Tự động tính toán nhiệt trị và chỉ số Wobbe', sortOrder: 3 },
+      { id: '10000000-0000-0000-0000-000000000001', machineId: 'b1111111-1111-1111-1111-111111111111', title: 'Natural Gas Analysis', description: 'Phân tích khí thiên nhiên thương mại', sortOrder: 1 },
+      { id: '10000000-0000-0000-0000-000000000002', machineId: 'b1111111-1111-1111-1111-111111111111', title: 'LNG Analysis', description: 'Phân tích thành phần khí hóa lỏng LNG tại cảng nhập/xuất', sortOrder: 2 },
+      { id: '10000000-0000-0000-0000-000000000003', machineId: 'b1111111-1111-1111-1111-111111111111', title: 'Heating Value Calculation', description: 'Tự động tính toán nhiệt trị và chỉ số Wobbe', sortOrder: 3 },
     ],
     highlights: [
-      { id: 'hl1', machineId: 'mac11111-1111-1111-1111-111111111111', title: 'Analysis up to C14+', description: 'Mở rộng dải đo lên đến hydrocarbon nặng C14+', icon: 'Zap', sortOrder: 1 },
-      { id: 'hl2', machineId: 'mac11111-1111-1111-1111-111111111111', title: 'Analysis time ≤30 min', description: 'Thời gian phân tích siêu tốc dưới 30 phút', icon: 'Clock', sortOrder: 2 },
-      { id: 'hl3', machineId: 'mac11111-1111-1111-1111-111111111111', title: 'High Repeatability', description: 'Độ lặp lại cao vượt tiêu chuẩn GPA và ASTM', icon: 'CheckCircle', sortOrder: 3 },
+      { id: '20000000-0000-0000-0000-000000000001', machineId: 'b1111111-1111-1111-1111-111111111111', title: 'Analysis up to C14+', description: 'Mở rộng dải đo lên đến hydrocarbon nặng C14+', icon: 'Zap', sortOrder: 1 },
+      { id: '20000000-0000-0000-0000-000000000002', machineId: 'b1111111-1111-1111-1111-111111111111', title: 'Analysis time ≤30 min', description: 'Thời gian phân tích siêu tốc dưới 30 phút', icon: 'Clock', sortOrder: 2 },
+      { id: '20000000-0000-0000-0000-000000000003', machineId: 'b1111111-1111-1111-1111-111111111111', title: 'High Repeatability', description: 'Độ lặp lại cao vượt tiêu chuẩn GPA và ASTM', icon: 'CheckCircle', sortOrder: 3 },
     ],
     specs: [
-      { id: 'sp1', machineId: 'mac11111-1111-1111-1111-111111111111', groupName: 'Performance', specName: 'Analysis time', specValue: '≤ 30 min', unit: '', sortOrder: 1 },
-      { id: 'sp2', machineId: 'mac11111-1111-1111-1111-111111111111', groupName: 'Performance', specName: 'Hydrocarbon Range', specValue: 'C1–C14+', unit: '', sortOrder: 2 },
-      { id: 'sp3', machineId: 'mac11111-1111-1111-1111-111111111111', groupName: 'Sample', specName: 'Sample type', specValue: 'Natural Gas, LNG, CNG', unit: '', sortOrder: 3 },
-      { id: 'sp4', machineId: 'mac11111-1111-1111-1111-111111111111', groupName: 'Sample', specName: 'Max sample pressure', specValue: '375 psi / 25.8 bar', unit: 'psi', sortOrder: 4 },
-      { id: 'sp5', machineId: 'mac11111-1111-1111-1111-111111111111', groupName: 'Environment', specName: 'Operating temperature', specValue: '15–35 °C', unit: '°C', sortOrder: 5 },
-      { id: 'sp6', machineId: 'mac11111-1111-1111-1111-111111111111', groupName: 'Electrical', specName: 'Power supply', specValue: '90–240 VAC ±10%', unit: 'VAC', sortOrder: 6 },
+      { id: '30000000-0000-0000-0000-000000000001', machineId: 'b1111111-1111-1111-1111-111111111111', groupName: 'Performance', specName: 'Analysis time', specValue: '≤ 30 min', unit: '', sortOrder: 1 },
+      { id: '30000000-0000-0000-0000-000000000002', machineId: 'b1111111-1111-1111-1111-111111111111', groupName: 'Performance', specName: 'Hydrocarbon Range', specValue: 'C1–C14+', unit: '', sortOrder: 2 },
+      { id: '30000000-0000-0000-0000-000000000003', machineId: 'b1111111-1111-1111-1111-111111111111', groupName: 'Sample', specName: 'Sample type', specValue: 'Natural Gas, LNG, CNG', unit: '', sortOrder: 3 },
+      { id: '30000000-0000-0000-0000-000000000004', machineId: 'b1111111-1111-1111-1111-111111111111', groupName: 'Sample', specName: 'Max sample pressure', specValue: '375 psi / 25.8 bar', unit: 'psi', sortOrder: 4 },
+      { id: '30000000-0000-0000-0000-000000000005', machineId: 'b1111111-1111-1111-1111-111111111111', groupName: 'Environment', specName: 'Operating temperature', specValue: '15–35 °C', unit: '°C', sortOrder: 5 },
+      { id: '30000000-0000-0000-0000-000000000006', machineId: 'b1111111-1111-1111-1111-111111111111', groupName: 'Electrical', specName: 'Power supply', specValue: '90–240 VAC ±10%', unit: 'VAC', sortOrder: 6 },
     ],
   },
   {
-    id: 'mac22222-2222-2222-2222-222222222222',
+    id: 'b2222222-2222-2222-2222-222222222222',
     name: 'SeNSe² Sulfur Chemiluminescence Detector',
     slug: 'sense-sulfur-chemiluminescence',
     model: 'SeNSe II',
     shortDescription: 'Đầu dò lưu huỳnh phát quang hóa học độ nhạy cực cao cho các dòng mẫu hydrocarbon tinh khiết.',
     description: 'PAC SeNSe² đem lại khả năng phát hiện vết lưu huỳnh ở mức ppb với độ chọn lọc và ổn định cao nhất trên thị trường hiện nay.',
-    mainImageId: 'm2222222-2222-2222-2222-222222222222',
+    mainImageId: 'c2222222-2222-2222-2222-222222222222',
     status: 'published',
     sortOrder: 2,
     publishedAt: '2026-03-05T14:00:00Z',
     createdAt: '2026-03-05T11:20:00Z',
     updatedAt: '2026-09-14T10:00:00Z',
     applications: [
-      { id: 'app4', machineId: 'mac22222-2222-2222-2222-222222222222', title: 'Trace Sulfur in Fuel', description: 'Phát hiện vết lưu huỳnh trong nhiên liệu sạch', sortOrder: 1 },
-      { id: 'app5', machineId: 'mac22222-2222-2222-2222-222222222222', title: 'Petrochemical Catalysts', description: 'Bảo vệ chất xúc tác hóa dầu khỏi ngộ độc lưu huỳnh', sortOrder: 2 },
+      { id: '10000000-0000-0000-0000-000000000004', machineId: 'b2222222-2222-2222-2222-222222222222', title: 'Trace Sulfur in Fuel', description: 'Phát hiện vết lưu huỳnh trong nhiên liệu sạch', sortOrder: 1 },
+      { id: '10000000-0000-0000-0000-000000000005', machineId: 'b2222222-2222-2222-2222-222222222222', title: 'Petrochemical Catalysts', description: 'Bảo vệ chất xúc tác hóa dầu khỏi ngộ độc lưu huỳnh', sortOrder: 2 },
     ],
     highlights: [
-      { id: 'hl4', machineId: 'mac22222-2222-2222-2222-222222222222', title: 'ppb Detection Limit', description: 'Độ nhạy tuyệt hảo ở mức parts-per-billion', icon: 'Shield', sortOrder: 1 },
-      { id: 'hl5', machineId: 'mac22222-2222-2222-2222-222222222222', title: 'Zero Quenching', description: 'Loại bỏ hoàn toàn hiệu ứng dập tắt tín hiệu', icon: 'Sparkles', sortOrder: 2 },
+      { id: '20000000-0000-0000-0000-000000000004', machineId: 'b2222222-2222-2222-2222-222222222222', title: 'ppb Detection Limit', description: 'Độ nhạy tuyệt hảo ở mức parts-per-billion', icon: 'Shield', sortOrder: 1 },
+      { id: '20000000-0000-0000-0000-000000000005', machineId: 'b2222222-2222-2222-2222-222222222222', title: 'Zero Quenching', description: 'Loại bỏ hoàn toàn hiệu ứng dập tắt tín hiệu', icon: 'Sparkles', sortOrder: 2 },
     ],
     specs: [
-      { id: 'sp7', machineId: 'mac22222-2222-2222-2222-222222222222', groupName: 'Performance', specName: 'Detection Limit', specValue: '< 0.5 ppb', unit: 'ppb', sortOrder: 1 },
-      { id: 'sp8', machineId: 'mac22222-2222-2222-2222-222222222222', groupName: 'Performance', specName: 'Linear Dynamic Range', specValue: '> 10^4', unit: '', sortOrder: 2 },
+      { id: '30000000-0000-0000-0000-000000000007', machineId: 'b2222222-2222-2222-2222-222222222222', groupName: 'Performance', specName: 'Detection Limit', specValue: '< 0.5 ppb', unit: 'ppb', sortOrder: 1 },
+      { id: '30000000-0000-0000-0000-000000000008', machineId: 'b2222222-2222-2222-2222-222222222222', groupName: 'Performance', specName: 'Linear Dynamic Range', specValue: '> 10^4', unit: '', sortOrder: 2 },
     ],
   },
   {
-    id: 'mac33333-3333-3333-3333-333333333333',
+    id: 'b3333333-3333-3333-3333-333333333333',
     name: 'OptiDist Automated Distillation Analyzer',
     slug: 'optidist-automated-distillation',
     model: 'OptiDist v4',
     shortDescription: 'Máy chưng cất tự động hoàn toàn theo tiêu chuẩn ASTM D86 cho các sản phẩm xăng dầu.',
     description: 'OptiDist là chuẩn mực vàng trong ngành kiểm nghiệm chưng cất khí quyển, vận hành chỉ với 1 nút bấm (One-Button Operation).',
-    mainImageId: 'm3333333-3333-3333-3333-333333333333',
+    mainImageId: 'c3333333-3333-3333-3333-333333333333',
     status: 'draft',
     sortOrder: 3,
     publishedAt: null,
     createdAt: '2026-03-10T14:45:00Z',
     updatedAt: '2026-09-14T10:00:00Z',
     applications: [
-      { id: 'app6', machineId: 'mac33333-3333-3333-3333-333333333333', title: 'Atmospheric Distillation', description: 'Chưng cất khí quyển xăng dầu thương phẩm', sortOrder: 1 },
+      { id: '10000000-0000-0000-0000-000000000006', machineId: 'b3333333-3333-3333-3333-333333333333', title: 'Atmospheric Distillation', description: 'Chưng cất khí quyển xăng dầu thương phẩm', sortOrder: 1 },
     ],
     highlights: [
-      { id: 'hl6', machineId: 'mac33333-3333-3333-3333-333333333333', title: 'One-Button Start', description: 'Khởi động quy trình chuẩn hóa chỉ bằng một chạm', icon: 'Play', sortOrder: 1 },
+      { id: '20000000-0000-0000-0000-000000000006', machineId: 'b3333333-3333-3333-3333-333333333333', title: 'One-Button Start', description: 'Khởi động quy trình chuẩn hóa chỉ bằng một chạm', icon: 'Play', sortOrder: 1 },
     ],
     specs: [
-      { id: 'sp9', machineId: 'mac33333-3333-3333-3333-333333333333', groupName: 'Performance', specName: 'Temperature range', specValue: '0 to 450 °C', unit: '°C', sortOrder: 1 },
+      { id: '30000000-0000-0000-0000-000000000009', machineId: 'b3333333-3333-3333-3333-333333333333', groupName: 'Performance', specName: 'Temperature range', specValue: '0 to 450 °C', unit: '°C', sortOrder: 1 },
     ],
   },
 ];
 
 const INITIAL_CONTACTS: Contact[] = [
   {
-    id: 'c1111111-1111-1111-1111-111111111111',
+    id: 'e1111111-1111-1111-1111-111111111111',
     fullName: 'Nguyễn Văn Hùng',
     companyName: 'Công ty Cổ phần Lọc Hóa Dầu Bình Sơn (BSR)',
     email: 'hung.nv@bsr.com.vn',
@@ -209,7 +214,7 @@ const INITIAL_CONTACTS: Contact[] = [
     updatedAt: '2026-09-14T09:15:00Z',
   },
   {
-    id: 'c2222222-2222-2222-2222-222222222222',
+    id: 'e2222222-2222-2222-2222-222222222222',
     fullName: 'Trần Thị Mai Phương',
     companyName: 'PV GAS Vũng Tàu',
     email: 'phuong.ttm@pvgas.com.vn',
@@ -223,7 +228,7 @@ const INITIAL_CONTACTS: Contact[] = [
     updatedAt: '2026-09-14T08:00:00Z',
   },
   {
-    id: 'c3333333-3333-3333-3333-333333333333',
+    id: 'e3333333-3333-3333-3333-333333333333',
     fullName: 'Lê Minh Tuấn',
     companyName: 'SGS Vietnam Ltd',
     email: 'tuan.le@sgs.com',
@@ -241,12 +246,12 @@ const INITIAL_CONTACTS: Contact[] = [
 
 const INITIAL_NEWS: NewsEvent[] = [
   {
-    id: 'n1111111-1111-1111-1111-111111111111',
+    id: 'd1111111-1111-1111-1111-111111111111',
     type: 'event',
     title: 'Hội Thảo Công Nghệ Phân Tích Khí Thiên Nhiên & LNG 2026',
     slug: 'hoi-thao-cong-nghe-phan-tich-khi-lng-2026',
     shortDescription: 'LTVN kết hợp cùng chuyên gia PAC toàn cầu tổ chức hội thảo chuyên đề giải pháp phân tích chất lượng khí thiên nhiên.',
-    thumbnailImageId: 'm1111111-1111-1111-1111-111111111111',
+    thumbnailImageId: 'c1111111-1111-1111-1111-111111111111',
     status: 'published',
     publishedAt: '2026-09-01T08:00:00Z',
     eventStartAt: '2026-10-15T09:00:00Z',
@@ -270,12 +275,12 @@ const INITIAL_NEWS: NewsEvent[] = [
     updatedAt: '2026-09-01T08:00:00Z',
   },
   {
-    id: 'n2222222-2222-2222-2222-222222222222',
+    id: 'd2222222-2222-2222-2222-222222222222',
     type: 'news',
     title: 'PAC Ra Mắt Bản Cập Nhật Firmware Thông Minh Cho Đầu Dò SeNSe II',
     slug: 'pac-ra-mat-firmware-thong-minh-sense-ii',
     shortDescription: 'Tăng cường độ ổn định đường nền và giảm thiểu sai số đo lường vết lưu huỳnh trong nhiên liệu sạch.',
-    thumbnailImageId: 'm2222222-2222-2222-2222-222222222222',
+    thumbnailImageId: 'c2222222-2222-2222-2222-222222222222',
     status: 'published',
     publishedAt: '2026-09-10T09:00:00Z',
     authorId: '22222222-2222-2222-2222-222222222222',
@@ -297,7 +302,7 @@ const INITIAL_NEWS: NewsEvent[] = [
   },
 ];
 
-// Helper Storage Manager
+// Helper Storage Manager (Offline-first resilient fallback)
 function getStored<T>(key: string, defaultData: T): T {
   try {
     const item = localStorage.getItem(`ltvn_admin_${key}`);
@@ -315,7 +320,29 @@ function setStored<T>(key: string, data: T): void {
   }
 }
 
-// Data Store Service
+// HTTP request helper with timeout and fallback
+async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T | null> {
+  try {
+    const res = await fetch(endpoint, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options?.headers || {}),
+      },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) {
+      console.warn(`[API] ${options?.method || 'GET'} ${endpoint} status ${res.status}`);
+      return null;
+    }
+    return (await res.json()) as T;
+  } catch (err) {
+    console.warn(`[API] ${options?.method || 'GET'} ${endpoint} network failure:`, err);
+    return null;
+  }
+}
+
+// Data Store Service connecting Admin Portal to NestJS Backend & Neon PostgreSQL
 export const api = {
   // Check backend health
   async checkBackend(): Promise<boolean> {
@@ -328,86 +355,225 @@ export const api = {
   },
 
   // Machines
-  getMachines(): Machine[] {
+  async getMachines(): Promise<Machine[]> {
+    const remote = await apiRequest<Machine[]>('/api/machines');
+    if (remote && Array.isArray(remote)) {
+      setStored('machines', remote);
+      return remote;
+    }
     return getStored('machines', INITIAL_MACHINES);
   },
-  saveMachine(machine: Machine): Machine {
-    const list = this.getMachines();
-    const index = list.findIndex((m) => m.id === machine.id);
-    if (index >= 0) {
-      list[index] = { ...machine, updatedAt: new Date().toISOString() };
+
+  async saveMachine(machine: Machine): Promise<Machine> {
+    let saved: Machine | null = null;
+    const isExisting = Boolean(machine.id && isValidUuid(machine.id));
+
+    if (isExisting) {
+      saved = await apiRequest<Machine>(`/api/machines/${machine.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(machine),
+      });
+    }
+
+    if (!saved) {
+      saved = await apiRequest<Machine>('/api/machines', {
+        method: 'POST',
+        body: JSON.stringify(machine),
+      });
+    }
+
+    const result = saved || {
+      ...machine,
+      id: machine.id || crypto.randomUUID(),
+      updatedAt: new Date().toISOString(),
+      createdAt: machine.createdAt || new Date().toISOString(),
+    };
+
+    const list = getStored('machines', INITIAL_MACHINES);
+    const idx = list.findIndex((m) => m.id === result.id);
+    if (idx >= 0) {
+      list[idx] = result;
     } else {
-      list.unshift({ ...machine, id: crypto.randomUUID(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+      list.unshift(result);
     }
     setStored('machines', list);
-    return machine;
+    return result;
   },
-  deleteMachine(id: string): void {
-    const list = this.getMachines().filter((m) => m.id !== id);
+
+  async deleteMachine(id: string): Promise<void> {
+    if (isValidUuid(id)) {
+      await apiRequest(`/api/machines/${id}`, { method: 'DELETE' });
+    }
+    const list = getStored('machines', INITIAL_MACHINES).filter((m) => m.id !== id);
     setStored('machines', list);
   },
 
   // Standards
-  getStandards(): Standard[] {
+  async getStandards(): Promise<Standard[]> {
+    const remote = await apiRequest<Standard[]>('/api/standards');
+    if (remote && Array.isArray(remote)) {
+      setStored('standards', remote);
+      return remote;
+    }
     return getStored('standards', INITIAL_STANDARDS);
   },
-  saveStandard(standard: Standard): Standard {
-    const list = this.getStandards();
-    const index = list.findIndex((s) => s.id === standard.id);
-    if (index >= 0) {
-      list[index] = standard;
+
+  async saveStandard(standard: Standard): Promise<Standard> {
+    let saved: Standard | null = null;
+    const isExisting = Boolean(standard.id && isValidUuid(standard.id));
+
+    if (isExisting) {
+      saved = await apiRequest<Standard>(`/api/standards/${standard.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(standard),
+      });
+    }
+
+    if (!saved) {
+      saved = await apiRequest<Standard>('/api/standards', {
+        method: 'POST',
+        body: JSON.stringify(standard),
+      });
+    }
+
+    const result = saved || {
+      ...standard,
+      id: standard.id || crypto.randomUUID(),
+      createdAt: standard.createdAt || new Date().toISOString(),
+    };
+
+    const list = getStored('standards', INITIAL_STANDARDS);
+    const idx = list.findIndex((s) => s.id === result.id);
+    if (idx >= 0) {
+      list[idx] = result;
     } else {
-      list.unshift({ ...standard, id: crypto.randomUUID(), createdAt: new Date().toISOString() });
+      list.unshift(result);
     }
     setStored('standards', list);
-    return standard;
+    return result;
   },
-  deleteStandard(id: string): void {
-    const list = this.getStandards().filter((s) => s.id !== id);
+
+  async deleteStandard(id: string): Promise<void> {
+    if (isValidUuid(id)) {
+      await apiRequest(`/api/standards/${id}`, { method: 'DELETE' });
+    }
+    const list = getStored('standards', INITIAL_STANDARDS).filter((s) => s.id !== id);
     setStored('standards', list);
   },
 
   // Media
-  getMedia(): MediaAsset[] {
+  async getMedia(): Promise<MediaAsset[]> {
+    const remote = await apiRequest<MediaAsset[]>('/api/media');
+    if (remote && Array.isArray(remote)) {
+      setStored('media', remote);
+      return remote;
+    }
     return getStored('media', INITIAL_MEDIA);
   },
-  saveMedia(asset: MediaAsset): MediaAsset {
-    const list = this.getMedia();
-    list.unshift(asset);
+
+  async saveMedia(asset: MediaAsset): Promise<MediaAsset> {
+    const saved = await apiRequest<MediaAsset>('/api/media', {
+      method: 'POST',
+      body: JSON.stringify(asset),
+    });
+
+    const result = saved || {
+      ...asset,
+      id: asset.id || crypto.randomUUID(),
+      createdAt: asset.createdAt || new Date().toISOString(),
+    };
+
+    const list = getStored('media', INITIAL_MEDIA);
+    const idx = list.findIndex((m) => m.id === result.id);
+    if (idx >= 0) {
+      list[idx] = result;
+    } else {
+      list.unshift(result);
+    }
     setStored('media', list);
-    return asset;
+    return result;
   },
-  deleteMedia(id: string): void {
-    const list = this.getMedia().filter((m) => m.id !== id);
+
+  async deleteMedia(id: string): Promise<void> {
+    if (isValidUuid(id)) {
+      await apiRequest(`/api/media/${id}`, { method: 'DELETE' });
+    }
+    const list = getStored('media', INITIAL_MEDIA).filter((m) => m.id !== id);
     setStored('media', list);
   },
 
   // News Events
-  getNewsEvents(): NewsEvent[] {
+  async getNewsEvents(): Promise<NewsEvent[]> {
+    const remote = await apiRequest<NewsEvent[]>('/api/news-events');
+    if (remote && Array.isArray(remote)) {
+      setStored('news_events', remote);
+      return remote;
+    }
     return getStored('news_events', INITIAL_NEWS);
   },
-  saveNewsEvent(item: NewsEvent): NewsEvent {
-    const list = this.getNewsEvents();
-    const index = list.findIndex((n) => n.id === item.id);
-    if (index >= 0) {
-      list[index] = { ...item, updatedAt: new Date().toISOString() };
+
+  async saveNewsEvent(item: NewsEvent): Promise<NewsEvent> {
+    let saved: NewsEvent | null = null;
+    const isExisting = Boolean(item.id && isValidUuid(item.id));
+
+    if (isExisting) {
+      saved = await apiRequest<NewsEvent>(`/api/news-events/${item.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(item),
+      });
+    }
+
+    if (!saved) {
+      saved = await apiRequest<NewsEvent>('/api/news-events', {
+        method: 'POST',
+        body: JSON.stringify(item),
+      });
+    }
+
+    const result = saved || {
+      ...item,
+      id: item.id || crypto.randomUUID(),
+      updatedAt: new Date().toISOString(),
+      createdAt: item.createdAt || new Date().toISOString(),
+    };
+
+    const list = getStored('news_events', INITIAL_NEWS);
+    const idx = list.findIndex((n) => n.id === result.id);
+    if (idx >= 0) {
+      list[idx] = result;
     } else {
-      list.unshift({ ...item, id: crypto.randomUUID(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+      list.unshift(result);
     }
     setStored('news_events', list);
-    return item;
+    return result;
   },
-  deleteNewsEvent(id: string): void {
-    const list = this.getNewsEvents().filter((n) => n.id !== id);
+
+  async deleteNewsEvent(id: string): Promise<void> {
+    if (isValidUuid(id)) {
+      await apiRequest(`/api/news-events/${id}`, { method: 'DELETE' });
+    }
+    const list = getStored('news_events', INITIAL_NEWS).filter((n) => n.id !== id);
     setStored('news_events', list);
   },
 
   // Contacts
-  getContacts(): Contact[] {
+  async getContacts(): Promise<Contact[]> {
+    const remote = await apiRequest<Contact[]>('/api/contacts');
+    if (remote && Array.isArray(remote)) {
+      setStored('contacts', remote);
+      return remote;
+    }
     return getStored('contacts', INITIAL_CONTACTS);
   },
-  updateContactStatus(id: string, status: Contact['status'], note?: string): void {
-    const list = this.getContacts();
+
+  async updateContactStatus(id: string, status: Contact['status'], note?: string): Promise<void> {
+    if (isValidUuid(id)) {
+      await apiRequest(`/api/contacts/${id}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status, adminNote: note }),
+      });
+    }
+    const list = getStored('contacts', INITIAL_CONTACTS);
     const target = list.find((c) => c.id === id);
     if (target) {
       target.status = status;
@@ -417,28 +583,66 @@ export const api = {
       setStored('contacts', list);
     }
   },
-  deleteContact(id: string): void {
-    const list = this.getContacts().filter((c) => c.id !== id);
+
+  async deleteContact(id: string): Promise<void> {
+    if (isValidUuid(id)) {
+      await apiRequest(`/api/contacts/${id}`, { method: 'DELETE' });
+    }
+    const list = getStored('contacts', INITIAL_CONTACTS).filter((c) => c.id !== id);
     setStored('contacts', list);
   },
 
   // Users
-  getUsers(): User[] {
+  async getUsers(): Promise<User[]> {
+    const remote = await apiRequest<User[]>('/api/users');
+    if (remote && Array.isArray(remote)) {
+      setStored('users', remote);
+      return remote;
+    }
     return getStored('users', INITIAL_USERS);
   },
-  saveUser(user: User): User {
-    const list = this.getUsers();
-    const index = list.findIndex((u) => u.id === user.id);
-    if (index >= 0) {
-      list[index] = { ...user, updatedAt: new Date().toISOString() };
+
+  async saveUser(user: User): Promise<User> {
+    let saved: User | null = null;
+    const isExisting = Boolean(user.id && isValidUuid(user.id));
+
+    if (isExisting) {
+      saved = await apiRequest<User>(`/api/users/${user.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(user),
+      });
+    }
+
+    if (!saved) {
+      saved = await apiRequest<User>('/api/users', {
+        method: 'POST',
+        body: JSON.stringify(user),
+      });
+    }
+
+    const result = saved || {
+      ...user,
+      id: user.id || crypto.randomUUID(),
+      updatedAt: new Date().toISOString(),
+      createdAt: user.createdAt || new Date().toISOString(),
+    };
+
+    const list = getStored('users', INITIAL_USERS);
+    const idx = list.findIndex((u) => u.id === result.id);
+    if (idx >= 0) {
+      list[idx] = result;
     } else {
-      list.unshift({ ...user, id: crypto.randomUUID(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+      list.unshift(result);
     }
     setStored('users', list);
-    return user;
+    return result;
   },
-  deleteUser(id: string): void {
-    const list = this.getUsers().filter((u) => u.id !== id);
+
+  async deleteUser(id: string): Promise<void> {
+    if (isValidUuid(id)) {
+      await apiRequest(`/api/users/${id}`, { method: 'DELETE' });
+    }
+    const list = getStored('users', INITIAL_USERS).filter((u) => u.id !== id);
     setStored('users', list);
   },
 };
