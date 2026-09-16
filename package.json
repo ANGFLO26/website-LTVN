@@ -15,6 +15,7 @@
     "db:push": "npm --prefix api run db:push",
     "db:migrate": "npm --prefix api run db:migrate",
     "db:studio": "npm --prefix api run db:studio",
+    "db:seed": "npm --prefix api run build && npm --prefix api run db:seed",
     "check:i18n": "node scripts/validate-i18n.mjs",
     "lint": "oxlint src scripts vite.config.ts",
     "preview": "vite preview",
