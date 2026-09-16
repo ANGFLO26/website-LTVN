@@ -16,7 +16,8 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="gioi-thieu" element={<AboutPage />} />
         <Route path="pac" element={<CatalogPage family="pac" />} />
-        <Route path="baker-hughes" element={<CatalogPage family="baker-hughes" />} />
+        {/* Tạm thời đóng trang baker-hughes - Mở lại khi cần hiển thị */}
+        {/* <Route path="baker-hughes" element={<CatalogPage family="baker-hughes" />} /> */}
         <Route path="san-pham/:slug" element={<ProductPage />} />
         <Route path="tin-tuc-su-kien" element={<NewsPage />} />
         <Route path="tin-tuc/:slug" element={<ArticlePage />} />

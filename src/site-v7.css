@@ -728,6 +728,10 @@ textarea:focus-visible {
   gap: 24px;
 }
 
+.home-solution-grid:has(> :only-child) {
+  grid-template-columns: 1fr;
+}
+
 .home-solution-path {
   position: relative;
   display: grid;

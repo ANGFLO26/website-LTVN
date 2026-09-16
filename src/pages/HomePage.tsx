@@ -139,6 +139,7 @@ export function HomePage() {
               </div>
             </Link>
 
+            {/* Tạm thời đóng thẻ Baker Hughes - Mở lại khi cần hiển thị:
             <Link to="/baker-hughes" className="home-solution-path home-solution-valves">
               <div className="home-solution-copy">
                 <span className="home-solution-kicker">BAKER HUGHES</span>
@@ -154,6 +155,7 @@ export function HomePage() {
                 <img src="/images/products/consolidated-2700-transparent.png" alt="Consolidated Safety Valve" loading="lazy" decoding="async" />
               </div>
             </Link>
+            */}
           </div>
 
           <div className="home-flow-bridge" aria-label={t('nextStep')}>

@@ -16,7 +16,8 @@ const navItems: Array<{ to: string; end?: boolean; key?: UiKey; label?: string }
   { to: '/', key: 'home' as const, end: true },
   { to: '/gioi-thieu', key: 'about' as const },
   { to: '/pac', label: 'PAC' },
-  { to: '/baker-hughes', label: 'BAKER HUGHES' },
+  // Tạm thời đóng trang BAKER HUGHES trên menu - Mở lại khi cần hiển thị:
+  // { to: '/baker-hughes', label: 'BAKER HUGHES' },
   { to: '/tin-tuc-su-kien', key: 'news' as const },
   { to: '/lien-he', key: 'contact' as const },
 ]
@@ -136,7 +137,8 @@ function Footer() {
           <h2>{language === 'vi' ? 'Giải pháp' : 'Solutions'}</h2>
           <div className="footer-links">
             <Link to="/pac">PAC · Herzog</Link>
-            <Link to="/baker-hughes">Baker Hughes</Link>
+            {/* Tạm thời đóng liên kết Baker Hughes ở footer - Mở lại khi cần hiển thị: */}
+            {/* <Link to="/baker-hughes">Baker Hughes</Link> */}
           </div>
         </div>
 
@@ -176,9 +178,10 @@ function Footer() {
 function PreFooterCta({ pathname }: { pathname: string }) {
   const { language } = useLanguage()
   const isPacCatalog = pathname === '/pac'
-  const isBakerCatalog = pathname === '/baker-hughes'
+  // Tạm thời đóng trang Baker Hughes:
+  // const isBakerCatalog = pathname === '/baker-hughes'
 
-  if (!isPacCatalog && !isBakerCatalog) return null
+  if (!isPacCatalog) return null
 
   const copy = isPacCatalog
     ? {

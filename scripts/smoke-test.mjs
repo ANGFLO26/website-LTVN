@@ -60,7 +60,7 @@ const routes = [
   ['/', 'Equipment solutions for laboratories and plants.'],
   ['/gioi-thieu', 'Technical capability for industry and laboratories'],
   ['/pac', 'Fuel and laboratory analysis instruments'],
-  ['/baker-hughes', 'Control valve and safety valve solutions'],
+  // ['/baker-hughes', 'Control valve and safety valve solutions'], // Mở lại khi hiển thị lại trang Baker Hughes
   ['/san-pham/optidist', 'OptiDist 2'],
   ['/tin-tuc-su-kien', 'News and Events'],
   [
