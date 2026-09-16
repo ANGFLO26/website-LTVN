@@ -57,8 +57,8 @@ const uiCopy = {
   offices: ['Hệ thống văn phòng', 'Our offices'],
   sendRequest: ['Gửi yêu cầu', 'Send request'],
   formReady: [
-    'Yêu cầu chưa được gửi. Chức năng này sẽ hoạt động sau khi kết nối backend.',
-    'The request has not been sent. Submission will work after the backend is connected.',
+    'Cảm ơn bạn! Yêu cầu tư vấn của bạn đã được gửi thành công. Đội ngũ kỹ thuật LTVN sẽ liên hệ lại sớm nhất.',
+    'Thank you! Your consultation request has been sent successfully. LT Vietnam technical team will contact you shortly.',
   ],
   fullName: ['Họ và tên', 'Full name'],
   company: ['Công ty', 'Company'],

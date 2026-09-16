@@ -102,8 +102,11 @@ export const MediaPage: React.FC<Props> = ({ media, onSave, onDelete }) => {
               alt={item.altText || item.fileName}
               className="media-preview"
               onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80';
+                const target = e.target as HTMLImageElement;
+                if (!target.dataset.fallback) {
+                  target.dataset.fallback = 'true';
+                  target.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect fill='%231e293b' width='400' height='300'/><text fill='%2364748b' font-family='sans-serif' font-size='14' dy='5' font-weight='bold' x='50%' y='50%' text-anchor='middle'>Image Unavailable</text></svg>";
+                }
               }}
             />
             <div className="media-meta">

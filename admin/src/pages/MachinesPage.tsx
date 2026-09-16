@@ -144,7 +144,7 @@ export const MachinesPage: React.FC<Props> = ({
                   <tr key={m.id}>
                     <td>
                       <img
-                        src={img?.publicUrl || 'https://via.placeholder.com/60'}
+                        src={img?.publicUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><rect fill='%231e293b' width='60' height='60'/><text fill='%2364748b' font-family='sans-serif' font-size='9' dy='3' font-weight='bold' x='50%' y='50%' text-anchor='middle'>PAC</text></svg>"}
                         alt={m.name}
                         style={{
                           width: 44,
@@ -180,6 +180,15 @@ export const MachinesPage: React.FC<Props> = ({
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'inline-flex', gap: 6 }}>
+                        <a
+                          href={`http://localhost:5173/san-pham/${m.slug}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="btn-icon"
+                          title="Xem trang sản phẩm trên website"
+                        >
+                          <ExternalLink size={16} color="#38bdf8" />
+                        </a>
                         <button
                           className="btn-icon"
                           title="Sửa máy"
@@ -251,6 +260,12 @@ export const MachinesPage: React.FC<Props> = ({
               onClick={() => setActiveTab('specs')}
             >
               4. Thông Số Kỹ Thuật ({editingMachine.specs?.length || 0})
+            </button>
+            <button
+              className={`sub-tab-btn ${activeTab === 'standards' ? 'active' : ''}`}
+              onClick={() => setActiveTab('standards')}
+            >
+              5. Tiêu Chuẩn ({editingMachine.standards?.length || 0})
             </button>
           </div>
 
@@ -617,6 +632,98 @@ export const MachinesPage: React.FC<Props> = ({
                   </button>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Tab 5: Standards */}
+          {activeTab === 'standards' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                  Liên kết các tiêu chuẩn quốc tế (ASTM, ISO, GPA) áp dụng cho phương pháp thử của thiết bị này
+                </span>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => {
+                    const current = editingMachine.standards || [];
+                    const available = standards.find((s) => !current.some((cs) => cs.standardId === s.id));
+                    if (available) {
+                      current.push({
+                        machineId: editingMachine.id,
+                        standardId: available.id,
+                        note: 'Phương pháp thử kiểm nghiệm',
+                        sortOrder: current.length + 1,
+                        standard: available,
+                      });
+                      setEditingMachine({ ...editingMachine, standards: [...current] });
+                    }
+                  }}
+                >
+                  <PlusCircle size={14} />
+                  <span>Gắn Tiêu Chuẩn</span>
+                </button>
+              </div>
+
+              {(editingMachine.standards || []).length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '30px 10px', color: '#64748b' }}>
+                  Chưa có tiêu chuẩn quốc tế nào được liên kết. Bấm <strong>"Gắn Tiêu Chuẩn"</strong> để thêm.
+                </div>
+              ) : (
+                (editingMachine.standards || []).map((st, idx) => (
+                  <div
+                    key={st.standardId || idx}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '2fr 2fr auto',
+                      gap: 10,
+                      alignItems: 'center',
+                      background: '#1e293b',
+                      padding: 10,
+                      borderRadius: 8,
+                    }}
+                  >
+                    <select
+                      className="form-control"
+                      value={st.standardId}
+                      onChange={(e) => {
+                        const list = [...(editingMachine.standards || [])];
+                        list[idx].standardId = e.target.value;
+                        list[idx].standard = standards.find((s) => s.id === e.target.value);
+                        setEditingMachine({ ...editingMachine, standards: list });
+                      }}
+                    >
+                      {standards.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.code} ({s.organization}) - {s.title?.slice(0, 40)}...
+                        </option>
+                      ))}
+                    </select>
+
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Ghi chú áp dụng (VD: Phương pháp chính...)"
+                      value={st.note || ''}
+                      onChange={(e) => {
+                        const list = [...(editingMachine.standards || [])];
+                        list[idx].note = e.target.value;
+                        setEditingMachine({ ...editingMachine, standards: list });
+                      }}
+                    />
+
+                    <button
+                      className="btn-icon"
+                      title="Bỏ liên kết tiêu chuẩn"
+                      onClick={() => {
+                        const list = (editingMachine.standards || []).filter((_, i) => i !== idx);
+                        setEditingMachine({ ...editingMachine, standards: list });
+                      }}
+                    >
+                      <Trash2 size={16} color="#f87171" />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           )}
         </Modal>

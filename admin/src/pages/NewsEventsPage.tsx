@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Edit2, Trash2, Calendar, MapPin } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Calendar, MapPin, ExternalLink } from 'lucide-react';
 import { StatusBadge } from '../components/StatusBadge';
 import { Modal } from '../components/Modal';
 import type { NewsEvent, MediaAsset } from '../types';
@@ -176,6 +176,15 @@ export const NewsEventsPage: React.FC<Props> = ({ news, media, onSave, onDelete 
                   </td>
                   <td style={{ textAlign: 'right' }}>
                     <div style={{ display: 'inline-flex', gap: 6 }}>
+                      <a
+                        href={`http://localhost:5173/tin-tuc/${item.slug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn-icon"
+                        title="Xem bài viết trên website"
+                      >
+                        <ExternalLink size={16} color="#38bdf8" />
+                      </a>
                       <button
                         className="btn-icon"
                         title="Sửa bài"
