@@ -367,134 +367,1209 @@ const INITIAL_STANDARDS: Standard[] = [
     description: 'Quy chuẩn thiết kế và kiểm định bình áp lực và van an toàn công nghiệp.',
     createdAt: '2026-01-01T00:00:00Z',
   },
+  {
+    id: 'b0000000-0000-4000-8000-000000000010',
+    code: '87/88 Config',
+    organization: 'Masoneilan',
+    year: 2021,
+    title: 'Pneumatic Spring-Diaphragm Actuation Configuration',
+    description: 'Cấu hình tác động: 87: khí đóng (air to close) / 88: khí mở (air to open).',
+    createdAt: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'b0000000-0000-4000-8000-000000000011',
+    code: 'In-situ Testing',
+    organization: 'ASME PTC 25 / Consolidated',
+    year: 2022,
+    title: 'In-situ Safety Valve Set Pressure Testing Method',
+    description: 'Phương pháp kiểm tra áp suất cài đặt của van an toàn tại vị trí lắp đặt thực tế.',
+    createdAt: '2026-01-01T00:00:00Z',
+  },
 ];
 
 const INITIAL_MACHINES: Machine[] = [
   {
-    id: 'd0000001-0000-4000-8000-000000000001',
-    name: 'Thiết bị chưng cất khí quyển tự động (PAC OptiDist 2)',
-    slug: 'optidist',
-    model: 'OptiDist 2',
-    shortDescription: 'Hệ thống chưng cất tự động cho xăng, diesel và nhiên liệu hàng không, hỗ trợ kiểm soát tốc độ chưng cất ổn định.',
-    description: 'PAC OptiDist 2 là hệ thống phân tích chưng cất khí quyển tự động tiên tiến hàng đầu thế giới, đáp ứng hoàn hảo các tiêu chuẩn ASTM D86, ISO 3405 và IP 123. Thiết bị sở hữu công nghệ cảm biến quang học tiên tiến và bộ gia nhiệt thông minh giúp tối ưu hóa quá trình chưng cất chỉ với một thao tác bấm nút.',
-    mainImageId: 'a0000001-0000-4000-8000-000000000001',
-    status: 'published',
-    sortOrder: 1,
-    publishedAt: '2026-01-01T00:00:00Z',
-    createdAt: '2026-01-01T00:00:00Z',
-    updatedAt: '2026-09-14T10:00:00Z',
-    applications: [
-      { id: '10000000-0000-0000-0000-000000000001', machineId: 'd0000001-0000-4000-8000-000000000001', title: 'Xăng thương phẩm & xăng pha ethanol', description: 'Kiểm tra đường cong chưng cất phân đoạn', sortOrder: 1 },
-      { id: '10000000-0000-0000-0000-000000000002', machineId: 'd0000001-0000-4000-8000-000000000001', title: 'Nhiên liệu Diesel (DO)', description: 'Xác định điểm sôi cuối và cặn chưng cất', sortOrder: 2 },
-      { id: '10000000-0000-0000-0000-000000000003', machineId: 'd0000001-0000-4000-8000-000000000001', title: 'Nhiên liệu hàng không Jet A-1', description: 'Đảm bảo nghiêm ngặt tiêu chuẩn bay quốc tế', sortOrder: 3 },
+    "id": "d0000001-0000-4000-8000-000000000001",
+    "name": "Thiết bị chưng cất khí quyển tự động (PAC OptiDist 2)",
+    "slug": "optidist",
+    "model": "OptiDist 2",
+    "shortDescription": "Hệ thống chưng cất tự động cho xăng, diesel và nhiên liệu hàng không, hỗ trợ kiểm soát tốc độ chưng cất ổn định.",
+    "description": "Hệ thống chưng cất tự động cho xăng, diesel và nhiên liệu hàng không, hỗ trợ kiểm soát tốc độ chưng cất ổn định. An automated distillation system for gasoline, diesel and aviation fuel, with stable distillation rate control.",
+    "mainImageId": "a0000001-0000-4000-8000-000000000001",
+    "status": "published",
+    "sortOrder": 1,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000001",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "title": "Xăng",
+        "description": "Gasoline",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000002",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "title": "Diesel",
+        "description": "Diesel",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000003",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "title": "Nhiên liệu hàng không",
+        "description": "Aviation fuel",
+        "sortOrder": 3
+      }
     ],
-    highlights: [
-      { id: '20000000-0000-0000-0000-000000000001', machineId: 'd0000001-0000-4000-8000-000000000001', title: 'Vận hành tự động hoàn toàn', description: 'Chỉ cần nạp mẫu và nhấn nút khởi động', icon: 'zap', sortOrder: 1 },
-      { id: '20000000-0000-0000-0000-000000000002', machineId: 'd0000001-0000-4000-8000-000000000001', title: 'Kiểm soát tốc độ gia nhiệt thông minh', description: 'Tối ưu hóa gia nhiệt chính xác từ điểm sôi đầu đến điểm sôi cuối', icon: 'activity', sortOrder: 2 },
-      { id: '20000000-0000-0000-0000-000000000003', machineId: 'd0000001-0000-4000-8000-000000000001', title: 'An toàn phòng lab tối đa', description: 'Tích hợp cảm biến quang báo cháy và hệ thống dập lửa CO2', icon: 'shield', sortOrder: 3 },
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000001",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "title": "Vận hành tự động với giao diện trực quan",
+        "description": "Automated operation with an intuitive interface",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000002",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "title": "Kiểm soát tốc độ chưng cất trong suốt phép thử",
+        "description": "Controls the distillation rate throughout the test",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000003",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "title": "Giảm thao tác cài đặt nhiệt thủ công",
+        "description": "Reduces manual heating setup",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
     ],
-    specs: [
-      { id: '30000000-0000-0000-0000-000000000001', machineId: 'd0000001-0000-4000-8000-000000000001', groupName: 'Vận hành', specName: 'Phương pháp thử', specValue: 'Chưng cất khí quyển tự động', unit: '', sortOrder: 1 },
-      { id: '30000000-0000-0000-0000-000000000002', machineId: 'd0000001-0000-4000-8000-000000000001', groupName: 'Vận hành', specName: 'Mẫu thử nghiệm', specValue: 'Xăng, Diesel, Nhiên liệu bay Jet A-1', unit: '', sortOrder: 2 },
-      { id: '30000000-0000-0000-0000-000000000003', machineId: 'd0000001-0000-4000-8000-000000000001', groupName: 'Nhiệt độ', specName: 'Dải nhiệt độ đo', specValue: '0 đến 450 °C', unit: '°C', sortOrder: 3 },
-      { id: '30000000-0000-0000-0000-000000000004', machineId: 'd0000001-0000-4000-8000-000000000001', groupName: 'Đo lường', specName: 'Độ chính xác thể tích', specValue: '± 0.1 mL', unit: 'mL', sortOrder: 4 },
-    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000001",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Phương pháp",
+        "specValue": "Chưng cất khí quyển tự động",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000002",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Mẫu thử",
+        "specValue": "Sản phẩm dầu mỏ và nhiên liệu",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000003",
+        "machineId": "d0000001-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Điều khiển",
+        "specValue": "Màn hình cảm ứng tích hợp",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
   },
   {
-    id: 'd0000002-0000-4000-8000-000000000002',
-    name: 'Thiết bị xác định trị số cetane dẫn xuất (Herzog CID 510)',
-    slug: 'cid-510',
-    model: 'CID 510',
-    shortDescription: 'Phân tích chất lượng cháy của nhiên liệu diesel thông qua phép đo thời gian trễ đánh lửa.',
-    description: 'Herzog CID 510 là thiết bị đo trị số cetane dẫn xuất (DCN) thế hệ mới theo tiêu chuẩn ASTM D7668.',
-    mainImageId: 'a0000002-0000-4000-8000-000000000002',
-    status: 'published',
-    sortOrder: 2,
-    publishedAt: '2026-01-02T00:00:00Z',
-    createdAt: '2026-01-02T00:00:00Z',
-    updatedAt: '2026-09-14T10:00:00Z',
-    applications: [
-      { id: '10000000-0000-0000-0000-000000000004', machineId: 'd0000002-0000-4000-8000-000000000002', title: 'Nhiên liệu Diesel truyền thống', description: 'Đo lường thời gian trễ đánh lửa ID', sortOrder: 1 },
-      { id: '10000000-0000-0000-0000-000000000005', machineId: 'd0000002-0000-4000-8000-000000000002', title: 'Nhiên liệu sinh học Biodiesel & HVO', description: 'Đánh giá chất lượng cháy của hỗn hợp sinh học', sortOrder: 2 },
+    "id": "d0000002-0000-4000-8000-000000000001",
+    "name": "Thiết bị xác định trị số cetane dẫn xuất (Herzog CID 510)",
+    "slug": "cid-510",
+    "model": "CID 510",
+    "shortDescription": "Phân tích chất lượng cháy của nhiên liệu diesel thông qua phép đo thời gian trễ đánh lửa.",
+    "description": "Phân tích chất lượng cháy của nhiên liệu diesel thông qua phép đo thời gian trễ đánh lửa. Evaluates diesel fuel ignition quality by measuring ignition delay.",
+    "mainImageId": "a0000002-0000-4000-8000-000000000002",
+    "status": "published",
+    "sortOrder": 2,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000011",
+        "machineId": "d0000002-0000-4000-8000-000000000001",
+        "title": "Diesel",
+        "description": "Diesel",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000012",
+        "machineId": "d0000002-0000-4000-8000-000000000001",
+        "title": "Nhiên liệu sinh học",
+        "description": "Biofuels",
+        "sortOrder": 2
+      }
     ],
-    highlights: [
-      { id: '20000000-0000-0000-0000-000000000004', machineId: 'd0000002-0000-4000-8000-000000000002', title: 'Thời gian phân tích siêu tốc', description: 'Cho kết quả DCN chính xác dưới 20 phút', icon: 'clock', sortOrder: 1 },
-      { id: '20000000-0000-0000-0000-000000000005', machineId: 'd0000002-0000-4000-8000-000000000002', title: 'Tiết kiệm mẫu thử', description: 'Chỉ yêu cầu thể tích mẫu dưới 100 mL', icon: 'droplet', sortOrder: 2 },
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000011",
+        "machineId": "d0000002-0000-4000-8000-000000000001",
+        "title": "Thời gian phân tích ngắn",
+        "description": "Short analysis time",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000012",
+        "machineId": "d0000002-0000-4000-8000-000000000001",
+        "title": "Lượng mẫu nhỏ",
+        "description": "Small sample volume",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000013",
+        "machineId": "d0000002-0000-4000-8000-000000000001",
+        "title": "Phù hợp phòng thí nghiệm kiểm soát chất lượng",
+        "description": "Suitable for quality control laboratories",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
     ],
-    specs: [
-      { id: '30000000-0000-0000-0000-000000000005', machineId: 'd0000002-0000-4000-8000-000000000002', groupName: 'Đo lường', specName: 'Chỉ số đo lường', specValue: 'Trị số Cetane dẫn xuất (DCN)', unit: '', sortOrder: 1 },
-      { id: '30000000-0000-0000-0000-000000000006', machineId: 'd0000002-0000-4000-8000-000000000002', groupName: 'Đo lường', specName: 'Dải đo DCN', specValue: '35 đến 85 DCN', unit: 'DCN', sortOrder: 2 },
-    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000011",
+        "machineId": "d0000002-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Kết quả",
+        "specValue": "Trị số cetane dẫn xuất",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000012",
+        "machineId": "d0000002-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Phương pháp",
+        "specValue": "Buồng đốt thể tích không đổi",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000013",
+        "machineId": "d0000002-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Ứng dụng",
+        "specValue": "Kiểm soát chất lượng nhiên liệu diesel",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
   },
   {
-    id: 'd0000003-0000-4000-8000-000000000003',
-    name: 'Thiết bị đo độ nhớt động học tự động (Herzog HVM 472)',
-    slug: 'hvm-472',
-    model: 'HVM 472',
-    shortDescription: 'Hệ thống đo độ nhớt đa dải, hỗ trợ tự động hóa quy trình phân tích sản phẩm dầu mỏ.',
-    description: 'Herzog HVM 472 là thiết bị đo độ nhớt mao quản tự động đa dải, phân tích cùng lúc hai mẫu độc lập.',
-    mainImageId: 'a0000003-0000-4000-8000-000000000003',
-    status: 'published',
-    sortOrder: 3,
-    publishedAt: '2026-01-03T00:00:00Z',
-    createdAt: '2026-01-03T00:00:00Z',
-    updatedAt: '2026-09-14T10:00:00Z',
-    applications: [
-      { id: '10000000-0000-0000-0000-000000000007', machineId: 'd0000003-0000-4000-8000-000000000003', title: 'Dầu nhờn động cơ và công nghiệp', description: 'Phân tích độ nhớt ở 40°C và 100°C', sortOrder: 1 },
+    "id": "d0000003-0000-4000-8000-000000000001",
+    "name": "Thiết bị đo độ nhớt động học tự động (Herzog HVM 472)",
+    "slug": "hvm-472",
+    "model": "HVM 472",
+    "shortDescription": "Hệ thống đo độ nhớt đa dải, hỗ trợ tự động hóa quy trình phân tích sản phẩm dầu mỏ.",
+    "description": "Hệ thống đo độ nhớt đa dải, hỗ trợ tự động hóa quy trình phân tích sản phẩm dầu mỏ. A multi-range viscosity measurement system that automates petroleum product analysis.",
+    "mainImageId": "a0000003-0000-4000-8000-000000000003",
+    "status": "published",
+    "sortOrder": 3,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000021",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "title": "Dầu nhờn",
+        "description": "Lubricating oils",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000022",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "title": "Nhiên liệu",
+        "description": "Fuels",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000023",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "title": "Sản phẩm dầu mỏ",
+        "description": "Petroleum products",
+        "sortOrder": 3
+      }
     ],
-    highlights: [
-      { id: '20000000-0000-0000-0000-000000000006', machineId: 'd0000003-0000-4000-8000-000000000003', title: 'Hai vị trí đo độc lập', description: 'Phân tích đồng thời hai mẫu', icon: 'layers', sortOrder: 1 },
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000021",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "title": "Đo tự động nhiều dải độ nhớt",
+        "description": "Automatic measurement across multiple viscosity ranges",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000022",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "title": "Giảm thời gian thao tác của kỹ thuật viên",
+        "description": "Reduces operator handling time",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000023",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "title": "Quản lý kết quả trên giao diện tích hợp",
+        "description": "Manages results through the integrated interface",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
     ],
-    specs: [
-      { id: '30000000-0000-0000-0000-000000000007', machineId: 'd0000003-0000-4000-8000-000000000003', groupName: 'Đo lường', specName: 'Dải đo độ nhớt', specValue: '0.3 đến 10,000 mm²/s', unit: 'mm²/s', sortOrder: 1 },
-    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000021",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Đại lượng",
+        "specValue": "Độ nhớt động học",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000022",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Phương pháp",
+        "specValue": "Ống mao quản tự động",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000023",
+        "machineId": "d0000003-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Điều khiển nhiệt",
+        "specValue": "Bể ổn nhiệt tích hợp",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
   },
   {
-    id: 'd0000007-0000-4000-8000-000000000007',
-    name: 'Van điều khiển globe hiệu suất cao (Masoneilan 21000 Series)',
-    slug: 'masoneilan-21000',
-    model: '21000 Series',
-    shortDescription: 'Dòng van điều khiển đa dụng cho các ứng dụng chất lỏng, khí và hơi trong nhà máy công nghiệp.',
-    description: 'Masoneilan 21000 Series là dòng van cầu điều khiển đơn cổng được ứng dụng rộng rãi nhất trong các nhà máy lọc dầu, hóa chất.',
-    mainImageId: 'a0000007-0000-4000-8000-000000000007',
-    status: 'published',
-    sortOrder: 4,
-    publishedAt: '2026-01-07T00:00:00Z',
-    createdAt: '2026-01-07T00:00:00Z',
-    updatedAt: '2026-09-14T10:00:00Z',
-    applications: [
-      { id: '10000000-0000-0000-0000-000000000008', machineId: 'd0000007-0000-4000-8000-000000000007', title: 'Hơi nhiệt độ cao và áp suất cao', description: 'Điều khiển lưu lượng hơi bảo vệ hệ thống', sortOrder: 1 },
+    "id": "d0000004-0000-4000-8000-000000000001",
+    "name": "Thiết bị đo điểm chớp cháy cốc kín Pensky-Martens (Herzog OptiFlash)",
+    "slug": "optiflash-pensky-martens",
+    "model": "OptiFlash",
+    "shortDescription": "Thiết bị tự động xác định điểm chớp cháy cho nhiên liệu, dầu nhờn và các sản phẩm dầu mỏ.",
+    "description": "Thiết bị tự động xác định điểm chớp cháy cho nhiên liệu, dầu nhờn và các sản phẩm dầu mỏ. An automatic instrument for determining the flash point of fuels, lubricating oils and petroleum products.",
+    "mainImageId": "a0000004-0000-4000-8000-000000000004",
+    "status": "published",
+    "sortOrder": 4,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000031",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "title": "Dầu nhờn",
+        "description": "Lubricating oils",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000032",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "title": "Diesel",
+        "description": "Diesel",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000033",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "title": "Sản phẩm dầu mỏ",
+        "description": "Petroleum products",
+        "sortOrder": 3
+      }
     ],
-    highlights: [
-      { id: '20000000-0000-0000-0000-000000000007', machineId: 'd0000007-0000-4000-8000-000000000007', title: 'Cấu trúc thân van hạng nặng', description: 'Độ bền cao, chịu rung động và chênh áp lớn', icon: 'cpu', sortOrder: 1 },
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000031",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "title": "Nhận biết điểm chớp cháy tự động",
+        "description": "Automatic flash point detection",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000032",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "title": "Kiểm soát gia nhiệt chính xác",
+        "description": "Precise heating control",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000033",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "title": "Hỗ trợ quy trình an toàn trong phòng thí nghiệm",
+        "description": "Supports safer laboratory workflows",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
     ],
-    specs: [
-      { id: '30000000-0000-0000-0000-000000000008', machineId: 'd0000007-0000-4000-8000-000000000007', groupName: 'Kỹ thuật van', specName: 'Kích cỡ danh định (Size)', specValue: '3/4 inch đến 8 inch (DN 20 đến DN 200)', unit: '', sortOrder: 1 },
-    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000031",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Cốc thử",
+        "specValue": "Pensky-Martens cốc kín",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000032",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Đánh lửa",
+        "specValue": "Tự động",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000033",
+        "machineId": "d0000004-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Hiển thị",
+        "specValue": "Màn hình điều khiển tích hợp",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
   },
   {
-    id: 'd0000011-0000-4000-8000-000000000011',
-    name: 'Van an toàn cho hệ thống CCGT và hơi cao áp (Consolidated 2700 Series)',
-    slug: 'consolidated-2700',
-    model: '2700 Series',
-    shortDescription: 'Dòng van an toàn được thiết kế cho các hệ thống phát điện tuabin khí chu trình hỗn hợp và dịch vụ hơi.',
-    description: 'Consolidated 2700 Series đáp ứng tiêu chuẩn ASME Section I & Section VIII, được tối ưu hóa đặc biệt cho các bộ sinh hơi HRSG.',
-    mainImageId: 'a0000011-0000-4000-8000-000000000011',
-    status: 'published',
-    sortOrder: 5,
-    publishedAt: '2026-01-11T00:00:00Z',
-    createdAt: '2026-01-11T00:00:00Z',
-    updatedAt: '2026-09-14T10:00:00Z',
-    applications: [
-      { id: '10000000-0000-0000-0000-000000000009', machineId: 'd0000011-0000-4000-8000-000000000011', title: 'Hệ thống lò hơi CCGT / HRSG', description: 'Xả quá áp bảo vệ bao hơi', sortOrder: 1 },
+    "id": "d0000005-0000-4000-8000-000000000001",
+    "name": "Thiết bị chưng cất tự động ở áp suất chân không (Herzog HDV 632)",
+    "slug": "hdv-632",
+    "model": "HDV 632",
+    "shortDescription": "Giải pháp chưng cất chân không cho các sản phẩm dầu mỏ có nhiệt độ sôi cao.",
+    "description": "Giải pháp chưng cất chân không cho các sản phẩm dầu mỏ có nhiệt độ sôi cao. A vacuum distillation solution for high-boiling petroleum products.",
+    "mainImageId": "a0000005-0000-4000-8000-000000000005",
+    "status": "published",
+    "sortOrder": 5,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000041",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "title": "Dầu nặng",
+        "description": "Heavy oils",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000042",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "title": "Dầu nhờn",
+        "description": "Lubricating oils",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000043",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "title": "Phân đoạn chân không",
+        "description": "Vacuum fractions",
+        "sortOrder": 3
+      }
     ],
-    highlights: [
-      { id: '20000000-0000-0000-0000-000000000008', machineId: 'd0000011-0000-4000-8000-000000000011', title: 'Đĩa van Thermodisc chịu nhiệt cao', description: 'Kín tuyệt đối ở 96% áp suất xả', icon: 'check-circle', sortOrder: 1 },
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000041",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "title": "Kiểm soát áp suất chân không",
+        "description": "Vacuum pressure control",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000042",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "title": "Tự động ghi nhận nhiệt độ và thể tích",
+        "description": "Automatically records temperature and volume",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000043",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "title": "Thiết kế phù hợp phòng thí nghiệm công nghiệp",
+        "description": "Designed for industrial laboratories",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
     ],
-    specs: [
-      { id: '30000000-0000-0000-0000-000000000009', machineId: 'd0000011-0000-4000-8000-000000000011', groupName: 'Áp suất & Nhiệt', specName: 'Áp suất cài đặt tối đa', specValue: 'Lên tới 207 bar', unit: 'bar', sortOrder: 1 },
-    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000041",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Phương pháp",
+        "specValue": "Chưng cất chân không",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000042",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Điều khiển áp suất",
+        "specValue": "Tự động",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000043",
+        "machineId": "d0000005-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Dữ liệu",
+        "specValue": "Ghi nhận và xuất báo cáo",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
   },
+  {
+    "id": "d0000006-0000-4000-8000-000000000001",
+    "name": "Thiết bị đo áp suất hơi bão hòa tự động (Herzog HVP 972)",
+    "slug": "hvp-972",
+    "model": "HVP 972",
+    "shortDescription": "Phân tích áp suất hơi của xăng và sản phẩm dầu mỏ trong quy trình kiểm soát chất lượng.",
+    "description": "Phân tích áp suất hơi của xăng và sản phẩm dầu mỏ trong quy trình kiểm soát chất lượng. Measures the vapor pressure of gasoline and petroleum products for quality control.",
+    "mainImageId": "a0000006-0000-4000-8000-000000000006",
+    "status": "published",
+    "sortOrder": 6,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000051",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "title": "Xăng",
+        "description": "Gasoline",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000052",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "title": "Nhiên liệu",
+        "description": "Fuels",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000053",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "title": "Dung môi nhẹ",
+        "description": "Light solvents",
+        "sortOrder": 3
+      }
+    ],
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000051",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "title": "Chuẩn bị mẫu đơn giản",
+        "description": "Simple sample preparation",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000052",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "title": "Điều khiển nhiệt độ tự động",
+        "description": "Automatic temperature control",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000053",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "title": "Kết quả nhanh và dễ theo dõi",
+        "description": "Fast, easy-to-track results",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
+    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000051",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Đại lượng",
+        "specValue": "Áp suất hơi",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000052",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Mẫu thử",
+        "specValue": "Xăng và sản phẩm nhẹ",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000053",
+        "machineId": "d0000006-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Vận hành",
+        "specValue": "Tự động",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
+  },
+  {
+    "id": "d0000007-0000-4000-8000-000000000001",
+    "name": "Van điều khiển globe hiệu suất cao (Masoneilan 21000 Series)",
+    "slug": "masoneilan-21000",
+    "model": "21000 Series",
+    "shortDescription": "Dòng van điều khiển đa dụng cho các ứng dụng chất lỏng, khí và hơi trong nhà máy công nghiệp.",
+    "description": "Dòng van điều khiển đa dụng cho các ứng dụng chất lỏng, khí và hơi trong nhà máy công nghiệp. A general-purpose control valve series for liquid, gas and steam applications in industrial plants.",
+    "mainImageId": "a0000007-0000-4000-8000-000000000007",
+    "status": "published",
+    "sortOrder": 7,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000061",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "title": "Hơi",
+        "description": "Steam",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000062",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "title": "Khí",
+        "description": "Gas",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000063",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "title": "Chất lỏng công nghệ",
+        "description": "Process liquids",
+        "sortOrder": 3
+      }
+    ],
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000061",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "title": "Cấu trúc thân van globe",
+        "description": "Globe-style valve body",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000062",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "title": "Nhiều lựa chọn trim và vật liệu",
+        "description": "Multiple trim and material options",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000063",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "title": "Phù hợp nhiều điều kiện công nghệ",
+        "description": "Suitable for a wide range of process conditions",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
+    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000061",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Kiểu van",
+        "specValue": "Van điều khiển globe",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000062",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Thương hiệu",
+        "specValue": "Masoneilan",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000063",
+        "machineId": "d0000007-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Ứng dụng",
+        "specValue": "Điều khiển lưu lượng và áp suất",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
+  },
+  {
+    "id": "d0000008-0000-4000-8000-000000000001",
+    "name": "Bộ định vị van thông minh (Masoneilan SVI II AP)",
+    "slug": "svi-ii-ap",
+    "model": "SVI II AP",
+    "shortDescription": "Bộ định vị kỹ thuật số hỗ trợ điều khiển chính xác và chẩn đoán tình trạng van.",
+    "description": "Bộ định vị kỹ thuật số hỗ trợ điều khiển chính xác và chẩn đoán tình trạng van. A digital positioner that supports precise control and valve condition diagnostics.",
+    "mainImageId": "a0000008-0000-4000-8000-000000000008",
+    "status": "published",
+    "sortOrder": 8,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000071",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "title": "Van điều khiển",
+        "description": "Control valves",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000072",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "title": "Chẩn đoán van",
+        "description": "Valve diagnostics",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000073",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "title": "Điều khiển quá trình",
+        "description": "Process control",
+        "sortOrder": 3
+      }
+    ],
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000071",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "title": "Hiệu chỉnh và cài đặt số",
+        "description": "Digital calibration and configuration",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000072",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "title": "Hỗ trợ chẩn đoán tình trạng van",
+        "description": "Supports valve condition diagnostics",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000073",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "title": "Tích hợp vào hệ thống điều khiển",
+        "description": "Integrates with process control systems",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
+    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000071",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Thiết bị",
+        "specValue": "Bộ định vị van kỹ thuật số",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000072",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Giao tiếp",
+        "specValue": "HART",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000073",
+        "machineId": "d0000008-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Lắp đặt",
+        "specValue": "Trên bộ truyền động van",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
+  },
+  {
+    "id": "d0000009-0000-4000-8000-000000000001",
+    "name": "Bộ truyền động màng lò xo khí nén (Masoneilan 87/88 Series)",
+    "slug": "actuator-87-88",
+    "model": "87/88 Series",
+    "shortDescription": "Bộ truyền động tuyến tính cho van điều khiển Masoneilan với cấu hình tác động thuận hoặc nghịch.",
+    "description": "Bộ truyền động tuyến tính cho van điều khiển Masoneilan với cấu hình tác động thuận hoặc nghịch. A linear actuator for Masoneilan control valves, available in direct- or reverse-acting configurations.",
+    "mainImageId": "a0000009-0000-4000-8000-000000000009",
+    "status": "published",
+    "sortOrder": 9,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000081",
+        "machineId": "d0000009-0000-4000-8000-000000000001",
+        "title": "Van điều khiển tuyến tính",
+        "description": "Linear control valves",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000082",
+        "machineId": "d0000009-0000-4000-8000-000000000001",
+        "title": "Hệ thống khí nén",
+        "description": "Pneumatic systems",
+        "sortOrder": 2
+      }
+    ],
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000081",
+        "machineId": "d0000009-0000-4000-8000-000000000001",
+        "title": "Cấu trúc màng lò xo",
+        "description": "Spring-diaphragm construction",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000082",
+        "machineId": "d0000009-0000-4000-8000-000000000001",
+        "title": "Dễ bảo trì và hiệu chỉnh",
+        "description": "Easy to maintain and calibrate",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000083",
+        "machineId": "d0000009-0000-4000-8000-000000000001",
+        "title": "Tương thích nhiều dòng van Masoneilan",
+        "description": "Compatible with multiple Masoneilan valve series",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
+    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000081",
+        "machineId": "d0000009-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Kiểu",
+        "specValue": "Bộ truyền động màng lò xo",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000082",
+        "machineId": "d0000009-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Nguồn điều khiển",
+        "specValue": "Khí nén",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000083",
+        "machineId": "d0000009-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Chuyển động",
+        "specValue": "Tuyến tính",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
+  },
+  {
+    "id": "d000000a-0000-4000-8000-000000000001",
+    "name": "Van điều khiển cho ứng dụng hơi (Masoneilan 84000 Series)",
+    "slug": "masoneilan-84000",
+    "model": "84000 Series",
+    "shortDescription": "Van điều khiển được thiết kế cho các điều kiện hơi và chênh áp cao trong nhà máy công nghiệp.",
+    "description": "Van điều khiển được thiết kế cho các điều kiện hơi và chênh áp cao trong nhà máy công nghiệp. A control valve designed for steam service and high differential-pressure conditions in industrial plants.",
+    "mainImageId": "a0000010-0000-4000-8000-000000000010",
+    "status": "published",
+    "sortOrder": 10,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000091",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "title": "Hơi",
+        "description": "Steam",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000092",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "title": "Năng lượng",
+        "description": "Power generation",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000093",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "title": "Quá trình công nghiệp",
+        "description": "Industrial processes",
+        "sortOrder": 3
+      }
+    ],
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000091",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "title": "Thiết kế cho điều kiện hơi",
+        "description": "Designed for steam service",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000092",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "title": "Kiểm soát dòng chảy ổn định",
+        "description": "Stable flow control",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000093",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "title": "Nhiều lựa chọn cấu hình",
+        "description": "Multiple configuration options",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
+    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000091",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Kiểu van",
+        "specValue": "Van điều khiển hơi",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000092",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Thương hiệu",
+        "specValue": "Masoneilan",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000093",
+        "machineId": "d000000a-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Dịch vụ",
+        "specValue": "Hơi và môi chất nhiệt độ cao",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
+  },
+  {
+    "id": "d000000b-0000-4000-8000-000000000001",
+    "name": "Van an toàn cho hệ thống CCGT (Consolidated 2700 Series)",
+    "slug": "consolidated-2700",
+    "model": "2700 Series",
+    "shortDescription": "Dòng van an toàn được thiết kế cho các hệ thống phát điện tuabin khí chu trình hỗn hợp và dịch vụ hơi.",
+    "description": "Dòng van an toàn được thiết kế cho các hệ thống phát điện tuabin khí chu trình hỗn hợp và dịch vụ hơi. A safety valve series designed for combined-cycle gas turbine power systems and steam service.",
+    "mainImageId": "a0000011-0000-4000-8000-000000000011",
+    "status": "published",
+    "sortOrder": 11,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000101",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "title": "Hơi",
+        "description": "Steam",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000102",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "title": "Phát điện",
+        "description": "Power generation",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000103",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "title": "Hệ thống CCGT",
+        "description": "CCGT systems",
+        "sortOrder": 3
+      }
+    ],
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000101",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "title": "Thiết kế bảo vệ quá áp",
+        "description": "Designed for overpressure protection",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000102",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "title": "Thiết kế hướng đến ứng dụng CCGT",
+        "description": "Designed for CCGT applications",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000103",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "title": "Cấu trúc lò xo cho dịch vụ hơi",
+        "description": "Spring-loaded construction for steam service",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
+    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000101",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Kiểu van",
+        "specValue": "Van an toàn lò xo",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000102",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Thương hiệu",
+        "specValue": "Consolidated",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000103",
+        "machineId": "d000000b-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Ứng dụng chính",
+        "specValue": "Phát điện tuabin khí chu trình hỗn hợp",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
+  },
+  {
+    "id": "d000000c-0000-4000-8000-000000000001",
+    "name": "Van an toàn và xả áp (Consolidated 1900/P Series)",
+    "slug": "consolidated-1900",
+    "model": "1900/P Series",
+    "shortDescription": "Dòng van an toàn và xả áp cho ứng dụng hơi, nước bốc hơi và hơi hữu cơ theo ASME Section I.",
+    "description": "Dòng van an toàn và xả áp cho ứng dụng hơi, nước bốc hơi và hơi hữu cơ theo ASME Section I. A safety relief valve series for steam, flashing water and organic vapor service under ASME Section I.",
+    "mainImageId": "a0000012-0000-4000-8000-000000000012",
+    "status": "published",
+    "sortOrder": 12,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000111",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "title": "Hơi",
+        "description": "Steam",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000112",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "title": "Nước bốc hơi",
+        "description": "Flashing water",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000113",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "title": "Hơi hữu cơ",
+        "description": "Organic vapor service",
+        "sortOrder": 3
+      }
+    ],
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000111",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "title": "Đế Thermodisc hỗ trợ độ kín trong dịch vụ hơi",
+        "description": "Thermodisc seat supports tightness in steam service",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000112",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "title": "Có cấu hình thông thường và balanced bellows",
+        "description": "Available in conventional and balanced-bellows configurations",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000113",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "title": "Có cấu hình lò xo lộ thiên để làm mát",
+        "description": "Available with an exposed-spring configuration for cooling",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
+    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000111",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Kiểu van",
+        "specValue": "Van an toàn và xả áp",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000112",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Thương hiệu",
+        "specValue": "Consolidated",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000113",
+        "machineId": "d000000c-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Lưu chất",
+        "specValue": "Hơi, nước bốc hơi và hơi hữu cơ",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
+  },
+  {
+    "id": "d000000d-0000-4000-8000-000000000001",
+    "name": "Thiết bị kiểm tra van điện tử (Consolidated EVT-Pro)",
+    "slug": "evt-pro",
+    "model": "EVT-Pro",
+    "shortDescription": "Thiết bị hỗ trợ kiểm tra áp suất cài đặt của van an toàn trong điều kiện lắp đặt thực tế.",
+    "description": "Thiết bị hỗ trợ kiểm tra áp suất cài đặt của van an toàn trong điều kiện lắp đặt thực tế. A device for checking safety valve set pressure under actual installed conditions.",
+    "mainImageId": "a0000013-0000-4000-8000-000000000013",
+    "status": "published",
+    "sortOrder": 13,
+    "publishedAt": "2026-01-01T00:00:00Z",
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-09-14T10:00:00Z",
+    "applications": [
+      {
+        "id": "10000000-0000-0000-0000-000000000121",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "title": "Kiểm định van",
+        "description": "Valve testing",
+        "sortOrder": 1
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000122",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "title": "Bảo trì nhà máy",
+        "description": "Plant maintenance",
+        "sortOrder": 2
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000123",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "title": "Van an toàn",
+        "description": "Safety valves",
+        "sortOrder": 3
+      }
+    ],
+    "highlights": [
+      {
+        "id": "20000000-0000-0000-0000-000000000121",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "title": "Kiểm tra tại vị trí lắp đặt",
+        "description": "Testing at the installed location",
+        "icon": "check-circle",
+        "sortOrder": 1
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000122",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "title": "Giảm thời gian tháo lắp van",
+        "description": "Reduces valve removal and reinstallation time",
+        "icon": "check-circle",
+        "sortOrder": 2
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000123",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "title": "Hỗ trợ lưu và đánh giá kết quả",
+        "description": "Supports result storage and evaluation",
+        "icon": "check-circle",
+        "sortOrder": 3
+      }
+    ],
+    "specs": [
+      {
+        "id": "30000000-0000-0000-0000-000000000121",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Thiết bị",
+        "specValue": "Thiết bị kiểm tra van điện tử",
+        "unit": "",
+        "sortOrder": 1
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000122",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Ứng dụng",
+        "specValue": "Kiểm tra van an toàn tại chỗ",
+        "unit": "",
+        "sortOrder": 2
+      },
+      {
+        "id": "30000000-0000-0000-0000-000000000123",
+        "machineId": "d000000d-0000-4000-8000-000000000001",
+        "groupName": "Thông số chung",
+        "specName": "Dữ liệu",
+        "specValue": "Ghi nhận kết quả điện tử",
+        "unit": "",
+        "sortOrder": 3
+      }
+    ]
+  }
 ];
 
 const INITIAL_CONTACTS: Contact[] = [
