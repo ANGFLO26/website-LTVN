@@ -3,12 +3,14 @@ import { useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router'
 import { OfficeNetwork } from '../components/OfficeNetwork'
 import { PageIntro } from '../components/PageElements'
-import { offices, products } from '../data'
+import { useSiteData } from '../context/DataContext'
+import { offices } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function ContactPage() {
   const { content, t } = useLanguage()
+  const { products } = useSiteData()
   const [searchParams] = useSearchParams()
   const [submitted, setSubmitted] = useState(false)
   const selectedProduct = searchParams.get('san-pham') ?? ''

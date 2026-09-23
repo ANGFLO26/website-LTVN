@@ -2,7 +2,8 @@ import { RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useDeferredValue, useMemo, useState } from 'react'
 import { EmptyState, PageIntro } from '../components/PageElements'
 import { ProductCard } from '../components/ProductCard'
-import { products, type LocalizedText, type ProductFamily } from '../data'
+import { type LocalizedText, type ProductFamily } from '../data'
+import { useSiteData } from '../context/DataContext'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
@@ -12,11 +13,12 @@ const searchableText = (value: LocalizedText) => `${value.vi} ${value.en}`
 
 export function CatalogPage({ family }: { family: ProductFamily }) {
   const { content, t } = useLanguage()
+  const { products } = useSiteData()
   const [query, setQuery] = useState('')
   const [brand, setBrand] = useState(ALL_FILTER)
   const [category, setCategory] = useState(ALL_FILTER)
   const deferredQuery = useDeferredValue(query)
-  const familyProducts = useMemo(() => products.filter((product) => product.family === family), [family])
+  const familyProducts = useMemo(() => products.filter((product) => product.family === family), [family, products])
   const brands = [ALL_FILTER, ...new Set(familyProducts.map((product) => product.brand))]
   const categories = Array.from(
     new Map(familyProducts.map((product) => [product.category.vi, product.category])).values(),

@@ -1,12 +1,13 @@
 import { ArrowLeft, Check, Phone, Send } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { ProductCard } from '../components/ProductCard'
-import { getProductBySlug, products } from '../data'
+import { useSiteData } from '../context/DataContext'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function ProductPage() {
   const { slug } = useParams()
+  const { getProductBySlug, products } = useSiteData()
   const product = getProductBySlug(slug)
   const { content, t } = useLanguage()
   usePageTitle(product?.model ?? t('productFallbackTitle'))

@@ -3,12 +3,13 @@ import { ArrowRight, ClipboardCheck, LifeBuoy, Wrench } from 'lucide-react'
 import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
 import { SectionHeading } from '../components/PageElements'
-import { newsItems } from '../data'
+import { useSiteData } from '../context/DataContext'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function HomePage() {
   const { language, t } = useLanguage()
+  const { newsItems } = useSiteData()
   const [activeSupportStep, setActiveSupportStep] = useState(0)
   usePageTitle(t('home'))
 

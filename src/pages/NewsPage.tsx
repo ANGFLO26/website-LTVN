@@ -3,21 +3,23 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
 import { EmptyState, PageIntro, SectionHeading } from '../components/PageElements'
-import { newsItems, newsTypeLabels, type NewsType } from '../data'
+import { useSiteData } from '../context/DataContext'
+import { newsTypeLabels, type NewsType } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function NewsPage() {
   const { content, t } = useLanguage()
+  const { newsItems } = useSiteData()
   const [filter, setFilter] = useState<'all' | NewsType>('all')
   usePageTitle(t('news'))
 
   const featured = newsItems.find((item) => item.slug === 'hoi-thao-van-an-toan') ?? newsItems[0]
   const filteredItems = useMemo(
     () => filter === 'all'
-      ? newsItems.filter((item) => item.slug !== featured.slug)
+      ? newsItems.filter((item) => item.slug !== featured?.slug)
       : newsItems.filter((item) => item.type === filter),
-    [featured.slug, filter],
+    [featured?.slug, filter, newsItems],
   )
   const filterOptions = [
     { value: 'all' as const, label: t('updatesAll') },
@@ -38,14 +40,16 @@ export function NewsPage() {
           <a href="#news-feed" className="button button-primary">{t('browseUpdates')} <ArrowRight size={17} aria-hidden="true" /></a>
         }
         aside={
-          <Link to={`/tin-tuc/${featured.slug}`} className="news-hero-feature">
-            <img src={featured.image} alt="" aria-hidden="true" />
-            <div>
-              <span>{t('featuredFieldStory')}</span>
-              <strong>{content(featured.title)}</strong>
-              <small>{content(newsTypeLabels[featured.type])} · {featured.year}</small>
-            </div>
-          </Link>
+          featured ? (
+            <Link to={`/tin-tuc/${featured.slug}`} className="news-hero-feature">
+              <img src={featured.image} alt="" aria-hidden="true" />
+              <div>
+                <span>{t('featuredFieldStory')}</span>
+                <strong>{content(featured.title)}</strong>
+                <small>{content(newsTypeLabels[featured.type])} · {featured.year}</small>
+              </div>
+            </Link>
+          ) : undefined
         }
       />
 

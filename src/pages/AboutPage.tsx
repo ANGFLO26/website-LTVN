@@ -10,12 +10,13 @@ import { Link } from 'react-router'
 import { CustomerShowcase } from '../components/CustomerShowcase'
 import { PageIntro, SectionHeading } from '../components/PageElements'
 import { RegionalPresence } from '../components/RegionalPresence'
-import { newsItems } from '../data'
+import { useSiteData } from '../context/DataContext'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function AboutPage() {
   const { content, language, t } = useLanguage()
+  const { newsItems } = useSiteData()
   usePageTitle(t('about'))
 
   const lifecycle = [

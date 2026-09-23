@@ -1,11 +1,13 @@
 import { ArrowLeft, ArrowRight, CalendarDays } from 'lucide-react'
 import { Link, useParams } from 'react-router'
-import { getNewsBySlug, getProductBySlug, newsTypeLabels } from '../data'
+import { useSiteData } from '../context/DataContext'
+import { newsTypeLabels } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function ArticlePage() {
   const { slug } = useParams()
+  const { getNewsBySlug, getProductBySlug } = useSiteData()
   const item = getNewsBySlug(slug)
   const { content, language, t } = useLanguage()
   usePageTitle(item ? content(item.title) : t('news'))
