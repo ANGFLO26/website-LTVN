@@ -211,12 +211,26 @@ const DICTIONARY: Record<string, string> = {
     'Handover, commissioning and operational training for the PAC OptiDist 2 automated distillation system in fuel analysis.',
   'Hội thảo kỹ thuật van an toàn Consolidated cho ngành năng lượng':
     'Consolidated safety valve technical seminar for the energy sector',
+  'LT Việt Nam phối hợp tổ chức hội thảo bảo dưỡng và kiểm định van an toàn':
+    'LT Vietnam coordinates technical seminar on safety valve maintenance and testing',
   'Chia sẻ giải pháp nâng cao độ tin cậy và tối ưu chu kỳ kiểm tra van an toàn trong nhà máy điện và lọc dầu.':
     'Sharing solutions to improve reliability and optimize safety valve testing intervals in power plants and refineries.',
   'LT Việt Nam cung cấp thiết bị phân tích PAC cho phòng thí nghiệm nhiên liệu hàng không Skypec':
     'LT Vietnam supplies PAC analytical equipment to Skypec aviation fuel laboratory',
+  'Chuyển giao thiết bị xác định điểm đông đặc Phase Technology 70Xi tại Skypec':
+    'Deployment of Phase Technology 70Xi freezing point analyzer at Skypec',
   'Triển khai giải pháp phân tích chất lượng Jet A-1 đáp ứng tiêu chuẩn kiểm định nhiên liệu hàng không nghiêm ngặt.':
     'Deploying Jet A-1 quality analysis solutions compliant with stringent aviation fuel standards.',
+  'TRAO ĐỔI THEO ỨNG DỤNG': 'APPLICATION-LED DISCUSSION',
+  'Bạn đang cần thiết bị xác định điểm đông đặc?': 'Do you need an instrument for freezing-point determination?',
+  'Chia sẻ loại mẫu, phương pháp hoặc tiêu chuẩn áp dụng để đội ngũ kỹ thuật tiếp nhận đúng nhu cầu.':
+    'Share the sample type, method or applicable standard so our technical team can review the right requirement.',
+  'Trao đổi về ứng dụng này': 'Discuss this application',
+  'GIẢI PHÁP LIÊN QUAN': 'RELATED SOLUTION',
+  'Tìm hiểu giải pháp van an toàn cho nhà máy': 'Explore safety valve solutions for industrial plants',
+  'Xem danh mục van an toàn Consolidated và các thiết bị hỗ trợ vận hành hiện có trên website.':
+    'Explore Consolidated safety valves and related operational support equipment available on the website.',
+  'Xem giải pháp van Baker Hughes': 'Explore Baker Hughes valve solutions',
 }
 
 // Regex patterns for automatic term conversion

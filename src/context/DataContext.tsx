@@ -184,7 +184,11 @@ function adaptMachineToProduct(m: ApiMachine): Product {
 }
 
 function adaptNewsToItem(n: ApiNewsEvent): NewsItem {
-  const image = n.thumbnailImage?.publicUrl || '/images/hero/portfolio-hero-v5.png'
+  const image = n.thumbnailImage?.publicUrl || (
+    n.slug === 'chuyen-giao-dfa-70xi'
+      ? '/images/news/phase-dfa-70xi-transparent.png'
+      : '/images/hero/portfolio-hero-v5.png'
+  )
   const year = n.publishedAt
     ? new Date(n.publishedAt).getFullYear().toString()
     : new Date(n.createdAt).getFullYear().toString()
@@ -197,20 +201,48 @@ function adaptNewsToItem(n: ApiNewsEvent): NewsItem {
     }
   }
 
+  let nextAction: NewsItem['nextAction'] = undefined
+  let relatedProduct: string | undefined = undefined
+
+  if (n.slug === 'ban-giao-pac-optidist-2') {
+    relatedProduct = 'optidist'
+  } else if (n.slug === 'hoi-thao-van-an-toan') {
+    nextAction = {
+      eyebrow: autoLocalized('GIẢI PHÁP LIÊN QUAN'),
+      title: autoLocalized('Tìm hiểu giải pháp van an toàn cho nhà máy'),
+      description: autoLocalized(
+        'Xem danh mục van an toàn Consolidated và các thiết bị hỗ trợ vận hành hiện có trên website.',
+      ),
+      label: autoLocalized('Xem giải pháp van Baker Hughes'),
+      to: '/baker-hughes',
+    }
+  } else if (n.slug === 'chuyen-giao-dfa-70xi') {
+    nextAction = {
+      eyebrow: autoLocalized('TRAO ĐỔI THEO ỨNG DỤNG'),
+      title: autoLocalized('Bạn đang cần thiết bị xác định điểm đông đặc?'),
+      description: autoLocalized(
+        'Chia sẻ loại mẫu, phương pháp hoặc tiêu chuẩn áp dụng để đội ngũ kỹ thuật tiếp nhận đúng nhu cầu.',
+      ),
+      label: autoLocalized('Trao đổi về ứng dụng này'),
+      to: '/lien-he?chu-de=phase-70xi',
+    }
+  }
+
+  const type: NewsType =
+    n.slug === 'ban-giao-pac-optidist-2' || n.slug === 'chuyen-giao-dfa-70xi'
+      ? 'project'
+      : (n.type as NewsType) || 'news'
+
   return {
     slug: n.slug,
-    type: (n.type as NewsType) || 'news',
+    type,
     year,
     title: autoLocalized(n.title),
     excerpt: autoLocalized(n.shortDescription || ''),
     image,
-    imageFit: 'cover',
-    relatedProduct:
-      n.slug === 'ban-giao-pac-optidist-2'
-        ? 'optidist'
-        : n.slug === 'hoi-thao-van-an-toan'
-          ? 'consolidated-2700'
-          : undefined,
+    imageFit: n.slug === 'chuyen-giao-dfa-70xi' ? 'contain' : 'cover',
+    relatedProduct,
+    nextAction,
     paragraphs,
   }
 }
@@ -218,7 +250,7 @@ function adaptNewsToItem(n: ApiNewsEvent): NewsItem {
 export function DataProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>(defaultProducts)
   const [newsItems, setNewsItems] = useState<NewsItem[]>(defaultNewsItems)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [isLive, setIsLive] = useState(false)
 
   const fetchData = useCallback(async () => {

@@ -20,6 +20,7 @@ export function ContactPage() {
     || (selectedGroup === 'pac' ? 'group-pac' : '')
     || (selectedGroup === 'baker-hughes' ? 'group-baker-hughes' : '')
     || (selectedTopic === 'phase-70xi' ? 'topic-phase-70xi' : '')
+  const [interest, setInterest] = useState(selectedInterest)
   usePageTitle(t('contact'))
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -114,7 +115,7 @@ export function ContactPage() {
               </label>
               <label className="form-wide">
                 <span>{t('interest')}</span>
-                <select name="product" defaultValue={selectedInterest}>
+                <select name="product" value={interest} onChange={(e) => setInterest(e.target.value)}>
                   <option value="">{t('selectProduct')}</option>
                   <option value="group-pac">{t('pacSolutionInterest')}</option>
                   <option value="group-baker-hughes">{t('bakerSolutionInterest')}</option>

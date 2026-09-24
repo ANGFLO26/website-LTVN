@@ -7,12 +7,19 @@ import { useLanguage } from '../i18n'
 
 export function ProductPage() {
   const { slug } = useParams()
-  const { getProductBySlug, products } = useSiteData()
+  const { getProductBySlug, products, loading } = useSiteData()
   const product = getProductBySlug(slug)
-  const { content, t } = useLanguage()
+  const { content, language, t } = useLanguage()
   usePageTitle(product?.model ?? t('productFallbackTitle'))
 
   if (!product) {
+    if (loading || products.length === 0) {
+      return (
+        <section className="container not-found" style={{ minHeight: '50vh', justifyContent: 'center' }}>
+          <p>{language === 'vi' ? 'Đang tải thông tin sản phẩm...' : 'Loading product information...'}</p>
+        </section>
+      )
+    }
     return (
       <section className="not-found container">
         <span className="eyebrow">404</span>

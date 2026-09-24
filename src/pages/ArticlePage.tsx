@@ -7,12 +7,19 @@ import { useLanguage } from '../i18n'
 
 export function ArticlePage() {
   const { slug } = useParams()
-  const { getNewsBySlug, getProductBySlug } = useSiteData()
+  const { getNewsBySlug, getProductBySlug, newsItems, loading } = useSiteData()
   const item = getNewsBySlug(slug)
   const { content, language, t } = useLanguage()
   usePageTitle(item ? content(item.title) : t('news'))
 
   if (!item) {
+    if (loading || newsItems.length === 0) {
+      return (
+        <section className="container not-found" style={{ minHeight: '50vh', justifyContent: 'center' }}>
+          <p>{language === 'vi' ? 'Đang tải nội dung...' : 'Loading content...'}</p>
+        </section>
+      )
+    }
     return (
       <section className="not-found container">
         <span className="eyebrow">404</span><h1>{t('articleNotFound')}</h1>
