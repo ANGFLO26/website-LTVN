@@ -59,9 +59,10 @@ export class MachinesService {
   }
 
   async findOne(idOrSlug: string) {
+    const isUuid = isValidUuid(idOrSlug);
     const machine = await this.db.query.machines.findFirst({
-      where: (machines, { eq, or }) =>
-        or(eq(machines.id, idOrSlug), eq(machines.slug, idOrSlug)),
+      where: (machines, { eq }) =>
+        isUuid ? eq(machines.id, idOrSlug) : eq(machines.slug, idOrSlug),
       with: {
         mainImage: true,
         specs: true,

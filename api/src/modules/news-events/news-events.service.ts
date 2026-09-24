@@ -20,8 +20,10 @@ export class NewsEventsService {
   }
 
   async findOne(idOrSlug: string) {
+    const isUuid = isValidUuid(idOrSlug);
     const item = await this.db.query.newsEvents.findFirst({
-      where: (news, { eq, or }) => or(eq(news.id, idOrSlug), eq(news.slug, idOrSlug)),
+      where: (news, { eq }) =>
+        isUuid ? eq(news.id, idOrSlug) : eq(news.slug, idOrSlug),
       with: {
         thumbnailImage: true,
         author: true,
