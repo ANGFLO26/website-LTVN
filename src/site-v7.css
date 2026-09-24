@@ -296,7 +296,8 @@ textarea:focus-visible {
 .main-nav {
   display: grid;
   align-self: stretch;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   align-items: stretch;
   padding-inline: clamp(10px, 2vw, 32px);
 }
@@ -3374,6 +3375,7 @@ textarea:focus-visible {
 
   .main-nav.is-open {
     display: grid;
+    grid-auto-flow: row;
     grid-template-columns: 1fr;
   }
 
