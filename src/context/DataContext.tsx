@@ -5,13 +5,13 @@ import {
   newsItems as defaultNewsItems,
   getProductBySlug as getStaticProductBySlug,
   getNewsBySlug as getStaticNewsBySlug,
-  localized,
   type Product,
   type NewsItem,
   type LocalizedText,
   type ProductFamily,
   type NewsType,
 } from '../data'
+import { autoLocalized } from '../services/translator'
 
 // API response types matching NestJS Drizzle endpoints
 export interface ApiMachine {
@@ -99,8 +99,7 @@ export const DataContext = createContext<DataContextType>({
   refreshData: async () => {},
 })
 
-function adaptMachineToProduct(m: ApiMachine, staticMap: Map<string, Product>): Product {
-  const staticProduct = staticMap.get(m.slug)
+function adaptMachineToProduct(m: ApiMachine): Product {
   const isBaker =
     m.slug.startsWith('masoneilan') ||
     m.slug.startsWith('consolidated') ||
@@ -108,76 +107,73 @@ function adaptMachineToProduct(m: ApiMachine, staticMap: Map<string, Product>): 
     m.slug === 'actuator-87-88' ||
     m.slug === 'evt-pro'
 
-  const family: ProductFamily = staticProduct?.family || (isBaker ? 'baker-hughes' : 'pac')
+  const family: ProductFamily = isBaker ? 'baker-hughes' : 'pac'
 
-  let brand = staticProduct?.brand || ''
-  if (!brand) {
-    if (m.model?.includes('Consolidated')) brand = 'Consolidated'
-    else if (m.model?.includes('Masoneilan')) brand = 'Masoneilan'
-    else if (m.model?.includes('Herzog') || m.name?.includes('Herzog')) brand = 'Herzog'
-    else brand = 'PAC'
-  }
+  let brand = ''
+  if (m.model?.includes('Consolidated')) brand = 'Consolidated'
+  else if (m.model?.includes('Masoneilan')) brand = 'Masoneilan'
+  else if (m.model?.includes('Herzog') || m.name?.includes('Herzog')) brand = 'Herzog'
+  else if (m.model?.includes('ISL') || m.name?.includes('ISL')) brand = 'ISL'
+  else brand = 'PAC'
 
-  const category = staticProduct?.category || localized('Thiết bị chuyên dụng', 'Specialized Equipment')
-  const image = m.mainImage?.publicUrl || staticProduct?.image || '/images/products/optidist-2-official.png'
+  let categoryName = 'Thiết bị chuyên dụng'
+  if (m.name.includes('Chưng cất') || m.slug.includes('dist') || m.slug.includes('hdv')) categoryName = 'Chưng cất'
+  else if (m.name.includes('chớp cháy') || m.slug.includes('flash')) categoryName = 'Điểm chớp cháy'
+  else if (m.name.includes('độ nhớt') || m.slug.includes('hvm')) categoryName = 'Độ nhớt'
+  else if (m.name.includes('áp suất hơi') || m.slug.includes('hvp')) categoryName = 'Áp suất hơi'
+  else if (m.name.includes('cetane') || m.slug.includes('cid')) categoryName = 'Số Cetane'
+  else if (m.name.includes('Van điều khiển') || m.slug.includes('valve-21000') || m.slug.includes('valve-84000') || m.slug.includes('valve-41005')) categoryName = 'Van điều khiển'
+  else if (m.name.includes('định vị') || m.slug.includes('svi')) categoryName = 'Bộ định vị'
+  else if (m.name.includes('chấp hành') || m.slug.includes('actuator')) categoryName = 'Cơ cấu chấp hành'
+  else if (m.name.includes('Van an toàn') || m.slug.includes('consolidated')) categoryName = 'Van an toàn'
+  else if (m.name.includes('kiểm tra van') || m.slug.includes('evt')) categoryName = 'Thiết bị kiểm tra van'
+
+  const category = autoLocalized(categoryName)
+  const image = m.mainImage?.publicUrl || `/images/products/${m.slug}.png`
 
   // Applications
   const applications: LocalizedText[] =
     m.applications && m.applications.length > 0
-      ? m.applications.map((app) => {
-          const staticApp = staticProduct?.applications.find((a) => a.vi === app.title)
-          return staticApp || localized(app.title, app.description || app.title)
-        })
-      : staticProduct?.applications || []
+      ? m.applications.map((app) => autoLocalized(app.title))
+      : []
 
   // Highlights
   const highlights: LocalizedText[] =
     m.highlights && m.highlights.length > 0
-      ? m.highlights.map((hl) => {
-          const staticHl = staticProduct?.highlights.find((h) => h.vi === hl.title)
-          return staticHl || localized(hl.title, hl.description || hl.title)
-        })
-      : staticProduct?.highlights || []
+      ? m.highlights.map((hl) => autoLocalized(hl.title))
+      : []
 
   // Specs
   const specifications =
     m.specs && m.specs.length > 0
       ? m.specs.map((s) => {
-          const staticSpec = staticProduct?.specifications.find((sp) => sp.label.vi === s.specName)
           const valText = s.specValue + (s.unit ? ' ' + s.unit : '')
           return {
-            label: staticSpec?.label || localized(s.specName, s.specName),
-            value: staticSpec?.value || localized(valText, valText),
+            label: autoLocalized(s.specName),
+            value: autoLocalized(valText),
           }
         })
-      : staticProduct?.specifications || []
+      : []
 
   // Technical Basis / Standards
   const technicalBasis =
     m.standards && m.standards.length > 0
       ? {
-          label: staticProduct?.technicalBasis?.label || localized('Tiêu chuẩn', 'Standards'),
+          label: autoLocalized('Tiêu chuẩn'),
           values: m.standards.map((st) => {
             const code = st.standard?.code || st.note || ''
-            const staticVal = staticProduct?.technicalBasis?.values.find((v) => v.vi === code)
-            return staticVal || localized(code, code)
+            return autoLocalized(code)
           }),
         }
-      : staticProduct?.technicalBasis || { label: localized('Tiêu chuẩn', 'Standards'), values: [] }
+      : { label: autoLocalized('Tiêu chuẩn'), values: [] }
 
   return {
     slug: m.slug,
     family,
     brand,
-    model: m.model || staticProduct?.model || m.slug,
-    name: staticProduct?.name ? { vi: m.name, en: staticProduct.name.en } : localized(m.name, m.name),
-    summary:
-      staticProduct?.summary && !m.shortDescription
-        ? staticProduct.summary
-        : localized(
-            m.shortDescription || m.description || '',
-            staticProduct?.summary?.en || m.shortDescription || m.description || '',
-          ),
+    model: m.model || m.slug,
+    name: autoLocalized(m.name),
+    summary: autoLocalized(m.shortDescription || m.description || ''),
     category,
     image,
     technicalBasis,
@@ -187,38 +183,34 @@ function adaptMachineToProduct(m: ApiMachine, staticMap: Map<string, Product>): 
   }
 }
 
-function adaptNewsToItem(n: ApiNewsEvent, staticMap: Map<string, NewsItem>): NewsItem {
-  const staticItem = staticMap.get(n.slug)
-  const image = n.thumbnailImage?.publicUrl || staticItem?.image || '/images/hero/portfolio-hero-v5.png'
+function adaptNewsToItem(n: ApiNewsEvent): NewsItem {
+  const image = n.thumbnailImage?.publicUrl || '/images/hero/portfolio-hero-v5.png'
   const year = n.publishedAt
     ? new Date(n.publishedAt).getFullYear().toString()
-    : staticItem?.year || new Date(n.createdAt).getFullYear().toString()
+    : new Date(n.createdAt).getFullYear().toString()
 
   let paragraphs: LocalizedText[] = []
   if (n.content && n.content.blocks && Array.isArray(n.content.blocks)) {
     const pBlocks = n.content.blocks.filter((b) => b.type === 'paragraph' && b.data?.text)
     if (pBlocks.length > 0) {
-      paragraphs = pBlocks.map((b) => {
-        const text = String(b.data.text)
-        const staticP = staticItem?.paragraphs.find((p) => p.vi === text)
-        return staticP || localized(text, text)
-      })
+      paragraphs = pBlocks.map((b) => autoLocalized(String(b.data.text)))
     }
-  }
-  if (paragraphs.length === 0 && staticItem?.paragraphs) {
-    paragraphs = staticItem.paragraphs
   }
 
   return {
     slug: n.slug,
-    type: (n.type as NewsType) || staticItem?.type || 'news',
+    type: (n.type as NewsType) || 'news',
     year,
-    title: staticItem?.title ? { vi: n.title, en: staticItem.title.en } : localized(n.title, n.title),
-    excerpt: localized(n.shortDescription || '', staticItem?.excerpt?.en || n.shortDescription || ''),
+    title: autoLocalized(n.title),
+    excerpt: autoLocalized(n.shortDescription || ''),
     image,
-    imageFit: staticItem?.imageFit || 'cover',
-    relatedProduct: staticItem?.relatedProduct,
-    nextAction: staticItem?.nextAction,
+    imageFit: 'cover',
+    relatedProduct:
+      n.slug === 'ban-giao-pac-optidist-2'
+        ? 'optidist'
+        : n.slug === 'hoi-thao-van-an-toan'
+          ? 'consolidated-2700'
+          : undefined,
     paragraphs,
   }
 }
@@ -228,9 +220,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [newsItems, setNewsItems] = useState<NewsItem[]>(defaultNewsItems)
   const [loading, setLoading] = useState(false)
   const [isLive, setIsLive] = useState(false)
-
-  const staticProductMap = useMemo(() => new Map(defaultProducts.map((p) => [p.slug, p])), [])
-  const staticNewsMap = useMemo(() => new Map(defaultNewsItems.map((n) => [n.slug, n])), [])
 
   const fetchData = useCallback(async () => {
     try {
@@ -244,9 +233,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
       if (machinesRes && machinesRes.ok) {
         const machinesData = (await machinesRes.json()) as ApiMachine[]
         if (Array.isArray(machinesData) && machinesData.length > 0) {
-          // Only show published machines
           const published = machinesData.filter((m) => m.status === 'published')
-          const adaptedProducts = published.map((m) => adaptMachineToProduct(m, staticProductMap))
+          const adaptedProducts = published.map(adaptMachineToProduct)
           setProducts(adaptedProducts)
           hasLiveData = true
         }
@@ -256,7 +244,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         const newsData = (await newsRes.json()) as ApiNewsEvent[]
         if (Array.isArray(newsData) && newsData.length > 0) {
           const published = newsData.filter((n) => n.status === 'published')
-          const adaptedNews = published.map((n) => adaptNewsToItem(n, staticNewsMap))
+          const adaptedNews = published.map(adaptNewsToItem)
           setNewsItems(adaptedNews)
           hasLiveData = true
         }
@@ -264,12 +252,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
       setIsLive(hasLiveData)
     } catch (err) {
-      console.warn('[SiteData] Backend offline or slow, using resilient fallback data:', err)
+      console.warn('[SiteData] Backend offline or slow:', err)
       setIsLive(false)
     } finally {
       setLoading(false)
     }
-  }, [staticProductMap, staticNewsMap])
+  }, [])
 
   useEffect(() => {
     fetchData()
