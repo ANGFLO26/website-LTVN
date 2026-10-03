@@ -1,0 +1,436 @@
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\App.tsx" "b/admin\\src\\App.tsx"
+index 2976aec..30b8013 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\App.tsx"
++++ "b/admin\\src\\App.tsx"
+@@ -1,4 +1,4 @@
+-import React, { useState, useEffect } from 'react';
++import React, { useState, useEffect, useCallback } from 'react';
+ import { Sidebar } from './components/Sidebar';
+ import { Header } from './components/Header';
+ import { DashboardPage } from './pages/DashboardPage';
+@@ -26,6 +26,9 @@ import './admin.css';
+ 
+ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: () => void }) {
+   const [currentView, setCurrentView] = useState<AdminView>('dashboard');
++  const [smallScreen, setSmallScreen] = useState(() => window.matchMedia('(max-width: 1023px)').matches);
++  const [sidebarOpen, setSidebarOpen] = useState(false);
++  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
+   const [backendConnected, setBackendConnected] = useState(false);
+   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+ 
+@@ -230,20 +233,37 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: ()
+ 
+   const newContactsCount = contacts.filter((c) => c.status === 'new').length;
+ 
++  useEffect(() => {
++    const breakpoint = window.matchMedia('(max-width: 1023px)');
++    const update = () => { setSmallScreen(breakpoint.matches); setSidebarOpen(false); };
++    breakpoint.addEventListener('change', update);
++    return () => breakpoint.removeEventListener('change', update);
++  }, []);
++
++  const navigate = (view: AdminView) => { setCurrentView(view); setSidebarOpen(false); };
++
+   return (
+     <div className="admin-shell">
+       {/* Left Sidebar */}
+       <Sidebar
++        smallScreen={smallScreen}
++        isOpen={sidebarOpen}
++        onClose={closeSidebar}
+         user={user}
+         onLogout={onLogout}
+         currentView={currentView}
+-        onNavigate={setCurrentView}
++        onNavigate={navigate}
+         newContactsCount={newContactsCount}
+       />
++      {smallScreen && sidebarOpen && (
++        <button className="sidebar-backdrop" aria-label="Đóng menu quản trị bằng nền" tabIndex={-1}
++          onClick={() => setSidebarOpen(false)} />
++      )}
+ 
+       {/* Main Panel */}
+-      <div className="admin-main">
+-        <Header currentView={currentView} backendConnected={backendConnected} />
++      <div className="admin-main" inert={smallScreen && sidebarOpen}>
++        <Header currentView={currentView} backendConnected={backendConnected}
++          sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen(open => !open)} />
+ 
+         <main className="admin-content">
+           {currentView === 'dashboard' && (
+@@ -252,7 +272,7 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: ()
+               contacts={contacts}
+               news={news}
+               media={media}
+-              onNavigate={setCurrentView}
++              onNavigate={navigate}
+               onUpdateContactStatus={handleUpdateContactStatus}
+             />
+           )}
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\admin.css" "b/admin\\src\\admin.css"
+index d493059..760ed03 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\admin.css"
++++ "b/admin\\src\\admin.css"
+@@ -834,3 +834,93 @@ body {
+     opacity: 1;
+   }
+ }
++
++/* Desktop keeps the existing 260px sidebar and page presentation. */
++.sidebar-toggle, .sidebar-close { display: none; }
++.sidebar-backdrop { position: fixed; inset: 0; z-index: 50; border: 0; background: rgba(0, 0, 0, 0.65); cursor: pointer; }
++.dashboard-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px; }
++.settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
++.page-actions { flex-wrap: wrap; }
++.card, .form-group, .form-row, .filter-bar, .page-title, .media-item { min-width: 0; }
++.form-control { min-width: 0; max-width: 100%; }
++.modal-dialog, .modal-body { min-width: 0; min-height: 0; }
++.modal-header, .modal-footer { flex-shrink: 0; }
++.modal-header h3 { min-width: 0; overflow-wrap: anywhere; }
++.modal-header .btn-icon { flex-shrink: 0; }
++.table-responsive { max-width: 100%; }
++.btn-icon:focus-visible, .menu-item:focus-visible, .sub-tab-btn:focus-visible, .tab-pill:focus-visible {
++  outline: 2px solid var(--primary); outline-offset: 2px;
++}
++
++@media (max-width: 1023px) {
++  .admin-main { margin-left: 0; width: 100%; }
++  .admin-sidebar { width: min(260px, calc(100% - 48px)); z-index: 60; visibility: hidden; transform: translateX(-100%); }
++  .admin-sidebar.is-open { visibility: visible; transform: translateX(0); }
++  .sidebar-toggle, .sidebar-close { display: inline-flex; }
++  .sidebar-brand { padding: 0 12px; gap: 8px; flex-shrink: 0; }
++  .brand-icon { flex-shrink: 0; }
++  .brand-info { min-width: 0; flex: 1; }
++  .sidebar-close { margin-left: auto; flex-shrink: 0; }
++  .sidebar-footer { flex-shrink: 0; }
++  .menu-item { min-height: 44px; }
++  .admin-header { height: auto; min-height: var(--header-height); padding: 12px 24px; flex-wrap: wrap; gap: 12px; }
++  .header-left { min-width: 0; flex: 1 1 280px; gap: 12px; }
++  .header-title { min-width: 0; overflow-wrap: anywhere; }
++  .header-right { min-width: 0; max-width: 100%; flex-wrap: wrap; gap: 8px; }
++  .admin-content { padding: 24px; min-width: 0; }
++  .dashboard-grid, .settings-grid { grid-template-columns: minmax(0, 1fr); }
++  .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
++  .page-top > *, .card-header > * { max-width: 100%; }
++  .search-input { min-width: 0; max-width: 100%; width: 100%; }
++  .search-input input { min-width: 0; }
++  .filter-bar { width: 100%; }
++  .tab-pill-group { flex-wrap: wrap; max-width: 100%; }
++  .tab-pill { min-height: 44px; }
++  .table-responsive .data-table { min-width: 760px; }
++  .table-responsive { overscroll-behavior-x: contain; }
++  .data-table th { white-space: nowrap; }
++  .data-table td { overflow-wrap: anywhere; }
++  .translation-status-badge { white-space: nowrap; }
++  .btn { min-height: 44px; max-width: 100%; justify-content: center; }
++  .btn svg, .btn-icon svg { flex-shrink: 0; }
++  .btn-icon { min-width: 44px; min-height: 44px; }
++  .page-title, .card-title, .settings-grid code, .modal-body { overflow-wrap: anywhere; }
++  .modal-overlay { padding: 12px; }
++  .modal-dialog { max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); }
++  .modal-header, .modal-body, .modal-footer { padding: 16px; }
++  .modal-body { flex: 1 1 auto; }
++  .modal-footer { flex-wrap: wrap; }
++  .modal-footer .btn { flex: 1 1 auto; }
++  .form-row, .editor-grid, .contact-info-grid { grid-template-columns: minmax(0, 1fr) !important; }
++  .editor-fields { flex-direction: column; align-items: stretch !important; }
++  .editor-fields > .form-control { width: 100%; flex: none !important; }
++  .editor-fields > .btn-icon, .editor-grid > .btn-icon { justify-self: end; align-self: flex-end; }
++  .editor-section-header, .translation-header { flex-wrap: wrap; gap: 12px; }
++  .sub-tabs { min-width: 0; max-width: 100%; flex-shrink: 0; }
++  .sub-tab-btn { min-height: 44px; flex-shrink: 0; }
++  .toast-container { left: 12px; right: 12px; bottom: 12px; }
++  .toast { overflow-wrap: anywhere; }
++}
++
++@media (max-width: 600px) {
++  .admin-header { padding: 12px 16px; }
++  .header-left { flex-basis: 100%; }
++  .header-title { font-size: 1rem; }
++  .header-right { width: 100%; justify-content: space-between; gap: 6px; }
++  .header-right .btn { padding: 8px 10px; min-width: 44px; }
++  .header-secondary-label { display: none; }
++  .backend-indicator { width: 44px; height: 44px; justify-content: center; padding: 0; flex-shrink: 0; }
++  .backend-indicator > svg, .backend-indicator > span:last-child { display: none; }
++  .admin-content { padding: 20px 16px; }
++  .page-title h1 { font-size: 1.3rem; }
++  .stat-grid, .media-grid { grid-template-columns: minmax(0, 1fr); }
++  .stat-icon { flex-shrink: 0; }
++  .card-header { padding: 16px; }
++  .form-control { font-size: 16px; }
++  .contact-info-grid > div { min-width: 0; }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .modal-dialog, .toast { animation: none; }
++  .btn, .btn-icon, .menu-item, .stat-card, .media-item { transition: none; }
++}
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Header.tsx" "b/admin\\src\\components\\Header.tsx"
+index b39f925..93a1deb 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Header.tsx"
++++ "b/admin\\src\\components\\Header.tsx"
+@@ -1,5 +1,5 @@
+ import React from 'react';
+-import { Server, Bell, ExternalLink } from 'lucide-react';
++import { Server, Bell, ExternalLink, Menu } from 'lucide-react';
+ import type { AdminView } from '../types';
+ import { buildApiUrl, getPublicSiteUrl, getSwaggerUrl } from '../config/urls';
+ import { ConfiguredExternalLink } from './ConfiguredExternalLink';
+@@ -7,9 +7,11 @@ import { ConfiguredExternalLink } from './ConfiguredExternalLink';
+ interface Props {
+   currentView: AdminView;
+   backendConnected: boolean;
++  sidebarOpen: boolean;
++  onToggleSidebar: () => void;
+ }
+ 
+-export const Header: React.FC<Props> = ({ currentView, backendConnected }) => {
++export const Header: React.FC<Props> = ({ currentView, backendConnected, sidebarOpen, onToggleSidebar }) => {
+   const publicSiteUrl = getPublicSiteUrl();
+   const titles: Record<AdminView, string> = {
+     dashboard: 'Bảng Điều Khiển Tổng Quan',
+@@ -25,6 +27,10 @@ export const Header: React.FC<Props> = ({ currentView, backendConnected }) => {
+   return (
+     <header className="admin-header">
+       <div className="header-left">
++        <button type="button" className="btn-icon sidebar-toggle" onClick={onToggleSidebar}
++          aria-label="Mở menu quản trị" aria-controls="admin-navigation" aria-expanded={sidebarOpen}>
++          <Menu size={22} aria-hidden="true" />
++        </button>
+         <h1 className="header-title">{titles[currentView] || 'Admin Portal'}</h1>
+       </div>
+ 
+@@ -62,7 +68,7 @@ export const Header: React.FC<Props> = ({ currentView, backendConnected }) => {
+           title="Mở tài liệu Swagger OpenAPI"
+           unavailableReason="Chưa cấu hình VITE_API_BASE_URL hợp lệ."
+         >
+-          <span>Swagger Docs</span>
++          <span className="header-secondary-label">Swagger Docs</span>
+           <ExternalLink size={14} />
+         </ConfiguredExternalLink>
+ 
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Sidebar.tsx" "b/admin\\src\\components\\Sidebar.tsx"
+index 4da9b9f..c595ea8 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Sidebar.tsx"
++++ "b/admin\\src\\components\\Sidebar.tsx"
+@@ -1,4 +1,4 @@
+-import React from 'react';
++import React, { useEffect, useRef } from 'react';
+ import {
+   LayoutDashboard,
+   Cpu,
+@@ -9,6 +9,7 @@ import {
+   Users,
+   Settings,
+   LogOut,
++  X,
+ } from 'lucide-react';
+ import type { AdminView } from '../types';
+ import type { AdminIdentity } from '../services/auth';
+@@ -19,6 +20,9 @@ interface Props {
+   currentView: AdminView;
+   onNavigate: (view: AdminView) => void;
+   newContactsCount: number;
++  smallScreen: boolean;
++  isOpen: boolean;
++  onClose: () => void;
+ }
+ 
+ export const Sidebar: React.FC<Props> = ({
+@@ -27,15 +31,47 @@ export const Sidebar: React.FC<Props> = ({
+   currentView,
+   onNavigate,
+   newContactsCount,
++  smallScreen,
++  isOpen,
++  onClose,
+ }) => {
++  const drawer = useRef<HTMLElement>(null);
++  // Only the mobile overlay owns focus/scroll; desktop navigation stays unchanged.
++  useEffect(() => {
++    if (!smallScreen || !isOpen) return;
++    const previousFocus = document.activeElement as HTMLElement | null;
++    const previousOverflow = document.body.style.overflow;
++    document.body.style.overflow = 'hidden';
++    drawer.current?.querySelector<HTMLButtonElement>('.sidebar-close')?.focus();
++    const keydown = (event: KeyboardEvent) => {
++      if (event.key === 'Escape') onClose();
++      if (event.key !== 'Tab') return;
++      const controls = drawer.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
++      if (!controls?.length) return;
++      const first = controls[0], last = controls[controls.length - 1];
++      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
++      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
++    };
++    window.addEventListener('keydown', keydown);
++    return () => {
++      document.body.style.overflow = previousOverflow;
++      window.removeEventListener('keydown', keydown);
++      previousFocus?.focus();
++    };
++  }, [smallScreen, isOpen, onClose]);
+   return (
+-    <aside className="admin-sidebar">
++    <aside ref={drawer} id="admin-navigation" className={`admin-sidebar ${isOpen ? 'is-open' : ''}`}
++      inert={smallScreen && !isOpen} role={smallScreen && isOpen ? 'dialog' : undefined}
++      aria-modal={smallScreen && isOpen ? true : undefined} aria-label="Menu quản trị">
+       <div className="sidebar-brand">
+         <div className="brand-icon">LT</div>
+         <div className="brand-info">
+           <h2>LTVN Portal</h2>
+           <span>PAC Instruments</span>
+         </div>
++        <button type="button" className="btn-icon sidebar-close" onClick={onClose} aria-label="Đóng menu quản trị">
++          <X size={22} aria-hidden="true" />
++        </button>
+       </div>
+ 
+       <nav className="sidebar-menu">
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Modal.tsx" "b/admin\\src\\components\\Modal.tsx"
+index 57ac09e..60c4ae9 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Modal.tsx"
++++ "b/admin\\src\\components\\Modal.tsx"
+@@ -43,8 +43,8 @@ export const Modal: React.FC<Props> = ({
+       >
+         <div className="modal-header">
+           <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{title}</h3>
+-          <button className="btn-icon" onClick={onClose}>
+-            <X size={20} />
++          <button type="button" className="btn-icon" onClick={onClose} aria-label="Đóng hộp thoại">
++            <X size={20} aria-hidden="true" />
+           </button>
+         </div>
+ 
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-DashboardPage.tsx" "b/admin\\src\\pages\\DashboardPage.tsx"
+index a4db889..ff15516 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-DashboardPage.tsx"
++++ "b/admin\\src\\pages\\DashboardPage.tsx"
+@@ -33,7 +33,7 @@ export const DashboardPage: React.FC<Props> = ({
+           <h1>Tổng Quan Hệ Thống</h1>
+           <p>Báo cáo hoạt động website và danh sách thiết bị phân tích PAC</p>
+         </div>
+-        <div style={{ display: 'flex', gap: 10 }}>
++        <div className="page-actions" style={{ display: 'flex', gap: 10 }}>
+           <button className="btn btn-secondary" onClick={() => onNavigate('media')}>
+             <ImageIcon size={16} />
+             <span>Thư Viện Ảnh</span>
+@@ -78,7 +78,7 @@ export const DashboardPage: React.FC<Props> = ({
+       </div>
+ 
+       {/* Grid Content */}
+-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24 }}>
++      <div className="dashboard-grid">
+         {/* Urgent Contacts */}
+         <div className="card">
+           <div className="card-header">
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-MachinesPage.tsx" "b/admin\\src\\pages\\MachinesPage.tsx"
+index 062a2be..8c4cdb5 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-MachinesPage.tsx"
++++ "b/admin\\src\\pages\\MachinesPage.tsx"
+@@ -409,7 +409,7 @@ export const MachinesPage: React.FC<Props> = ({
+           {/* Tab 2: Applications */}
+           {activeTab === 'apps' && (
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
++              <div className="editor-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                   Danh sách ứng dụng phân tích mẫu của máy
+                 </span>
+@@ -435,6 +435,7 @@ export const MachinesPage: React.FC<Props> = ({
+               {(editingMachine.applications || []).map((app, idx) => (
+                 <div
+                   key={app.id || idx}
++                  className="editor-fields"
+                   style={{
+                     display: 'flex',
+                     gap: 12,
+@@ -485,7 +486,7 @@ export const MachinesPage: React.FC<Props> = ({
+           {/* Tab 3: Highlights */}
+           {activeTab === 'highlights' && (
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
++              <div className="editor-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                   Các tính năng nổi bật vượt trội của máy
+                 </span>
+@@ -512,6 +513,7 @@ export const MachinesPage: React.FC<Props> = ({
+               {(editingMachine.highlights || []).map((hl, idx) => (
+                 <div
+                   key={hl.id || idx}
++                  className="editor-fields"
+                   style={{
+                     display: 'flex',
+                     gap: 12,
+@@ -562,7 +564,7 @@ export const MachinesPage: React.FC<Props> = ({
+           {/* Tab 4: Specs */}
+           {activeTab === 'specs' && (
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
++              <div className="editor-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                   Thông số kỹ thuật phân theo nhóm (Performance, Sample, Environment,...)
+                 </span>
+@@ -590,6 +592,7 @@ export const MachinesPage: React.FC<Props> = ({
+               {(editingMachine.specs || []).map((sp, idx) => (
+                 <div
+                   key={sp.id || idx}
++                  className="editor-grid"
+                   style={{
+                     display: 'grid',
+                     gridTemplateColumns: '1.2fr 1.5fr 1.5fr 0.8fr auto',
+@@ -661,7 +664,7 @@ export const MachinesPage: React.FC<Props> = ({
+           {/* Tab 5: Standards */}
+           {activeTab === 'standards' && (
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
++              <div className="editor-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                   Liên kết các tiêu chuẩn quốc tế (ASTM, ISO, GPA) áp dụng cho phương pháp thử của thiết bị này
+                 </span>
+@@ -695,6 +698,7 @@ export const MachinesPage: React.FC<Props> = ({
+                 (editingMachine.standards || []).map((st, idx) => (
+                   <div
+                     key={st.standardId || idx}
++                    className="editor-grid"
+                     style={{
+                       display: 'grid',
+                       gridTemplateColumns: '2fr 2fr auto',
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-NewsEventsPage.tsx" "b/admin\\src\\pages\\NewsEventsPage.tsx"
+index 9bb47c1..2d0cb68 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-NewsEventsPage.tsx"
++++ "b/admin\\src\\pages\\NewsEventsPage.tsx"
+@@ -643,7 +643,7 @@ export const NewsEventsPage: React.FC<Props> = ({ news, media, onSave, onDelete
+ 
+             {/* TAB NGÔN NGỮ (No flags, purely text) */}
+             <div style={{ marginTop: 8 }}>
+-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
++              <div className="translation-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                 <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                   Nội Dung Bản Dịch
+                 </span>
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-SettingsPage.tsx" "b/admin\\src\\pages\\SettingsPage.tsx"
+index 8ba0f8a..06bb147 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-SettingsPage.tsx"
++++ "b/admin\\src\\pages\\SettingsPage.tsx"
+@@ -18,7 +18,7 @@ export const SettingsPage: React.FC<Props> = ({ backendConnected, onRefreshData
+         </div>
+       </div>
+ 
+-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
++      <div className="settings-grid">
+         {/* Backend API Info */}
+         <div className="card">
+           <div className="card-header">
+diff --git "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-ContactsPage.tsx" "b/admin\\src\\pages\\ContactsPage.tsx"
+index c9d3190..7304d3a 100644
+--- "a/artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-ContactsPage.tsx"
++++ "b/admin\\src\\pages\\ContactsPage.tsx"
+@@ -205,6 +205,7 @@ export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDele
+           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+             {/* Customer info card */}
+             <div
++              className="contact-info-grid"
+               style={{
+                 background: '#1e293b',
+                 padding: 16,

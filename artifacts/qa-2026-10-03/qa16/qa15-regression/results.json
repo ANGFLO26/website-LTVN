@@ -1,0 +1,166 @@
+{
+  "passed": 9,
+  "total": 9,
+  "results": [
+    {
+      "id": "T1",
+      "name": "Header website uses configured public origin",
+      "result": "PASS"
+    },
+    {
+      "id": "T2",
+      "name": "Machine preview uses actual public product route",
+      "result": "PASS"
+    },
+    {
+      "id": "T3",
+      "name": "News preview preserves existing VI slug semantics",
+      "result": "PASS"
+    },
+    {
+      "id": "T4",
+      "name": "Both Swagger links share the configured API request base",
+      "result": "PASS"
+    },
+    {
+      "id": "T5",
+      "name": "Trailing slash and /api suffix normalize without duplication",
+      "result": "PASS"
+    },
+    {
+      "id": "T6",
+      "name": "All Admin views have zero clickable loopback destinations",
+      "result": "PASS"
+    },
+    {
+      "id": "T7",
+      "name": "Real development server supports explicit local URLs and dev fallback",
+      "result": "PASS"
+    },
+    {
+      "id": "T8",
+      "name": "Missing/invalid production public config disables all public links",
+      "result": "PASS"
+    },
+    {
+      "id": "T9",
+      "name": "Configured API keeps login/session/edit/save/delete/logout working",
+      "result": "PASS"
+    }
+  ],
+  "proof": {
+    "destinations": [
+      "https://public.qa.example/",
+      "https://public.qa.example/san-pham/qa-machine",
+      "https://public.qa.example/tin-tuc/tin-qa15-vi",
+      "https://api.qa.example/api/docs",
+      "https://api.qa.example/api/docs",
+      "https://public.qa.example/",
+      "https://public.qa.example/san-pham/qa-machine",
+      "https://public.qa.example/tin-tuc/tin-qa15-vi",
+      "http://127.0.0.1:5173/",
+      "http://localhost:5173/",
+      "http://127.0.0.1:52559/api/docs",
+      "http://127.0.0.1:52559/api/docs"
+    ],
+    "mutations": [
+      {
+        "origin": "https://api.qa.example",
+        "path": "/api/machines/2b5b1bbc-5419-4c7e-8749-79d5eaaecb6a",
+        "method": "PUT",
+        "bearer": true
+      },
+      {
+        "origin": "https://api.qa.example",
+        "path": "/api/machines/2b5b1bbc-5419-4c7e-8749-79d5eaaecb6a",
+        "method": "DELETE",
+        "bearer": true
+      }
+    ],
+    "externalNetwork": "blocked or mocked",
+    "migration": "NOT EXECUTED",
+    "staticSource": "PASS: public routes, real Swagger mount, no component loopback literals/window.open",
+    "apiOrigin": "https://api.qa.example",
+    "visibleHrefInventory": [
+      {
+        "view": "Dashboard",
+        "href": "https://public.qa.example/"
+      },
+      {
+        "view": "Dashboard",
+        "href": "https://api.qa.example/api/docs"
+      },
+      {
+        "view": "Máy Phân Tích PAC",
+        "href": "https://public.qa.example/"
+      },
+      {
+        "view": "Máy Phân Tích PAC",
+        "href": "https://api.qa.example/api/docs"
+      },
+      {
+        "view": "Máy Phân Tích PAC",
+        "href": "https://public.qa.example/san-pham/qa-machine"
+      },
+      {
+        "view": "Tiêu Chuẩn Quốc Tế",
+        "href": "https://public.qa.example/"
+      },
+      {
+        "view": "Tiêu Chuẩn Quốc Tế",
+        "href": "https://api.qa.example/api/docs"
+      },
+      {
+        "view": "Thư Viện Media",
+        "href": "https://public.qa.example/"
+      },
+      {
+        "view": "Thư Viện Media",
+        "href": "https://api.qa.example/api/docs"
+      },
+      {
+        "view": "Tin Tức & Sự Kiện",
+        "href": "https://public.qa.example/"
+      },
+      {
+        "view": "Tin Tức & Sự Kiện",
+        "href": "https://api.qa.example/api/docs"
+      },
+      {
+        "view": "Tin Tức & Sự Kiện",
+        "href": "https://public.qa.example/tin-tuc/tin-qa15-vi"
+      },
+      {
+        "view": "Yêu Cầu Liên Hệ",
+        "href": "https://public.qa.example/"
+      },
+      {
+        "view": "Yêu Cầu Liên Hệ",
+        "href": "https://api.qa.example/api/docs"
+      },
+      {
+        "view": "Tài Khoản Quản Trị",
+        "href": "https://public.qa.example/"
+      },
+      {
+        "view": "Tài Khoản Quản Trị",
+        "href": "https://api.qa.example/api/docs"
+      },
+      {
+        "view": "Cấu Hình API",
+        "href": "https://public.qa.example/"
+      },
+      {
+        "view": "Cấu Hình API",
+        "href": "https://api.qa.example/api/docs"
+      },
+      {
+        "view": "Cấu Hình API",
+        "href": "https://api.qa.example/api/docs"
+      }
+    ],
+    "productionClickableLoopbackCount": 0
+  },
+  "pageErrors": [],
+  "unexpectedRequests": []
+}

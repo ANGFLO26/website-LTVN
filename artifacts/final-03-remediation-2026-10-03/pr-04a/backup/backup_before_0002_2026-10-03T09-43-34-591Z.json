@@ -1,0 +1,1051 @@
+{
+  "timestamp": "2026-10-03T09:43:34.594Z",
+  "database": "neondb",
+  "tables": {
+    "users": [
+      {
+        "id": "11111111-1111-4111-8111-111111111111",
+        "email": "admin@ltvietnam.com.vn",
+        "password_hash": "$2a$12$e8xH.z6iKqU8b3pU4jG1..s8x7R9y4jF6n1qP8oR3iK9u7m5v",
+        "full_name": "Quản Trị Viên Hệ Thống",
+        "role": "admin",
+        "status": "active",
+        "last_login_at": null,
+        "created_at": "2026-01-10T08:00:00.000Z",
+        "updated_at": "2026-09-14T22:30:00.000Z",
+        "deleted_at": null,
+        "failed_login_attempts": 0,
+        "locked_until": null
+      },
+      {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "email": "editor@ltvietnam.com.vn",
+        "password_hash": "$2a$12$e8xH.z6iKqU8b3pU4jG1..s8x7R9y4jF6n1qP8oR3iK9u7m5v",
+        "full_name": "Biên Tập Kỹ Thuật",
+        "role": "editor",
+        "status": "active",
+        "last_login_at": null,
+        "created_at": "2026-02-15T09:30:00.000Z",
+        "updated_at": "2026-09-14T14:15:00.000Z",
+        "deleted_at": null,
+        "failed_login_attempts": 0,
+        "locked_until": null
+      }
+    ],
+    "machines": [
+      {
+        "id": "d0000000-0000-4000-8000-000000000002",
+        "name": "Thiết bị xác định trị số cetane dẫn xuất (Herzog CID 510)",
+        "slug": "cid-510",
+        "model": "CID 510",
+        "short_description": "Phân tích chất lượng cháy của nhiên liệu diesel thông qua phép đo thời gian trễ đánh lửa.",
+        "description": "Herzog CID 510 - Thiết bị xác định trị số cetane dẫn xuất. Phân tích chất lượng cháy của nhiên liệu diesel thông qua phép đo thời gian trễ đánh lửa.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000002",
+        "status": "published",
+        "sort_order": 2,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-000000000003",
+        "name": "Thiết bị đo độ nhớt động học tự động (Herzog HVM 472)",
+        "slug": "hvm-472",
+        "model": "HVM 472",
+        "short_description": "Hệ thống đo độ nhớt đa dải, hỗ trợ tự động hóa quy trình phân tích sản phẩm dầu mỏ.",
+        "description": "Herzog HVM 472 - Thiết bị đo độ nhớt động học tự động. Hệ thống đo độ nhớt đa dải, hỗ trợ tự động hóa quy trình phân tích sản phẩm dầu mỏ.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000003",
+        "status": "published",
+        "sort_order": 3,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-000000000004",
+        "name": "Thiết bị đo điểm chớp cháy cốc kín Pensky-Martens (Herzog OptiFlash)",
+        "slug": "optiflash-pensky-martens",
+        "model": "OptiFlash",
+        "short_description": "Thiết bị tự động xác định điểm chớp cháy cho nhiên liệu, dầu nhờn và các sản phẩm dầu mỏ.",
+        "description": "Herzog OptiFlash - Thiết bị đo điểm chớp cháy cốc kín Pensky-Martens. Thiết bị tự động xác định điểm chớp cháy cho nhiên liệu, dầu nhờn và các sản phẩm dầu mỏ.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000004",
+        "status": "published",
+        "sort_order": 4,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-000000000005",
+        "name": "Thiết bị chưng cất tự động ở áp suất chân không (Herzog HDV 632)",
+        "slug": "hdv-632",
+        "model": "HDV 632",
+        "short_description": "Giải pháp chưng cất chân không cho các sản phẩm dầu mỏ có nhiệt độ sôi cao.",
+        "description": "Herzog HDV 632 - Thiết bị chưng cất tự động ở áp suất chân không. Giải pháp chưng cất chân không cho các sản phẩm dầu mỏ có nhiệt độ sôi cao.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000005",
+        "status": "published",
+        "sort_order": 5,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-000000000006",
+        "name": "Thiết bị đo áp suất hơi bão hòa tự động (Herzog HVP 972)",
+        "slug": "hvp-972",
+        "model": "HVP 972",
+        "short_description": "Phân tích áp suất hơi của xăng và sản phẩm dầu mỏ trong quy trình kiểm soát chất lượng.",
+        "description": "Herzog HVP 972 - Thiết bị đo áp suất hơi bão hòa tự động. Phân tích áp suất hơi của xăng và sản phẩm dầu mỏ trong quy trình kiểm soát chất lượng.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000006",
+        "status": "published",
+        "sort_order": 6,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-000000000007",
+        "name": "Van điều khiển globe hiệu suất cao (Masoneilan 21000 Series)",
+        "slug": "masoneilan-21000",
+        "model": "21000 Series",
+        "short_description": "Dòng van điều khiển đa dụng cho các ứng dụng chất lỏng, khí và hơi trong nhà máy công nghiệp.",
+        "description": "Masoneilan 21000 Series - Van điều khiển globe hiệu suất cao. Dòng van điều khiển đa dụng cho các ứng dụng chất lỏng, khí và hơi trong nhà máy công nghiệp.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000007",
+        "status": "published",
+        "sort_order": 7,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-000000000008",
+        "name": "Bộ định vị van thông minh (Masoneilan SVI II AP)",
+        "slug": "svi-ii-ap",
+        "model": "SVI II AP",
+        "short_description": "Bộ định vị kỹ thuật số hỗ trợ điều khiển chính xác và chẩn đoán tình trạng van.",
+        "description": "Masoneilan SVI II AP - Bộ định vị van thông minh. Bộ định vị kỹ thuật số hỗ trợ điều khiển chính xác và chẩn đoán tình trạng van.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000008",
+        "status": "published",
+        "sort_order": 8,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-000000000009",
+        "name": "Bộ truyền động màng lò xo khí nén (Masoneilan 87/88 Series)",
+        "slug": "actuator-87-88",
+        "model": "87/88 Series",
+        "short_description": "Bộ truyền động tuyến tính cho van điều khiển Masoneilan với cấu hình tác động thuận hoặc nghịch.",
+        "description": "Masoneilan 87/88 Series - Bộ truyền động màng lò xo khí nén. Bộ truyền động tuyến tính cho van điều khiển Masoneilan với cấu hình tác động thuận hoặc nghịch.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000009",
+        "status": "published",
+        "sort_order": 9,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-00000000000a",
+        "name": "Van điều khiển cho ứng dụng hơi (Masoneilan 84000 Series)",
+        "slug": "masoneilan-84000",
+        "model": "84000 Series",
+        "short_description": "Van điều khiển được thiết kế cho các điều kiện hơi và chênh áp cao trong nhà máy công nghiệp.",
+        "description": "Masoneilan 84000 Series - Van điều khiển cho ứng dụng hơi. Van điều khiển được thiết kế cho các điều kiện hơi và chênh áp cao trong nhà máy công nghiệp.",
+        "main_image_id": "a0000000-0000-4000-8000-00000000000a",
+        "status": "published",
+        "sort_order": 10,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-00000000000b",
+        "name": "Van an toàn cho hệ thống CCGT (Consolidated 2700 Series)",
+        "slug": "consolidated-2700",
+        "model": "2700 Series",
+        "short_description": "Dòng van an toàn được thiết kế cho các hệ thống phát điện tuabin khí chu trình hỗn hợp và dịch vụ hơi.",
+        "description": "Consolidated 2700 Series - Van an toàn cho hệ thống CCGT. Dòng van an toàn được thiết kế cho các hệ thống phát điện tuabin khí chu trình hỗn hợp và dịch vụ hơi.",
+        "main_image_id": "a0000000-0000-4000-8000-00000000000b",
+        "status": "published",
+        "sort_order": 11,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-00000000000c",
+        "name": "Van an toàn và xả áp (Consolidated 1900/P Series)",
+        "slug": "consolidated-1900",
+        "model": "1900/P Series",
+        "short_description": "Dòng van an toàn và xả áp cho ứng dụng hơi, nước bốc hơi và hơi hữu cơ theo ASME Section I.",
+        "description": "Consolidated 1900/P Series - Van an toàn và xả áp. Dòng van an toàn và xả áp cho ứng dụng hơi, nước bốc hơi và hơi hữu cơ theo ASME Section I.",
+        "main_image_id": "a0000000-0000-4000-8000-00000000000c",
+        "status": "published",
+        "sort_order": 12,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-00000000000d",
+        "name": "Thiết bị kiểm tra van điện tử (Consolidated EVT-Pro)",
+        "slug": "evt-pro",
+        "model": "EVT-Pro",
+        "short_description": "Thiết bị hỗ trợ kiểm tra áp suất cài đặt của van an toàn trong điều kiện lắp đặt thực tế.",
+        "description": "Consolidated EVT-Pro - Thiết bị kiểm tra van điện tử. Thiết bị hỗ trợ kiểm tra áp suất cài đặt của van an toàn trong điều kiện lắp đặt thực tế.",
+        "main_image_id": "a0000000-0000-4000-8000-00000000000d",
+        "status": "published",
+        "sort_order": 13,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-23T11:37:15.021Z",
+        "deleted_at": null
+      },
+      {
+        "id": "d0000000-0000-4000-8000-000000000001",
+        "name": "Thiết bị chưng cất khí quyển tự động (PAC OptiDist 2)",
+        "slug": "optidist",
+        "model": "OptiDist 2",
+        "short_description": "Hệ thống chưng cất tự động cho xăng, diesel và nhiên liệu hàng không, hỗ trợ kiểm soát tốc độ chưng cất ổn định.",
+        "description": "PAC OptiDist 2 - Thiết bị chưng cất khí quyển tự động. Hệ thống chưng cất tự động cho xăng, diesel và nhiên liệu hàng không, hỗ trợ kiểm soát tốc độ chưng cất ổn định.",
+        "main_image_id": "a0000000-0000-4000-8000-000000000001",
+        "status": "published",
+        "sort_order": 1,
+        "published_at": "2026-01-01T00:00:00.000Z",
+        "created_by": "11111111-1111-4111-8111-111111111111",
+        "updated_by": null,
+        "created_at": "2026-09-23T11:37:15.021Z",
+        "updated_at": "2026-09-24T16:01:16.078Z",
+        "deleted_at": null
+      }
+    ],
+    "standards": [
+      {
+        "id": "b0000000-0000-4000-8000-000000000001",
+        "code": "ASTM D86",
+        "organization": "ASTM",
+        "year": 2023,
+        "title": "Standard Test Method for Distillation of Petroleum Products and Liquid Fuels at Atmospheric Pressure",
+        "description": "Xác định khoảng chưng cất của các sản phẩm dầu mỏ ở áp suất khí quyển.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000002",
+        "code": "ISO 3405",
+        "organization": "ISO",
+        "year": 2019,
+        "title": "Petroleum and related products — Determination of distillation characteristics at atmospheric pressure",
+        "description": "Tiêu chuẩn quốc tế xác định đặc tính chưng cất ở áp suất khí quyển.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000003",
+        "code": "IP 123",
+        "organization": "Energy Institute",
+        "year": 2019,
+        "title": "Petroleum products — Determination of distillation characteristics at atmospheric pressure",
+        "description": "Phương pháp kiểm nghiệm chưng cất khí quyển theo tiêu chuẩn Viện Năng lượng Anh Quốc.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000004",
+        "code": "ASTM D7668",
+        "organization": "ASTM",
+        "year": 2022,
+        "title": "Standard Test Method for Determination of Derived Cetane Number (DCN) of Diesel Fuel Oils",
+        "description": "Xác định trị số cetane dẫn xuất (DCN) của diesel bằng buồng đốt thể tích không đổi.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000005",
+        "code": "ASTM D445",
+        "organization": "ASTM",
+        "year": 2021,
+        "title": "Standard Test Method for Kinematic Viscosity of Transparent and Opaque Liquids",
+        "description": "Đo độ nhớt động học của chất lỏng trong suốt và mờ đục.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000006",
+        "code": "ISO 3104",
+        "organization": "ISO",
+        "year": 2020,
+        "title": "Petroleum products — Transparent and opaque liquids — Determination of kinematic viscosity",
+        "description": "Tiêu chuẩn ISO xác định độ nhớt động học và tính toán độ nhớt động lực học.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000007",
+        "code": "ASTM D93",
+        "organization": "ASTM",
+        "year": 2020,
+        "title": "Standard Test Methods for Flash Point by Pensky-Martens Closed Cup Tester",
+        "description": "Xác định điểm chớp cháy bằng thiết bị cốc kín Pensky-Martens.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000008",
+        "code": "ISO 2719",
+        "organization": "ISO",
+        "year": 2016,
+        "title": "Determination of flash point — Pensky-Martens closed cup method",
+        "description": "Xác định điểm chớp cháy theo phương pháp cốc kín Pensky-Martens.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000009",
+        "code": "ASTM D1160",
+        "organization": "ASTM",
+        "year": 2018,
+        "title": "Standard Test Method for Distillation of Petroleum Products at Reduced Pressure",
+        "description": "Chưng cất sản phẩm dầu mỏ ở áp suất chân không giảm thấp.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-00000000000a",
+        "code": "ISO 6616",
+        "organization": "ISO",
+        "year": 2000,
+        "title": "Petroleum products — Determination of distillation characteristics at reduced pressure",
+        "description": "Xác định đặc tính chưng cất chân không của các phân đoạn dầu nặng.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-00000000000b",
+        "code": "ASTM D5191",
+        "organization": "ASTM",
+        "year": 2022,
+        "title": "Standard Test Method for Vapor Pressure of Petroleum Products and Liquid Fuels (Mini Method)",
+        "description": "Đo áp suất hơi vi lượng của xăng và nhiên liệu lỏng.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-00000000000c",
+        "code": "ASME B16.34",
+        "organization": "ASME",
+        "year": 2020,
+        "title": "Valves Flanged, Threaded and Welding End",
+        "description": "Tiêu chuẩn thiết kế, áp suất và nhiệt độ cho van mặt bích, nối ren và hàn.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-00000000000d",
+        "code": "HART Protocol",
+        "organization": "FieldComm Group",
+        "year": 2021,
+        "title": "Highway Addressable Remote Transducer Protocol",
+        "description": "Giao thức truyền thông số hai chiều trên nền tín hiệu tương tự 4-20mA.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-00000000000e",
+        "code": "ASME Section I",
+        "organization": "ASME",
+        "year": 2021,
+        "title": "Rules for Construction of Power Boilers",
+        "description": "Quy chuẩn chế tạo nồi hơi và van an toàn áp suất cao trong nhà máy nhiệt điện.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-00000000000f",
+        "code": "ASME Section VIII",
+        "organization": "ASME",
+        "year": 2021,
+        "title": "Rules for Construction of Pressure Vessels",
+        "description": "Quy chuẩn thiết kế và kiểm định bình áp lực và van an toàn công nghiệp.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000010",
+        "code": "87/88 Config",
+        "organization": "Masoneilan",
+        "year": 2021,
+        "title": "Pneumatic Spring-Diaphragm Actuation Configuration",
+        "description": "Cấu hình tác động: 87: khí đóng (air to close) / 88: khí mở (air to open).",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      },
+      {
+        "id": "b0000000-0000-4000-8000-000000000011",
+        "code": "In-situ Testing",
+        "organization": "ASME PTC 25 / Consolidated",
+        "year": 2022,
+        "title": "In-situ Safety Valve Set Pressure Testing Method",
+        "description": "Phương pháp kiểm tra áp suất cài đặt của van an toàn tại vị trí lắp đặt thực tế.",
+        "created_at": "2026-09-23T11:37:14.918Z",
+        "updated_at": "2026-09-23T11:37:14.918Z"
+      }
+    ],
+    "news_events": [
+      {
+        "id": "e0000000-0000-4000-8000-000000000001",
+        "type": "news",
+        "title": "LT Việt Nam hoàn thành lắp đặt và bàn giao PAC OptiDist 2 tại Quatest 2",
+        "slug": "ban-giao-pac-optidist-2",
+        "short_description": "Đội ngũ kỹ thuật hoàn thành lắp đặt, hướng dẫn vận hành và chuyển giao thiết bị chưng cất tự động.",
+        "thumbnail_image_id": "a0000000-0000-4000-8000-00000000000e",
+        "content": {
+          "blocks": [
+            {
+              "data": {
+                "text": "LT Việt Nam hoàn thành lắp đặt và bàn giao PAC OptiDist 2 tại Quatest 2",
+                "level": 2
+              },
+              "type": "heading"
+            },
+            {
+              "data": {
+                "text": "Dự án tập trung vào việc đưa hệ thống chưng cất tự động vào vận hành ổn định tại phòng thí nghiệm của khách hàng."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Phạm vi thực hiện gồm lắp đặt thiết bị, kiểm tra điều kiện vận hành, chạy thử và hướng dẫn người sử dụng."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Hồ sơ kỹ thuật và hướng dẫn vận hành được tập hợp để người sử dụng thuận tiện tra cứu sau bàn giao."
+              },
+              "type": "paragraph"
+            }
+          ],
+          "version": 1
+        },
+        "status": "published",
+        "published_at": "2026-06-01T08:00:00.000Z",
+        "event_start_at": null,
+        "event_end_at": null,
+        "location": null,
+        "author_id": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:15.819Z",
+        "updated_at": "2026-09-23T11:37:15.819Z",
+        "deleted_at": null
+      },
+      {
+        "id": "e0000000-0000-4000-8000-000000000002",
+        "type": "event",
+        "title": "LT Việt Nam phối hợp tổ chức hội thảo bảo dưỡng và kiểm định van an toàn",
+        "slug": "hoi-thao-van-an-toan",
+        "short_description": "Hội thảo được tổ chức tại Hà Nội cùng Bộ Công Thương và Baker Hughes GE, với đại biểu từ hơn 20 nhà máy công nghiệp.",
+        "thumbnail_image_id": "a0000000-0000-4000-8000-00000000000f",
+        "content": {
+          "blocks": [
+            {
+              "data": {
+                "text": "LT Việt Nam phối hợp tổ chức hội thảo bảo dưỡng và kiểm định van an toàn",
+                "level": 2
+              },
+              "type": "heading"
+            },
+            {
+              "data": {
+                "text": "Cuối năm 2019 tại Hà Nội, Bộ Công Thương, LT Việt Nam và Baker Hughes GE phối hợp tổ chức hội thảo về bảo dưỡng và kiểm định van an toàn trong nhà máy công nghiệp."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Hội thảo do lãnh đạo Cục An toàn và Môi trường Công nghiệp chủ trì, với đại biểu đến từ hơn 20 nhà máy lọc dầu, nhiệt điện, phân bón và công nghiệp lớn."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Các chuyên gia trình bày quy trình bảo dưỡng, sửa chữa và kiểm định van an toàn, đồng thời trao đổi kinh nghiệm vận hành trong những điều kiện làm việc khắc nghiệt."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Tìm hiểu giải pháp van an toàn cho nhà máy — Xem danh mục van an toàn Consolidated và các thiết bị hỗ trợ vận hành hiện có trên website.",
+                "author": "Xem giải pháp van Baker Hughes"
+              },
+              "type": "quote"
+            }
+          ],
+          "version": 1
+        },
+        "status": "published",
+        "published_at": "2019-06-01T08:00:00.000Z",
+        "event_start_at": "2019-11-20T08:30:00.000Z",
+        "event_end_at": "2019-11-20T17:00:00.000Z",
+        "location": "Khách sạn Melia, 44 Lý Thường Kiệt, Hoàn Kiếm, Hà Nội",
+        "author_id": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:15.819Z",
+        "updated_at": "2026-09-23T11:37:15.819Z",
+        "deleted_at": null
+      },
+      {
+        "id": "e0000000-0000-4000-8000-000000000003",
+        "type": "news",
+        "title": "Chuyển giao thiết bị xác định điểm đông đặc Phase Technology 70Xi tại Skypec",
+        "slug": "chuyen-giao-dfa-70xi",
+        "short_description": "LT Việt Nam hoàn thành giao hàng, lắp đặt, chạy thử và đào tạo chuyển giao công nghệ tại chi nhánh Skypec Hà Nội.",
+        "thumbnail_image_id": "a0000000-0000-4000-8000-000000000010",
+        "content": {
+          "blocks": [
+            {
+              "data": {
+                "text": "Chuyển giao thiết bị xác định điểm đông đặc Phase Technology 70Xi tại Skypec",
+                "level": 2
+              },
+              "type": "heading"
+            },
+            {
+              "data": {
+                "text": "Trong hai ngày 7 và 8 tháng 7 năm 2025, đội ngũ LT Việt Nam triển khai thiết bị phân tích điểm đông đặc Phase Technology tại chi nhánh Hà Nội của Công ty Cổ phần Nhiên liệu bay Petrolimex (Skypec)."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Phạm vi công việc gồm lắp đặt tại hiện trường, tích hợp, hiệu chuẩn, chạy thử và xác nhận khả năng hoạt động của thiết bị."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Chương trình chuyển giao bao gồm đào tạo lý thuyết và thực hành, hướng dẫn bảo trì, xử lý sự cố và bàn giao tài liệu kỹ thuật cùng hướng dẫn sử dụng."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Bạn đang cần thiết bị xác định điểm đông đặc? — Chia sẻ loại mẫu, phương pháp hoặc tiêu chuẩn áp dụng để đội ngũ kỹ thuật tiếp nhận đúng nhu cầu.",
+                "author": "Trao đổi về ứng dụng này"
+              },
+              "type": "quote"
+            }
+          ],
+          "version": 1
+        },
+        "status": "published",
+        "published_at": "2025-06-01T08:00:00.000Z",
+        "event_start_at": null,
+        "event_end_at": null,
+        "location": null,
+        "author_id": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:15.819Z",
+        "updated_at": "2026-09-23T11:37:15.819Z",
+        "deleted_at": null
+      }
+    ],
+    "news_event_translations": [
+      {
+        "id": "7e62c071-c391-4576-a97c-d7776604c967",
+        "news_event_id": "e0000000-0000-4000-8000-000000000001",
+        "locale": "vi",
+        "title": "LT Việt Nam hoàn thành lắp đặt và bàn giao PAC OptiDist 2 tại Quatest 2",
+        "slug": "ban-giao-pac-optidist-2",
+        "short_description": "Đội ngũ kỹ thuật hoàn thành lắp đặt, hướng dẫn vận hành và chuyển giao thiết bị chưng cất tự động.",
+        "content": {
+          "blocks": [
+            {
+              "data": {
+                "text": "LT Việt Nam hoàn thành lắp đặt và bàn giao PAC OptiDist 2 tại Quatest 2",
+                "level": 2
+              },
+              "type": "heading"
+            },
+            {
+              "data": {
+                "text": "Dự án tập trung vào việc đưa hệ thống chưng cất tự động vào vận hành ổn định tại phòng thí nghiệm của khách hàng."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Phạm vi thực hiện gồm lắp đặt thiết bị, kiểm tra điều kiện vận hành, chạy thử và hướng dẫn người sử dụng."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Hồ sơ kỹ thuật và hướng dẫn vận hành được tập hợp để người sử dụng thuận tiện tra cứu sau bàn giao."
+              },
+              "type": "paragraph"
+            }
+          ],
+          "version": 1
+        },
+        "location": null,
+        "seo_title": null,
+        "seo_description": null,
+        "created_at": "2026-09-23T11:37:15.819Z",
+        "updated_at": "2026-09-23T11:37:15.819Z"
+      },
+      {
+        "id": "61d8529e-d5e4-41ea-9a0f-4cf2cd7138b0",
+        "news_event_id": "e0000000-0000-4000-8000-000000000002",
+        "locale": "vi",
+        "title": "LT Việt Nam phối hợp tổ chức hội thảo bảo dưỡng và kiểm định van an toàn",
+        "slug": "hoi-thao-van-an-toan",
+        "short_description": "Hội thảo được tổ chức tại Hà Nội cùng Bộ Công Thương và Baker Hughes GE, với đại biểu từ hơn 20 nhà máy công nghiệp.",
+        "content": {
+          "blocks": [
+            {
+              "data": {
+                "text": "LT Việt Nam phối hợp tổ chức hội thảo bảo dưỡng và kiểm định van an toàn",
+                "level": 2
+              },
+              "type": "heading"
+            },
+            {
+              "data": {
+                "text": "Cuối năm 2019 tại Hà Nội, Bộ Công Thương, LT Việt Nam và Baker Hughes GE phối hợp tổ chức hội thảo về bảo dưỡng và kiểm định van an toàn trong nhà máy công nghiệp."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Hội thảo do lãnh đạo Cục An toàn và Môi trường Công nghiệp chủ trì, với đại biểu đến từ hơn 20 nhà máy lọc dầu, nhiệt điện, phân bón và công nghiệp lớn."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Các chuyên gia trình bày quy trình bảo dưỡng, sửa chữa và kiểm định van an toàn, đồng thời trao đổi kinh nghiệm vận hành trong những điều kiện làm việc khắc nghiệt."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Tìm hiểu giải pháp van an toàn cho nhà máy — Xem danh mục van an toàn Consolidated và các thiết bị hỗ trợ vận hành hiện có trên website.",
+                "author": "Xem giải pháp van Baker Hughes"
+              },
+              "type": "quote"
+            }
+          ],
+          "version": 1
+        },
+        "location": "Khách sạn Melia, 44 Lý Thường Kiệt, Hoàn Kiếm, Hà Nội",
+        "seo_title": null,
+        "seo_description": null,
+        "created_at": "2026-09-23T11:37:15.819Z",
+        "updated_at": "2026-09-23T11:37:15.819Z"
+      },
+      {
+        "id": "8957b6ba-0c57-4bb9-875c-a32dbdfc7f53",
+        "news_event_id": "e0000000-0000-4000-8000-000000000003",
+        "locale": "vi",
+        "title": "Chuyển giao thiết bị xác định điểm đông đặc Phase Technology 70Xi tại Skypec",
+        "slug": "chuyen-giao-dfa-70xi",
+        "short_description": "LT Việt Nam hoàn thành giao hàng, lắp đặt, chạy thử và đào tạo chuyển giao công nghệ tại chi nhánh Skypec Hà Nội.",
+        "content": {
+          "blocks": [
+            {
+              "data": {
+                "text": "Chuyển giao thiết bị xác định điểm đông đặc Phase Technology 70Xi tại Skypec",
+                "level": 2
+              },
+              "type": "heading"
+            },
+            {
+              "data": {
+                "text": "Trong hai ngày 7 và 8 tháng 7 năm 2025, đội ngũ LT Việt Nam triển khai thiết bị phân tích điểm đông đặc Phase Technology tại chi nhánh Hà Nội của Công ty Cổ phần Nhiên liệu bay Petrolimex (Skypec)."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Phạm vi công việc gồm lắp đặt tại hiện trường, tích hợp, hiệu chuẩn, chạy thử và xác nhận khả năng hoạt động của thiết bị."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Chương trình chuyển giao bao gồm đào tạo lý thuyết và thực hành, hướng dẫn bảo trì, xử lý sự cố và bàn giao tài liệu kỹ thuật cùng hướng dẫn sử dụng."
+              },
+              "type": "paragraph"
+            },
+            {
+              "data": {
+                "text": "Bạn đang cần thiết bị xác định điểm đông đặc? — Chia sẻ loại mẫu, phương pháp hoặc tiêu chuẩn áp dụng để đội ngũ kỹ thuật tiếp nhận đúng nhu cầu.",
+                "author": "Trao đổi về ứng dụng này"
+              },
+              "type": "quote"
+            }
+          ],
+          "version": 1
+        },
+        "location": null,
+        "seo_title": null,
+        "seo_description": null,
+        "created_at": "2026-09-23T11:37:15.819Z",
+        "updated_at": "2026-09-23T11:37:15.819Z"
+      }
+    ],
+    "contacts": [
+      {
+        "id": "f0000002-0000-4000-8000-000000000002",
+        "full_name": "Trần Thị Thu Trang",
+        "company_name": "Phòng Thử nghiệm Quatest 2",
+        "email": "trang.tt@quatest2.gov.vn",
+        "phone": "0983 678 910",
+        "subject": "Tư vấn bổ sung phụ kiện cho thiết bị PAC OptiDist 2",
+        "message": "Chào đội ngũ kỹ thuật, chúng tôi cần mua bổ sung bình hứng và nhiệt kế chuẩn cho máy OptiDist 2 vừa bàn giao. Nhờ quý công ty gửi danh mục phụ tùng chính hãng.",
+        "status": "processing",
+        "assigned_to": "22222222-2222-4222-8222-222222222222",
+        "admin_note": "Đang liên hệ đại diện PAC Singapore để xác nhận mã linh kiện.",
+        "resolved_at": null,
+        "created_at": "2026-09-14T14:20:00.000Z",
+        "updated_at": "2026-09-23T11:37:15.924Z"
+      },
+      {
+        "id": "f0000003-0000-4000-8000-000000000003",
+        "full_name": "Lê Hoàng Nam",
+        "company_name": "Tổng Công ty Khí Việt Nam (PV Gas)",
+        "email": "nam.lh@pvgas.com.vn",
+        "phone": "0903 112 233",
+        "subject": "Tư vấn van điều khiển Masoneilan 21000 cho hệ thống khí khô",
+        "message": "Chúng tôi muốn tìm hiểu thông số kỹ thuật và điều kiện làm việc của van điều khiển Masoneilan Class 600 cho dự án nâng công suất trạm phân phối khí.",
+        "status": "resolved",
+        "assigned_to": "11111111-1111-4111-8111-111111111111",
+        "admin_note": "Đã gửi catalog kỹ thuật và tài liệu sizing van Masoneilan ngày 16/09.",
+        "resolved_at": "2026-09-16T16:00:00.000Z",
+        "created_at": "2026-09-12T10:15:00.000Z",
+        "updated_at": "2026-09-23T11:37:15.924Z"
+      },
+      {
+        "id": "5c46a1d9-51e9-4553-bdc6-44222b315a6c",
+        "full_name": "Nguyen Van A",
+        "company_name": "",
+        "email": "contact@example.com",
+        "phone": "",
+        "subject": "Quan tâm: optidist",
+        "message": "Yeu cau tu van thiet bi",
+        "status": "new",
+        "assigned_to": null,
+        "admin_note": null,
+        "resolved_at": null,
+        "created_at": "2026-09-24T16:47:28.187Z",
+        "updated_at": "2026-09-24T16:47:28.187Z"
+      },
+      {
+        "id": "a5c2bcff-836b-4e73-a2e6-e90f6d16f259",
+        "full_name": "Nguyen Van A",
+        "company_name": "",
+        "email": "contact@example.com",
+        "phone": "",
+        "subject": "Quan tâm: optidist",
+        "message": "Yeu cau tu van thiet bi",
+        "status": "new",
+        "assigned_to": null,
+        "admin_note": null,
+        "resolved_at": null,
+        "created_at": "2026-09-24T16:51:24.814Z",
+        "updated_at": "2026-09-24T16:51:24.814Z"
+      },
+      {
+        "id": "0082d270-dbd8-4b7a-bd48-697c935d8388",
+        "full_name": "Nguyen Van A",
+        "company_name": "",
+        "email": "contact@example.com",
+        "phone": "",
+        "subject": "Quan tâm: optidist",
+        "message": "Yeu cau tu van thiet bi",
+        "status": "new",
+        "assigned_to": null,
+        "admin_note": null,
+        "resolved_at": null,
+        "created_at": "2026-09-24T16:54:19.870Z",
+        "updated_at": "2026-09-24T16:54:19.870Z"
+      },
+      {
+        "id": "f0000001-0000-4000-8000-000000000001",
+        "full_name": "Nguyễn Văn Hải",
+        "company_name": "Công ty Cổ phần Lọc hóa dầu Bình Sơn (BSR)",
+        "email": "hai.nv@bsr.com.vn",
+        "phone": "0912 345 678",
+        "subject": "Yêu cầu báo giá bảo trì định kỳ van an toàn Consolidated",
+        "message": "Kính gửi LT Việt Nam, chúng tôi đang chuẩn bị kế hoạch bảo dưỡng định kỳ cho phân xưởng chưng cất tháp dầu thô. Xin vui lòng gửi phương án kiểm định van an toàn tại hiện trường bằng thiết bị EVT-Pro.",
+        "status": "processing",
+        "assigned_to": "11111111-1111-4111-8111-111111111111",
+        "admin_note": "Đã chuyển phòng kỹ thuật van chuẩn bị tài liệu báo giá.",
+        "resolved_at": null,
+        "created_at": "2026-09-15T09:30:00.000Z",
+        "updated_at": "2026-09-24T17:03:08.284Z"
+      }
+    ],
+    "media_assets": [
+      {
+        "id": "a0000000-0000-4000-8000-000000000001",
+        "file_name": "optidist-2-official.png",
+        "storage_key": "images/products/optidist-2-official.png",
+        "public_url": "/images/products/optidist-2-official.png",
+        "alt_text": "PAC OptiDist 2 — Thiết bị chưng cất khí quyển tự động",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000002",
+        "file_name": "cid-510-transparent.png",
+        "storage_key": "images/products/cid-510-transparent.png",
+        "public_url": "/images/products/cid-510-transparent.png",
+        "alt_text": "Herzog CID 510 — Thiết bị xác định trị số cetane dẫn xuất",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000003",
+        "file_name": "hvm-472.jpg",
+        "storage_key": "images/products/hvm-472.jpg",
+        "public_url": "/images/products/hvm-472.jpg",
+        "alt_text": "Herzog HVM 472 — Thiết bị đo độ nhớt động học tự động",
+        "mime_type": "image/jpeg",
+        "size_bytes": "256000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000004",
+        "file_name": "optiflash.jpg",
+        "storage_key": "images/products/optiflash.jpg",
+        "public_url": "/images/products/optiflash.jpg",
+        "alt_text": "Herzog OptiFlash — Thiết bị đo điểm chớp cháy cốc kín Pensky-Martens",
+        "mime_type": "image/jpeg",
+        "size_bytes": "256000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000005",
+        "file_name": "hdv-632.jpg",
+        "storage_key": "images/products/hdv-632.jpg",
+        "public_url": "/images/products/hdv-632.jpg",
+        "alt_text": "Herzog HDV 632 — Thiết bị chưng cất tự động ở áp suất chân không",
+        "mime_type": "image/jpeg",
+        "size_bytes": "256000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000006",
+        "file_name": "hvp-972.jpg",
+        "storage_key": "images/products/hvp-972.jpg",
+        "public_url": "/images/products/hvp-972.jpg",
+        "alt_text": "Herzog HVP 972 — Thiết bị đo áp suất hơi bão hòa tự động",
+        "mime_type": "image/jpeg",
+        "size_bytes": "256000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000007",
+        "file_name": "valve-21000-transparent.png",
+        "storage_key": "images/products/valve-21000-transparent.png",
+        "public_url": "/images/products/valve-21000-transparent.png",
+        "alt_text": "Masoneilan 21000 Series — Van điều khiển globe hiệu suất cao",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000008",
+        "file_name": "svi-ii-ap.png",
+        "storage_key": "images/products/svi-ii-ap.png",
+        "public_url": "/images/products/svi-ii-ap.png",
+        "alt_text": "Masoneilan SVI II AP — Bộ định vị van thông minh",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000009",
+        "file_name": "actuator-87-88.png",
+        "storage_key": "images/products/actuator-87-88.png",
+        "public_url": "/images/products/actuator-87-88.png",
+        "alt_text": "Masoneilan 87/88 Series — Bộ truyền động màng lò xo khí nén",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-00000000000a",
+        "file_name": "valve-84000.png",
+        "storage_key": "images/products/valve-84000.png",
+        "public_url": "/images/products/valve-84000.png",
+        "alt_text": "Masoneilan 84000 Series — Van điều khiển cho ứng dụng hơi",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-00000000000b",
+        "file_name": "consolidated-2700-transparent.png",
+        "storage_key": "images/products/consolidated-2700-transparent.png",
+        "public_url": "/images/products/consolidated-2700-transparent.png",
+        "alt_text": "Consolidated 2700 Series — Van an toàn cho hệ thống CCGT",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-00000000000c",
+        "file_name": "consolidated-1900.png",
+        "storage_key": "images/products/consolidated-1900.png",
+        "public_url": "/images/products/consolidated-1900.png",
+        "alt_text": "Consolidated 1900/P Series — Van an toàn và xả áp",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-00000000000d",
+        "file_name": "evt-pro.png",
+        "storage_key": "images/products/evt-pro.png",
+        "public_url": "/images/products/evt-pro.png",
+        "alt_text": "Consolidated EVT-Pro — Thiết bị kiểm tra van điện tử",
+        "mime_type": "image/png",
+        "size_bytes": "1024000",
+        "width": 1200,
+        "height": 1200,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-00000000000e",
+        "file_name": "optidist-2-angle-official.png",
+        "storage_key": "images/products/optidist-2-angle-official.png",
+        "public_url": "/images/products/optidist-2-angle-official.png",
+        "alt_text": "LT Việt Nam hoàn thành lắp đặt và bàn giao PAC OptiDist 2 tại Quatest 2",
+        "mime_type": "image/png",
+        "size_bytes": "1200000",
+        "width": 1200,
+        "height": 800,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-00000000000f",
+        "file_name": "safety-valve-seminar.jpg",
+        "storage_key": "images/news/safety-valve-seminar.jpg",
+        "public_url": "/images/news/safety-valve-seminar.jpg",
+        "alt_text": "LT Việt Nam phối hợp tổ chức hội thảo bảo dưỡng và kiểm định van an toàn",
+        "mime_type": "image/jpeg",
+        "size_bytes": "350000",
+        "width": 1200,
+        "height": 800,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      },
+      {
+        "id": "a0000000-0000-4000-8000-000000000010",
+        "file_name": "phase-dfa-70xi-transparent.png",
+        "storage_key": "images/news/phase-dfa-70xi-transparent.png",
+        "public_url": "/images/news/phase-dfa-70xi-transparent.png",
+        "alt_text": "Chuyển giao thiết bị xác định điểm đông đặc Phase Technology 70Xi tại Skypec",
+        "mime_type": "image/png",
+        "size_bytes": "1200000",
+        "width": 1200,
+        "height": 800,
+        "uploaded_by": "11111111-1111-4111-8111-111111111111",
+        "created_at": "2026-09-23T11:37:14.816Z",
+        "deleted_at": null
+      }
+    ]
+  }
+}

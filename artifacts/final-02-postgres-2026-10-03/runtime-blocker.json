@@ -1,0 +1,12 @@
+{
+  "observedError": "An Application Control policy has blocked this file.",
+  "existingDatabaseUrlUsed": false,
+  "versionMetadata": "18.6",
+  "databaseConnections": 0,
+  "blocker": "Windows Application Control",
+  "migrationsExecuted": 0,
+  "firstAttempt": "Node spawn UNKNOWN before initdb execution; attempt-01 preserved",
+  "command": "initdb.exe --version",
+  "initdbBinarySHA256": "d59423ea6106821670ea7289b6d5476feb8741d5fdc8537de25f22dda1f13532",
+  "policyBypassAttempted": false
+}

@@ -1,0 +1,18 @@
+{
+  "mode": "OFFLINE ONLY; NO DATABASE; NO MIGRATION EXECUTION",
+  "currentSchemaMatchesLatestSnapshot": true,
+  "differences": [],
+  "addedTables": [
+    "public.news_event_translations"
+  ],
+  "alteredLegacyTables": [],
+  "snapshotChainValid": true,
+  "sequenceValid": true,
+  "snapshotTableCounts": {
+    "initial": 11,
+    "latest": 12
+  },
+  "sqlMatchesSnapshot": true,
+  "sqlIssues": [],
+  "migrationSha256": "04bd986553e390aa72133ff434a78d8822dc73d0c3d643884d994abcab332338"
+}

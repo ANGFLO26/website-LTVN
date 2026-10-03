@@ -1,0 +1,236 @@
+{
+  "passed": 3,
+  "total": 8,
+  "results": [
+    {
+      "id": "T1",
+      "name": "B1 — Create sends and retains the entered end date",
+      "result": "FAIL",
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- '2026-11-11T11:45:00.000Z'\n"
+    },
+    {
+      "id": "T2",
+      "name": "B1 — Edit sends the changed end date and retains it on reopen",
+      "result": "FAIL",
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- '2026-11-12T12:45:00.000Z'\n"
+    },
+    {
+      "id": "T3",
+      "name": "B1 — Clearing end date sends explicit null and stays cleared",
+      "result": "FAIL",
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- null\n"
+    },
+    {
+      "id": "T4",
+      "name": "B3 — Legacy VI location, excerpt and body render without translations",
+      "result": "FAIL",
+      "error": "locator.textContent: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.article-location')\u001b[22m\n"
+    },
+    {
+      "id": "T5",
+      "name": "B3 — Legacy VI data is unavailable in EN, never rendered as English",
+      "result": "FAIL",
+      "error": "locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.article-location') to be visible\u001b[22m\n"
+    },
+    {
+      "id": "T6",
+      "name": "B3 — Authored VI location overrides legacy location",
+      "result": "PASS"
+    },
+    {
+      "id": "T7",
+      "name": "B3 — Empty/null authored VI location does not revive stale legacy location",
+      "result": "PASS"
+    },
+    {
+      "id": "T8",
+      "name": "No browser JS crash in the targeted scenarios",
+      "result": "PASS"
+    }
+  ],
+  "proof": {
+    "dateRequests": [
+      {
+        "method": "POST",
+        "payload": {
+          "type": "event",
+          "title": "Sự kiện kiểm tra ngày kết thúc",
+          "slug": "su-kien-kiem-tra-ngay-ket-thuc",
+          "shortDescription": null,
+          "thumbnailImageId": null,
+          "status": "draft",
+          "content": {
+            "version": 1,
+            "blocks": [
+              {
+                "type": "heading",
+                "data": {
+                  "level": 2,
+                  "text": "Tiêu đề bài viết"
+                }
+              },
+              {
+                "type": "paragraph",
+                "data": {
+                  "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+                }
+              }
+            ]
+          },
+          "location": null,
+          "eventStartAt": "2026-11-11T09:00:00.000Z",
+          "translations": {
+            "vi": {
+              "title": "Sự kiện kiểm tra ngày kết thúc",
+              "slug": "su-kien-kiem-tra-ngay-ket-thuc",
+              "shortDescription": null,
+              "location": null,
+              "content": {
+                "version": 1,
+                "blocks": [
+                  {
+                    "type": "heading",
+                    "data": {
+                      "level": 2,
+                      "text": "Tiêu đề bài viết"
+                    }
+                  },
+                  {
+                    "type": "paragraph",
+                    "data": {
+                      "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+                    }
+                  }
+                ]
+              },
+              "seoTitle": null,
+              "seoDescription": null
+            }
+          }
+        }
+      },
+      {
+        "method": "PUT",
+        "payload": {
+          "type": "event",
+          "title": "Sự kiện kiểm tra ngày kết thúc",
+          "slug": "su-kien-kiem-tra-ngay-ket-thuc",
+          "shortDescription": null,
+          "thumbnailImageId": null,
+          "status": "draft",
+          "content": {
+            "version": 1,
+            "blocks": [
+              {
+                "type": "heading",
+                "data": {
+                  "level": 2,
+                  "text": "Tiêu đề bài viết"
+                }
+              },
+              {
+                "type": "paragraph",
+                "data": {
+                  "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+                }
+              }
+            ]
+          },
+          "location": null,
+          "eventStartAt": "2026-11-11T09:00:00.000Z",
+          "translations": {
+            "vi": {
+              "title": "Sự kiện kiểm tra ngày kết thúc",
+              "slug": "su-kien-kiem-tra-ngay-ket-thuc",
+              "shortDescription": null,
+              "location": null,
+              "content": {
+                "version": 1,
+                "blocks": [
+                  {
+                    "type": "heading",
+                    "data": {
+                      "level": 2,
+                      "text": "Tiêu đề bài viết"
+                    }
+                  },
+                  {
+                    "type": "paragraph",
+                    "data": {
+                      "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+                    }
+                  }
+                ]
+              },
+              "seoTitle": null,
+              "seoDescription": null
+            }
+          }
+        }
+      },
+      {
+        "method": "PUT",
+        "payload": {
+          "type": "event",
+          "title": "Sự kiện kiểm tra ngày kết thúc",
+          "slug": "su-kien-kiem-tra-ngay-ket-thuc",
+          "shortDescription": null,
+          "thumbnailImageId": null,
+          "status": "draft",
+          "content": {
+            "version": 1,
+            "blocks": [
+              {
+                "type": "heading",
+                "data": {
+                  "level": 2,
+                  "text": "Tiêu đề bài viết"
+                }
+              },
+              {
+                "type": "paragraph",
+                "data": {
+                  "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+                }
+              }
+            ]
+          },
+          "location": null,
+          "eventStartAt": "2026-11-11T09:00:00.000Z",
+          "translations": {
+            "vi": {
+              "title": "Sự kiện kiểm tra ngày kết thúc",
+              "slug": "su-kien-kiem-tra-ngay-ket-thuc",
+              "shortDescription": null,
+              "location": null,
+              "content": {
+                "version": 1,
+                "blocks": [
+                  {
+                    "type": "heading",
+                    "data": {
+                      "level": 2,
+                      "text": "Tiêu đề bài viết"
+                    }
+                  },
+                  {
+                    "type": "paragraph",
+                    "data": {
+                      "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+                    }
+                  }
+                ]
+              },
+              "seoTitle": null,
+              "seoDescription": null
+            }
+          }
+        }
+      }
+    ]
+  },
+  "pageErrors": [],
+  "network": "API mocked; external traffic aborted",
+  "database": "NOT EXECUTED",
+  "migration": "NOT EXECUTED"
+}

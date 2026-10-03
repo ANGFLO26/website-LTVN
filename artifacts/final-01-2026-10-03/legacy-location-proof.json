@@ -1,0 +1,10 @@
+{
+  "id": "FINAL-01-B3",
+  "severity": "P2",
+  "environment": "Production public build; Chromium; legacy response mock without translations; no DB",
+  "expected": "Legacy VI article retains its authored top-level location",
+  "actual": "Title/excerpt/body render in VI but location is discarded",
+  "sourceLocation": "Địa điểm legacy cần giữ",
+  "domLocationCount": 0,
+  "pageErrors": []
+}

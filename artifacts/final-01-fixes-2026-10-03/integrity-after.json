@@ -1,0 +1,20 @@
+{
+  "result": "PASS",
+  "head": "6b0a76ec2bae5e099142d659a23a14f5f6dc20fc",
+  "existingFilesChecked": 605,
+  "changed": [
+    "admin/src/services/api.ts",
+    "api/src/modules/news-events/news-events.service.ts",
+    "api/test/news-mutation.e2e-spec.ts",
+    "src/context/DataContext.tsx"
+  ],
+  "added": [
+    "api/test/news-vi-validation.e2e-spec.ts",
+    "scripts/final01-news-regression-browser.mjs"
+  ],
+  "removed": [],
+  "protectedArtifactFilesChecked": 243,
+  "oldArtifactsByteIdentical": true,
+  "schemaAndMigrationByteIdentical": true,
+  "noOtherBaselineSourceChanged": true
+}

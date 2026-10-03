@@ -1,0 +1,38 @@
+{
+  "audited": [
+    "api/package.json",
+    "api/drizzle.config.ts",
+    "api/src/database/schema.ts",
+    "api/src/database/database.module.ts",
+    "api/src/database/seed.ts (bootstrap only, not executed)",
+    "api/src/app.module.ts",
+    "api/src/main.ts",
+    "api/.env (keys/host classification only)",
+    "api/.env.example",
+    "admin/.env.example",
+    "api/drizzle/0000_known_stryfe.sql",
+    "api/drizzle/0001_add_news_event_translations.sql",
+    "api/drizzle/meta/_journal.json"
+  ],
+  "existingProjectDatabaseUrlUsed": false,
+  "existingShellDatabaseUrlUsed": false,
+  "existingApiEnv": "non-local URL present; forbidden and ignored",
+  "docker": "not installed/available",
+  "wsl": "no local distro available",
+  "existingPostgresData": "C:/Program Files/PostgreSQL/18/data exists; NEVER OPENED/CONNECTED/MODIFIED",
+  "strategy": "Official EDB Windows x64 portable runtime, new isolated initdb cluster in dedicated temporary directory; loopback-only separate process/port; no Windows service; no existing data/volume",
+  "host": "127.0.0.1",
+  "database": "ltvn_final02_test",
+  "user": "ltvn_final02",
+  "port": "dedicated free port selected before initialization",
+  "credentials": "generated in memory; temporary initdb pwfile deleted immediately; never logged",
+  "migrationMechanism": "Project Drizzle postgres-js migrator; immutable artifact copy of original migration folder with 0000-only journal for phase A, then full original journal for phase B; original SQL/hash unchanged",
+  "prerequisites": "assert own postmaster PID/data_directory/loopback port, exact database and user, public table count=0 before migration",
+  "noSeed": true,
+  "noProductionSourceChange": true,
+  "runtimeSources": [
+    "https://www.postgresql.org/download/windows/",
+    "https://www.enterprisedb.com/download-postgresql-binaries",
+    "https://sbp.enterprisedb.com/getfile.jsp?fileid=1260609"
+  ]
+}

@@ -1,0 +1,1350 @@
+[
+  {
+    "path": "artifacts\\qa-2026-09-26\\about-crash-one-paragraph.png",
+    "hash": "d5398960a510b55c800892e2fc1da886d043e35e2c5caeb71dc94d93d5b32a20"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\admin-false-save-success.png",
+    "hash": "6f559ec6ab81b15b3f2cee3bd392f1b40db4085534997b2efa8c70fe44d28b49"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\admin-mobile.png",
+    "hash": "53f395e263e4182d242495fbc19717cd391562f49e228667a54f5b01b45558ee"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\admin-mutation-payloads.json",
+    "hash": "2f066631a534e9fed9242aa26075d1eec61fe19f45556cdd06191e75f47dec55"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\api-audit.mjs",
+    "hash": "517333e5fe4df81064172f36ad8e476a562c3650eec1760694e2096fe170a57c"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\api-results.json",
+    "hash": "eadcc62a807fb004852f4631180e8306ab1ffbf6339504d4168a08d402225775"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\BAO-CAO-KIEM-THU.md",
+    "hash": "86a6fa202d66977b767d4105bb15dd4419a35305d59bb64e5208a186065c7d66"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\broken-baker-link.png",
+    "hash": "1c3e5a4fb9a3ec5fd2f51035c1d037d6f79a17a2d67bdd92b80b4e496cfcd48a"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\browser-audit.mjs",
+    "hash": "8b9630744ffb136a460fb1902cce81105f9b7e0438d60a9920cc30aa07b3de70"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\browser-results.json",
+    "hash": "f2bd1429ed1f28f91107db5b7c9dff8c1a4cf3c6939fa54b19b3ec5b7959c3df"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\contact-false-success.png",
+    "hash": "c39e343a1ecabfb794a34b0450fffa8e5835c1e9060a05f819ba5083c10865f6"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\product-stuck-loading.png",
+    "hash": "1701bf2c77ae6d441a1ae073f9bdc545d714bed6b38b16bdf030a9fcfa5ec96c"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\targeted-browser-results.json",
+    "hash": "db95ec916d6c58e1b97cc9bb5f6828125814b9ecdb2a580fd6cc8aaf8bfa02df"
+  },
+  {
+    "path": "artifacts\\qa-2026-09-26\\targeted-browser.mjs",
+    "hash": "4f433310933d7a7b7e65604e9167429c258d21dc622d15ac8a426fbe15566a6f"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\admin-build.log",
+    "hash": "9ec3bd5057111da7c8b3f70b1c8b18ea67b561cf718c58e8e000c2675cc32408"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\api-build.log",
+    "hash": "ac93893729f54e990b28f82653ce4652373ca1af9b4456f14fd7783bcafc1cd2"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\backend.log",
+    "hash": "ebb62467b8008f68b5aa9a7b8bbd8f3bd8e3114d242129c198654eee93bd2fee"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\baseline\\en-detail.png",
+    "hash": "823d1db859437b616b3d0046beb1ff1777e5bd44290310c9f7a83a8cde21a9b3"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\baseline\\en-empty-list.png",
+    "hash": "7410b38569a694c8e818ace6c2dbeb00e97700eda6427128ade713a9a1cb3143"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\diff-check.log",
+    "hash": "8e4d7859cb0c494b6911e7c5388196c67b3280790adff37ad55f5a2bf7dae104"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\en-detail.png",
+    "hash": "823d1db859437b616b3d0046beb1ff1777e5bd44290310c9f7a83a8cde21a9b3"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\en-empty-home-1280.png",
+    "hash": "382788c6e6eaf20b33a6f5404b2efafe3f362847b041088aa5b75457bc75cd5f"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\en-empty-home-375.png",
+    "hash": "b5bfd4fb6ea7dad167de4d0730f52748ef2a952208cf5372cc59d85152bf4659"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\en-empty-list.png",
+    "hash": "992971d7c2f39ec4bd5ea1a97eadbad680172369776ca099afdaefb564f2501a"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\git-diff-stat.txt",
+    "hash": "e37d77e29b754b129c0c21fd7a01b180c9a90a02e04717a0a5cf060e4631504f"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\git-stat-warnings.txt",
+    "hash": "8e4d7859cb0c494b6911e7c5388196c67b3280790adff37ad55f5a2bf7dae104"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\git-status-short.txt",
+    "hash": "c371f1829b6ff0a46533bcce02905e2d4d1f7da20e2b0f72cd1a397529bce27c"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\lint.log",
+    "hash": "ae47c6b78cb3aeb5ee0418e63ffc1503e4c1b6c65e93da36bf7f5c5b5ffcfcff"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\qa06-about.log",
+    "hash": "a7395574f385b12e2d68ac5b27be0467e0bbf69713106948c3ee66a2bcb37d0b"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\qa10-empty-state.log",
+    "hash": "625df5020c41892b44e82662184f1d04f0af438ddc8ecea2823815247c6cf417"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\qa11-detail-state.log",
+    "hash": "9ba05b967faadfe6933ed146a8455d13982758388c500e2a8e57fdd148d1bdd8"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\qa12-article-blocks.log",
+    "hash": "d12a2b6ba8a295e3ae9b14e92a5cfe15e84a563f583b165068421ae0d801f5f1"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\qa13-baker-links.log",
+    "hash": "83878f46fd8bb620b1f561140d718fea41dfb08d6d48954487279dc34fb3f51d"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\qa14c3-admin-bilingual.log",
+    "hash": "a1c343d84b3e3bc7e28fc69f2791fddd453b297a47b1aa8618abba964d460b11"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\qa14c4-public-bilingual.log",
+    "hash": "92ef6573b2197dd14e30eecb5572f2b805b2b3821b83c8fa2553a0a9bec7e6d1"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\results.json",
+    "hash": "81fe39094d305ecfb47187b1c75845c55c3a9ad9a8573fa1924819b3ff5e81a1"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\schema.log",
+    "hash": "3b669ad20b790deae6437e7ef0711f085df92cdbb1fc902bcaa9725ac6ff6bb5"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\unknown-slug-404.png",
+    "hash": "fa7bc9e98f2407a9e8daf3fe87be72b22c49a89d23a898f64970e59c5f849f1f"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa14c4v\\vi-only-unavailable.png",
+    "hash": "3ec7b73e6f8c86eb47483cc8b51a2cd9d79f6588a3f33e80f9124874ef510c53"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\api-build.log",
+    "hash": "ac93893729f54e990b28f82653ce4652373ca1af9b4456f14fd7783bcafc1cd2"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\backend.log",
+    "hash": "fed9a3b4ed4565bfea67fff18842477de1551fb6860b1aba11daa9fef25e1ed7"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\browser.log",
+    "hash": "a73fe734f97ad0092742009fd27d98d2435d30e95e2259d85d766d331a10393c"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\configured\\assets\\index-bBwTxSMp.css",
+    "hash": "a24a169f86f0584933d6603f26b3acac807ccd46b9eed348aa8acb1f4e410be0"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\configured\\assets\\index-Cxsl5PHF.js",
+    "hash": "9e12df5f1cd1e37ac03d842652ae430ad3c64ab9f758ef5a198a227dee0cc6af"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\configured\\index.html",
+    "hash": "31164cfd5d8290b8d63ffb2927ad4847f076cca935fb22d57a339d48b72ffc4b"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\invalid\\assets\\index-bBwTxSMp.css",
+    "hash": "a24a169f86f0584933d6603f26b3acac807ccd46b9eed348aa8acb1f4e410be0"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\invalid\\assets\\index-CWOeTkiu.js",
+    "hash": "995157ead21ec0981b01d876be6ab4811d538778f1374ae53178173ad6a42246"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\invalid\\index.html",
+    "hash": "e44094a4690500f1eb64a990eb5fb3232c8f3537d2ec8ae97d099938db1d9de6"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\missing\\assets\\index-bBwTxSMp.css",
+    "hash": "a24a169f86f0584933d6603f26b3acac807ccd46b9eed348aa8acb1f4e410be0"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\missing\\assets\\index-BWAeCBCz.js",
+    "hash": "fad7db912ff40667d5cc840dd66845a0907b08260caf887f9c8b7c34590a726a"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\missing\\index.html",
+    "hash": "b7b5eeee527fbbd6284dbb0c2737ee286be9017654475b6f48e99433cd8d6a8c"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\slash\\assets\\index-bBwTxSMp.css",
+    "hash": "a24a169f86f0584933d6603f26b3acac807ccd46b9eed348aa8acb1f4e410be0"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\slash\\assets\\index-C5OeLXFl.js",
+    "hash": "6e72150d5cd19b79b1f52026143c4baf2f11a0e7befc047572c28582d8163269"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\builds\\slash\\index.html",
+    "hash": "a924cba72d003712d83c5328c8f2b240589920eddff1a818bfabb63b1aa4113e"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\configured-header.png",
+    "hash": "24372af69bec8314a5ae88a5878246f955e051aa4a08807764b6b0197e53b519"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\diff-check.txt",
+    "hash": "0943347574b77b1d5dfbd5178628c15632464978d3ff48891f1794ce7ebacdeb"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\env\\configured\\.env.production",
+    "hash": "d6e425f0bce63c6b989811634f04a82f46dfff7176edc1d85555f42d282351e2"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\env\\dev-explicit\\.env.development",
+    "hash": "fc52ecaa7ff932502e0adafcc985a97fd6a1683f138b398d83d62dd3fe40288f"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\env\\dev-fallback\\.env.development",
+    "hash": "aaf17bc5977091f7b8e4e80dc1838995839bb9527b0c4efa27d3c07110b79506"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\env\\invalid\\.env.production",
+    "hash": "0c7bfb486a481b8bd3618d2b0cef1b66c708d50638e04edbc6fc2b46c16439e1"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\env\\missing\\.env.production",
+    "hash": "b9f20cbe7ee64a24bcf72554c123cf2e859b9b40d971361e31afd9242f2e1221"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\env\\slash\\.env.production",
+    "hash": "6fa88e51e974ad444445a87bd4d7c98609b6242f1551a6f3c9bc94d4cb7cff0e"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\git-diff-stat.txt",
+    "hash": "e89c61c6726226c79351e54eacc5dc7d7e1cc1a398b99e6ccdc57227b268dd53"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\git-status-short.txt",
+    "hash": "55ea44162d997af0958976e0f561a4853cb3901d635f7c1a1ab29d7365854f2a"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\lint-final.txt",
+    "hash": "d335af4638e8cbc9db7554cefbe15904e722bf9d1d03c067e04481f0520283ca"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\lint.log",
+    "hash": "ae47c6b78cb3aeb5ee0418e63ffc1503e4c1b6c65e93da36bf7f5c5b5ffcfcff"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\public-build.log",
+    "hash": "db6048d712225526934d3439af490babce0ea1b610e8dc6e9f84654d76869130"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\public-config-invalid.png",
+    "hash": "347980d7097e4bf5a585bc2e72f23b8c4484181f864c387c6f532709b198a5c7"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\public-config-missing.png",
+    "hash": "347980d7097e4bf5a585bc2e72f23b8c4484181f864c387c6f532709b198a5c7"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\qa04.log",
+    "hash": "c932c982a1264022cd4257bddf4a73d052ea348fb54d17ae88eb0ac8552cbec6"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\qa14c3.log",
+    "hash": "a1c343d84b3e3bc7e28fc69f2791fddd453b297a47b1aa8618abba964d460b11"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\results.json",
+    "hash": "fa6feb499ed56ab3f08b45eebb72c1d3f10385a9f64461ee65feebc83a37f6a3"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\source-before\\auth.ts",
+    "hash": "cb505b025f236932a16f2ed1b8004f69f662eca190f7b583bc6b1bb64b58acec"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\source-before\\Header.tsx",
+    "hash": "fe79a976cf751b0df7446efcfb2a719efabaf9e250c2b3f2b4288369d1da9f81"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\source-before\\MachinesPage.tsx",
+    "hash": "c05063f5b3423f9e00de38096aae37a67329bfdf3d34cf45374a3d29ec959ef4"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\source-before\\NewsEventsPage.tsx",
+    "hash": "d3b637b6ff8985d6697e4d96a95a350a1dadcd5f678b7f00ba7956e50973094f"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\source-before\\SettingsPage.tsx",
+    "hash": "50c6d2bccbbe2631c05eef7fcd7209d1e7fbb1b9def28ec50a39ad57e5a6cd9c"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\url-audit-after.txt",
+    "hash": "fa02cd1225d56d6bf6562aa0623615ae727896f958d13ef439f95d528544d88e"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa15\\url-audit-before.txt",
+    "hash": "bf6321e858c1340ae6ce82b3d9a565b41f0ff7f4c25d7c41c5dfafb95ae71f74"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\admin-build.log",
+    "hash": "9de531c0971a0b483a637f072d71e2cdee63a581de945fdef27509540fb9e14e"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\api-build.log",
+    "hash": "ac93893729f54e990b28f82653ce4652373ca1af9b4456f14fd7783bcafc1cd2"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\backend.log",
+    "hash": "d74d9f98bd8b6dd086b91a98a37a90d5d5cee696c128ff545f36c735d2f749cb"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\baseline-dashboard-1440.png",
+    "hash": "289e18ac2acc5780b91dc9bc4fb955435c44c779dca2771af34c2245de3e3391"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\baseline-dashboard-375.png",
+    "hash": "f3b8677ad85cfec7058a7762beecf722bc367a5e7713385e1ae5e5008c5d21bf"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\baseline-dashboard-768.png",
+    "hash": "c40f107ea790c5d34bf12ba0b85691c01d828b19ecdd4172b4f197a1591755c4"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\baseline-machine-modal-1440.png",
+    "hash": "a87bcae783fbf4e86d34cf936654106b1ebee3cd41bda812b934627ebf4200cb"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\baseline-machine-modal-375.png",
+    "hash": "4fe3e4bfd7bcafacdd85b53f372521ade7649babc09b9891f70bfa4eb67987ee"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\baseline-machine-modal-768.png",
+    "hash": "3b6f7e02290d419d76486ce971ad39e91892df53730fecb8b67df17b104a815e"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\baseline.json",
+    "hash": "0bbc4349ebefd1af2772f5a4a79bc2299129b9c8fd9cc6203b25cb432f470437"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\dashboard-375.png",
+    "hash": "63d65bb5a938ec68ff084d9555cef025b8c5fd60ea57f18459dd7edbd664bc9d"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\dashboard-desktop-1440.png",
+    "hash": "289e18ac2acc5780b91dc9bc4fb955435c44c779dca2771af34c2245de3e3391"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\diff-check-warnings.txt",
+    "hash": "3ca975a880c19843db1bf8f500e7ac312b495d4a7b801047b80270a08e499e39"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\git-diff-stat.txt",
+    "hash": "75109e18d988a86dd624ffb3b342c9325d40941a07503384c9561dc0282bc511"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\git-diff-warnings.txt",
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\git-status-short.txt",
+    "hash": "eb138819f834a114c421371857850ee670efa809a53eff2b38620f5b145720b2"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\lint.log",
+    "hash": "ae47c6b78cb3aeb5ee0418e63ffc1503e4c1b6c65e93da36bf7f5c5b5ffcfcff"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\login-375.png",
+    "hash": "f9942675cdd41da3dc1ad01f7be4168279607fd0d647408fe10849714e4e8f3a"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\machine-modal-375.png",
+    "hash": "0337fa1853d1034d06a24309b1c39e7b5311934881bb6ed65dd6c5db373b98e4"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\machines-375.png",
+    "hash": "df666acdbdb94a711ecb918e243062dbff25880fa90902a35c62ff6cfc2d13ca"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\news-375.png",
+    "hash": "5bcf8d16fbfdded4a30651f82f3b820953bd7e91ebef234b6da0a3f77f43df34"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\news-bilingual-modal-375.png",
+    "hash": "226d029196eeab353845ee4807bab186c639c84e9879990450006b487c2aef73"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\news-modal-tablet-768.png",
+    "hash": "3aed7648dfb1b3485f5ae2e1ee090096dfc5b19a7fa877452cdc6e15497c666e"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\public-build.log",
+    "hash": "f99df20cb10d5e5f7abb118f27abb7154722a0b8229f1dc56f389bf52ddf54f0"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa01.log",
+    "hash": "9e3b3a4c066608f78136fa3189c48c238f3e466b1f3ba7aad892a468c98bc4d0"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa04.log",
+    "hash": "c932c982a1264022cd4257bddf4a73d052ea348fb54d17ae88eb0ac8552cbec6"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa14c3.log",
+    "hash": "a1c343d84b3e3bc7e28fc69f2791fddd453b297a47b1aa8618abba964d460b11"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\configured\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\configured\\assets\\index-e586FSyn.js",
+    "hash": "d749065b18a27ffc88b50c93300be35d0834ac3179b608c0088c7dd3392e70a9"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\configured\\index.html",
+    "hash": "b17843500c84d32d8d75bd5f279d156c979987f119667e985bbb00e602343ae4"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\invalid\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\invalid\\assets\\index-BTVVDD5k.js",
+    "hash": "6b129aeab483a532f1d76d5fc47f1b35cc17e11313d47393274ba414b1221c26"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\invalid\\index.html",
+    "hash": "8057f6f7e8a0b0a8cc6872c9bd9f6b3c79498cecf922415aaf71d96b436a5e53"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\missing\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\missing\\assets\\index-wKKIj52S.js",
+    "hash": "2bb9aa067e49d3fc169aebdff66b9fb48efd573b105f2b38bee8cf65f1cbbbf5"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\missing\\index.html",
+    "hash": "168a3b3697024bc149a8e3d6ec16feb7325bfa7c8f09dc115e4f8bfe79c7a9de"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\slash\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\slash\\assets\\index-Ct47RYBy.js",
+    "hash": "02203382c70833e97ffbe04840da18c3a5114c4fb85c2e9d6b9c41f13b50c6cc"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\builds\\slash\\index.html",
+    "hash": "49c9cfd38ab20cf0f9295edb7a24c3301042726f74e24c9d95b1363d7a08094b"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\configured-header.png",
+    "hash": "a936fca999d037b90237ee5263a772df0c5602aa8d4384e0d18604c119cef157"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\env\\configured\\.env.production",
+    "hash": "d6e425f0bce63c6b989811634f04a82f46dfff7176edc1d85555f42d282351e2"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\env\\dev-explicit\\.env.development",
+    "hash": "fc52ecaa7ff932502e0adafcc985a97fd6a1683f138b398d83d62dd3fe40288f"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\env\\dev-fallback\\.env.development",
+    "hash": "aaf17bc5977091f7b8e4e80dc1838995839bb9527b0c4efa27d3c07110b79506"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\env\\invalid\\.env.production",
+    "hash": "0c7bfb486a481b8bd3618d2b0cef1b66c708d50638e04edbc6fc2b46c16439e1"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\env\\missing\\.env.production",
+    "hash": "b9f20cbe7ee64a24bcf72554c123cf2e859b9b40d971361e31afd9242f2e1221"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\env\\slash\\.env.production",
+    "hash": "6fa88e51e974ad444445a87bd4d7c98609b6242f1551a6f3c9bc94d4cb7cff0e"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\public-config-invalid.png",
+    "hash": "88fa19baea138564963a95119e05b75a01b49da98a3af9aeb2a3f21f56519310"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\public-config-missing.png",
+    "hash": "b284a555692385be6317a7892bb26dda17f8fb5cb681b660335dda399469cbaa"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15-regression\\results.json",
+    "hash": "a2975ee08b8112b4fea24c2204d276ede9d08aa8e3a073699f6b7c4481b4d776"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa15.log",
+    "hash": "169515403a8969b56c8f33e1fb42dfcaa6a0b446dfe67f51ae098b6f4d976764"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa16-source.diff",
+    "hash": "d6cd07bfed287b44705334afe5d58ea1f005c3849942ce15e501cf70e798387b"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\qa16.log",
+    "hash": "4352424da6b5f9ed2af5b8d7755ec76536a658467c927e4e1bbfa2d5c58ac7de"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\results.json",
+    "hash": "7917646fbb53861af6bec6d7a8473c7b1fe8075127a346fe3cf9ca4fe84e4dce"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\sidebar-open-375.png",
+    "hash": "0c1f111047a2b8d9141cb58192093d9b4e337b910d81ed3faac712b5538208b9"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\admin.css",
+    "hash": "09ef98cdf801a1b83944c18a5a3ba0849bda4e4f93b9fbb4355af95138b0168c"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\App.tsx",
+    "hash": "3d82a38534eb93ec5eecf6332471db7c0585290f5f40df0406f9ee6093090074"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Header.tsx",
+    "hash": "37dd2ff92624eab6cd1e31209874f411bc95e5b1e6cf5e14e9a963062a0a59bd"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Modal.tsx",
+    "hash": "96f07a1bf12835e8c9cf539063402c06fabdea02bfe1fc4bafcf708db31f6bd6"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\components-Sidebar.tsx",
+    "hash": "f81844b5f207fc7e6d8b3b6896bf64f204cf60201360645d028ea47ddef5e4d8"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-ContactsPage.tsx",
+    "hash": "4e5199d81d68445594e8bf210582fea93ef1c9bbc704915f33f92c663c68519c"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-DashboardPage.tsx",
+    "hash": "0205356f9cf519ad6424ca3dfc6737302d4b0c35dfa42a24b7ff78f108e9f6f1"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-MachinesPage.tsx",
+    "hash": "f38c10f86d87045b43e61171b5e44b9bbfcf750ac936b0bbf88ae4e0299eeb95"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-MediaPage.tsx",
+    "hash": "2de193d9b2befad77647c6c9384e3481204659fa4e9c0fec4f4a96460cfbb2d5"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-NewsEventsPage.tsx",
+    "hash": "a0d3c5bbc694c64a78b38c48b08d289ea4316037a34b790ad56d24ce1c0e3bbd"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-SettingsPage.tsx",
+    "hash": "3987dca9dd380df80f506e1e0ecf4a2c29b4a8b7a43564ac6368988e961ab7ad"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-StandardsPage.tsx",
+    "hash": "a9a835e94eea08bf40a227ba6ca78687037cb0d8369b6e41cc8649569136a34f"
+  },
+  {
+    "path": "artifacts\\qa-2026-10-03\\qa16\\source-before\\pages-UsersPage.tsx",
+    "hash": "404716195b35300b08cd5d30695a3d61d2ea73e3b647adf71ee1d4011cfd718c"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\admin-build.log",
+    "hash": "890d546c82fc0b8b81f35f66f85a94a21a76947de0678522762d926ba69dbae1"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\api-build.log",
+    "hash": "ac93893729f54e990b28f82653ce4652373ca1af9b4456f14fd7783bcafc1cd2"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\api-e2e.log",
+    "hash": "41657daf7cf929dc8ffe68a968ffdeb329378f73962d5b6d85d9805991b8545d"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\api-lint.log",
+    "hash": "5f560292dc733da1f99940f8272dde14befd643ac3d1427f78df598b98ada8c1"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\api-unit.log",
+    "hash": "b39fd006c81f279a6c54e39f452e7cf7c7156054102a56ec355112a45d9f8069"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\create-browser-proof.mjs",
+    "hash": "43dfc3e5821f71458e4a5686525a979228ea5fe320ba14963c2413c786d2fafe"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\create-legacy-proof.mjs",
+    "hash": "d0857b980f2200e83997657ed3addb7b0607b29ef3965d46d4d72d1e221db513"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\diff-check-after.txt",
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\diff-check-before.txt",
+    "hash": "3ca975a880c19843db1bf8f500e7ac312b495d4a7b801047b80270a08e499e39"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\event-end-browser-proof.log",
+    "hash": "4745be6fc31bc89f6530672a19933f63669a091d45a4d96ac198c555432a4140"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\event-end-browser-proof.mjs",
+    "hash": "128bfde3e30f4f322dc6dbddb5301f554bbeded98f93078c48a638f69d9ddcf3"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\event-end-entered.png",
+    "hash": "2c379a292692cf4973ce153d9016fd8874140bf3027c04f2b9b889bbffd76671"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\event-end-proof.json",
+    "hash": "eeb7c2d81c91c7ad1b43c0527cbf2e00693d95dc7e8fdafbb627fb3ca9a9e71b"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\FINAL-01-AUDIT.txt",
+    "hash": "5282eefb47999ff7dcda8b9ebe8fa82244056c96a6d51046c62f98f15fabde4c"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\git-diff-after.txt",
+    "hash": "75109e18d988a86dd624ffb3b342c9325d40941a07503384c9561dc0282bc511"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\git-diff-before.txt",
+    "hash": "75109e18d988a86dd624ffb3b342c9325d40941a07503384c9561dc0282bc511"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\git-diff-warnings.txt",
+    "hash": "3ca975a880c19843db1bf8f500e7ac312b495d4a7b801047b80270a08e499e39"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\git-status-after.txt",
+    "hash": "35099df82edec3e2092ebd20d78137733beff5815c2640d785133a686acfa4c0"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\git-status-before.txt",
+    "hash": "35099df82edec3e2092ebd20d78137733beff5815c2640d785133a686acfa4c0"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\harness-output-redirect.json",
+    "hash": "a9ff0324e338f139227a169f38f68ea06ca014732d308e1f8a5931de09e14e27"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\hashes-before.json",
+    "hash": "69e85b48a410558b81775603416e69d0c724cd16c472162f6f24013d93c02ad6"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\head-before.txt",
+    "hash": "7419f74d2a2a9c594031dc3851b5293da2f348e4dac135df3b8f22b4432566da"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\integrity-after.json",
+    "hash": "ca67376eaaea29831914426715236ab2f31cf08e34d9c9d0b2f5f202adbf6285"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\integrity-git-warnings.txt",
+    "hash": "ce5008d59c259103b60e605a7a1274e8ccb0f07d52dec0a806ea1eb8f5a0a25a"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\inventory.json",
+    "hash": "7ef95b944a0e6fb05763679c068bfd993dcdd8a5fe26bf342be7d99d65de5926"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\legacy-location-browser-proof.log",
+    "hash": "ec5028b52606c5b00266f3c39f46739ea3974cb05ef55a8a10d75fb3921fbff4"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\legacy-location-browser-proof.mjs",
+    "hash": "f1d6f0590fcd7ce20191bf2f9506d830c86edc78211edd8d19a6fceb9377b50f"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\legacy-location-missing.png",
+    "hash": "79f0508c057a58c3f59121b95fa5cdb5c826ad43dcae417f45797378afefbf5d"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\legacy-location-proof.json",
+    "hash": "dfe3e0ca915b7e5fffbf302b4e361b35c5ac35e17d6fe888ee9c8d24c2c1ef2d"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\migration-consistency.json",
+    "hash": "0eb97e605072dc743b70c104d7a72c6cd367b2f97140ad8cc978422f4ef5da28"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\old-artifacts-before.json",
+    "hash": "9d8621a2aeea2dbc58ed2e47196997b6c70cc5e30fb3c77aff76b209111f27e5"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\public-build.log",
+    "hash": "88eb754bfd2c50ebbe826771bd57276586772111a9e285c303bc8de7388dfa4f"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa01-auth-browser.log",
+    "hash": "b1c46ebdffa116549794ff7be7cf5215f8ecbf64e082bf76a1c6216746384375"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa04-mutation-browser.log",
+    "hash": "5dd2496d39f048d0ab6c292815452dc7019b717342718b29c5e787b2d7822fc4"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa05-contact-browser.log",
+    "hash": "54c6b6b17c068c43b9d1840d2de304cf8bbb8931b4ab226163d49bd949cb53a9"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa06-about-browser.log",
+    "hash": "57b387f8a373e6629a9ef5c02e04420bc8fad54e678a99cff273e01c691538ed"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa08-contact-browser.log",
+    "hash": "75f6d0d6ba0dcd2da09a5ab8ff0c57e5a5693ff0d3acdea372417ee773f0a9be"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa09-contact-browser.log",
+    "hash": "35fbdde360aa6cb5db394e25ab6f24e0f97ae88f8ddbcab4bf40fe7399a83f1d"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa10-empty-state-browser.log",
+    "hash": "9207e1fac2cc14f2876b3c1f3ca769a007b822f9e24f09dd8551f4ea222b3985"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa11-detail-state-browser.log",
+    "hash": "87fe65e7c878b24bd9cd743399a092347f49698e6dc0fe2284d32f7492066e66"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa12-article-blocks-browser.log",
+    "hash": "2d32444c8465c552e0306182f36e44298b611598b96f19cc70b01557e1cfd2f6"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa13-baker-links-browser.log",
+    "hash": "3d3ddb41317cbd9fafaae577917d22f60c35d625ebb9cd678d3a8174f39e896e"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c3-admin-bilingual-browser.log",
+    "hash": "291dd28041fb9820153a4b12123d9522689379defbe672495a1ce07808ba2d29"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c4\\en-detail.png",
+    "hash": "823d1db859437b616b3d0046beb1ff1777e5bd44290310c9f7a83a8cde21a9b3"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c4\\en-empty-home-1280.png",
+    "hash": "bdd0ed4bdcf54b10c4b638e37ec428dbbe5e305a7c17e743efd3c92e209e1573"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c4\\en-empty-home-375.png",
+    "hash": "2d7153123dd7e0017338e8aaa66decd3f4fae0d3ccbc60868d60a755f86eb3d0"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c4\\en-empty-list.png",
+    "hash": "cd6aa0a9352adcf0288751b113310c7d62ccf1033058bac9335414a7f4f33ffe"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c4\\results.json",
+    "hash": "81fe39094d305ecfb47187b1c75845c55c3a9ad9a8573fa1924819b3ff5e81a1"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c4\\unknown-slug-404.png",
+    "hash": "fa7bc9e98f2407a9e8daf3fe87be72b22c49a89d23a898f64970e59c5f849f1f"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c4\\vi-only-unavailable.png",
+    "hash": "3ec7b73e6f8c86eb47483cc8b51a2cd9d79f6588a3f33e80f9124874ef510c53"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa14c4-public-bilingual-browser.log",
+    "hash": "90692e74c5ffb73bcde37d203574c67c99405232938444d0e2740a73e2cb08c4"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\configured\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\configured\\assets\\index-e586FSyn.js",
+    "hash": "d749065b18a27ffc88b50c93300be35d0834ac3179b608c0088c7dd3392e70a9"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\configured\\index.html",
+    "hash": "b17843500c84d32d8d75bd5f279d156c979987f119667e985bbb00e602343ae4"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\invalid\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\invalid\\assets\\index-BTVVDD5k.js",
+    "hash": "6b129aeab483a532f1d76d5fc47f1b35cc17e11313d47393274ba414b1221c26"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\invalid\\index.html",
+    "hash": "8057f6f7e8a0b0a8cc6872c9bd9f6b3c79498cecf922415aaf71d96b436a5e53"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\missing\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\missing\\assets\\index-wKKIj52S.js",
+    "hash": "2bb9aa067e49d3fc169aebdff66b9fb48efd573b105f2b38bee8cf65f1cbbbf5"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\missing\\index.html",
+    "hash": "168a3b3697024bc149a8e3d6ec16feb7325bfa7c8f09dc115e4f8bfe79c7a9de"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\slash\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\slash\\assets\\index-Ct47RYBy.js",
+    "hash": "02203382c70833e97ffbe04840da18c3a5114c4fb85c2e9d6b9c41f13b50c6cc"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\builds\\slash\\index.html",
+    "hash": "49c9cfd38ab20cf0f9295edb7a24c3301042726f74e24c9d95b1363d7a08094b"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\configured-header.png",
+    "hash": "888962a450b059314e7da31d0d9d4e4e080af3ba09d147eda0928f43b00ee7e8"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\env\\configured\\.env.production",
+    "hash": "d6e425f0bce63c6b989811634f04a82f46dfff7176edc1d85555f42d282351e2"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\env\\dev-explicit\\.env.development",
+    "hash": "fc52ecaa7ff932502e0adafcc985a97fd6a1683f138b398d83d62dd3fe40288f"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\env\\dev-fallback\\.env.development",
+    "hash": "aaf17bc5977091f7b8e4e80dc1838995839bb9527b0c4efa27d3c07110b79506"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\env\\invalid\\.env.production",
+    "hash": "0c7bfb486a481b8bd3618d2b0cef1b66c708d50638e04edbc6fc2b46c16439e1"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\env\\missing\\.env.production",
+    "hash": "b9f20cbe7ee64a24bcf72554c123cf2e859b9b40d971361e31afd9242f2e1221"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\env\\slash\\.env.production",
+    "hash": "6fa88e51e974ad444445a87bd4d7c98609b6242f1551a6f3c9bc94d4cb7cff0e"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\public-config-invalid.png",
+    "hash": "1a9c134f59a6ccf6485492b928dbd4cee5c582d8f213f3c3db1fe8327d28e179"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\public-config-missing.png",
+    "hash": "1a9c134f59a6ccf6485492b928dbd4cee5c582d8f213f3c3db1fe8327d28e179"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15\\results.json",
+    "hash": "0386498166dbedc93e2159fe42e316ba79916abbde0fcbba03909342260787e4"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa15-admin-urls-browser.log",
+    "hash": "7dcdfe8a573a9e38c87bd06bff10a85c1b6494af539acf09e56c3aa8e3f703c6"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\dashboard-375.png",
+    "hash": "63d65bb5a938ec68ff084d9555cef025b8c5fd60ea57f18459dd7edbd664bc9d"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\dashboard-desktop-1440.png",
+    "hash": "289e18ac2acc5780b91dc9bc4fb955435c44c779dca2771af34c2245de3e3391"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\login-375.png",
+    "hash": "f9942675cdd41da3dc1ad01f7be4168279607fd0d647408fe10849714e4e8f3a"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\machine-modal-375.png",
+    "hash": "0337fa1853d1034d06a24309b1c39e7b5311934881bb6ed65dd6c5db373b98e4"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\machines-375.png",
+    "hash": "df666acdbdb94a711ecb918e243062dbff25880fa90902a35c62ff6cfc2d13ca"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\news-375.png",
+    "hash": "5d79e3c027280510f80ed57f936de8e5c61c0e524481b9d9d26cc26350092057"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\news-bilingual-modal-375.png",
+    "hash": "226d029196eeab353845ee4807bab186c639c84e9879990450006b487c2aef73"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\news-modal-tablet-768.png",
+    "hash": "3aed7648dfb1b3485f5ae2e1ee090096dfc5b19a7fa877452cdc6e15497c666e"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\results.json",
+    "hash": "7917646fbb53861af6bec6d7a8473c7b1fe8075127a346fe3cf9ca4fe84e4dce"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16\\sidebar-open-375.png",
+    "hash": "36a77b98a74e060d866c9b30fbf966ff9da3e12f57b905d00636277e193680bb"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16-admin-responsive-browser.log",
+    "hash": "fffb269572c8c39159dbd435016fb35eae1283c696e988957b42c5d5ed6ff057"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\qa16-output-redirect.mjs",
+    "hash": "a12de0ea0316c07722786245551d3f43bba80c191fbd78dca6fd00fe9fe2eee8"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\regression-results.json",
+    "hash": "14aa822fadb58ff64a1764849ca2e9cb9dcf30946147d6a6ede7caef4e999538"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\root-lint.log",
+    "hash": "ae47c6b78cb3aeb5ee0418e63ffc1503e4c1b6c65e93da36bf7f5c5b5ffcfcff"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\run-regressions.mjs",
+    "hash": "b4bcbaab47ca699055c7a6df8c9919c54840f25d99cce8f04f8a43ebb4ef922c"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\schema-static.log",
+    "hash": "3b669ad20b790deae6437e7ef0711f085df92cdbb1fc902bcaa9725ac6ff6bb5"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\static-audit.mjs",
+    "hash": "0ed370e242e57050cd65867476778f8986b8532fad3f7e0fc88ddd8954e8cab7"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\static-git-warnings.txt",
+    "hash": "3ca975a880c19843db1bf8f500e7ac312b495d4a7b801047b80270a08e499e39"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\verify-integrity.mjs",
+    "hash": "f11fc2b3f57cde8d1e44d61106deab36c4a8d40f471d4a317141ebbd6e71e533"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\vi-update-proof.json",
+    "hash": "590c8fcb94de6ff1413dfd96711e2d593a0dc17036ecd59ccf6c0b0bf63208c0"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\vi-update-proof.log",
+    "hash": "5032f153b51c8f2200d1e41936c5b61bc3ef331729d9b4e54ad698f16aa8fa4a"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\vi-update-proof.mjs",
+    "hash": "1b64a6615173d2fce5a1e66ed2b8c775f765aad3ce682e08cf7f61fa0b84ec2c"
+  },
+  {
+    "path": "artifacts\\final-01-2026-10-03\\write-report.mjs",
+    "hash": "1cec72e3ee4ae338526c4d0f6bcd2952c82b9327ef012d7af00afee2d0016f8b"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\api-e2e.log",
+    "hash": "4fe84e75f99897798648776398def7baa73e6c59afaf2ace078842282d5a2a96"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\api-lint.log",
+    "hash": "5f560292dc733da1f99940f8272dde14befd643ac3d1427f78df598b98ada8c1"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\api-red-confirmed.log",
+    "hash": "12b2a1df5dd384facc74664b33de687eb39e3fcfc96c5c5c220f40982b625465"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\api-red.log",
+    "hash": "129159c1abfb9427dedd8ff85bca1d9cefbd5aef56b5ed3b7dbe09598881087b"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\api-unit.log",
+    "hash": "d1903eac3e3b01c492c6f09f74b6cb1b5214e7739b13cfdcc18207843d10cfa0"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\baseline.mjs",
+    "hash": "c8cd3527efa95fac5d2ea2068af56c02d3e94089d21d2c789d3c194f1a30fbdc"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser\\event-end-retained.png",
+    "hash": "d6d96b683c7404b0daa68d45aa18b29080e4af6c6bb0a983c4ecc87f857e5ad0"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser\\legacy-location-visible.png",
+    "hash": "a174eb6ce30239102e859a15ed68c53c94369e876a0d32c07db792b232ac2c0e"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser\\results.json",
+    "hash": "3df5d645127d67586a52fa942eed518c54d18567cb5d557401cc115dbd224490"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser-full.log",
+    "hash": "fe8febbdd292e18a61c2c65d5729d5e89caee46b057a4ce367219c3a4d06e805"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser-red\\results.json",
+    "hash": "4549021e12acb72ae028b96b1c23e433ea9f3e9fbf1df6864f1c3c353e1d70f0"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser-red-confirmed\\results.json",
+    "hash": "f18b512925e8817e85c6a1dcdd691a9bb582461dd37ed4b0b7286c313ede2149"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser-red-confirmed.log",
+    "hash": "efb16797d44146c609bd9e1dcd37ba6a065013da10b00afa0d6f7df5b8bc9874"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser-red.log",
+    "hash": "0b1442203211c6ca346ee97a21122c58b958bd17439ffb3bded245a433183c59"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\browser-targeted.log",
+    "hash": "068a503070caa2697038ce4c6fd004102e4ba06c6d6302bf765927d286b8b3ce"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\build-admin.log",
+    "hash": "1e2fe45c98accad1255cde3b9935539e678ebb1e238bbe70976bd51beb78ce48"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\build-api.log",
+    "hash": "ac93893729f54e990b28f82653ce4652373ca1af9b4456f14fd7783bcafc1cd2"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\build-public.log",
+    "hash": "32b52f0ded67507ab45f1453dce872546849ad7d3240d5eb3d041f17d6db185f"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\diff-check-after.txt",
+    "hash": "3ca975a880c19843db1bf8f500e7ac312b495d4a7b801047b80270a08e499e39"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\diff-check-before.txt",
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\diff-check-final.txt",
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\files-before.json",
+    "hash": "f5abfb1eb71da4dddef42d28b0b43780ab1a3bf091f6d7d0ca0a8151dfd3b605"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\FINAL-01-FOLLOW-UP.txt",
+    "hash": "5cb5230f3ae73582c32a5596ad28448265c6f3176c278e6bff625dc4f0f5b761"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\finish.mjs",
+    "hash": "63e601c94a4cfe25c2c40d0fdd58491b87bb6e1c9462995dc2615d11e3931d31"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\git-diff-after.txt",
+    "hash": "d50edb59cddde635db310ddb2ce2cf72f5497332c75a0a38969b5603bb7aae23"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\git-diff-before.txt",
+    "hash": "75109e18d988a86dd624ffb3b342c9325d40941a07503384c9561dc0282bc511"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\git-status-after.txt",
+    "hash": "a6c5066a897ea1ef4b6b78f9becd4ca558aba4acab72f9cd4523f4ea48b45367"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\git-status-before.txt",
+    "hash": "f3f2b8d96235b55687983c18e7c83fe9b0d423e58430dc1d37186161f7b857e7"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\harness-output-redirect.json",
+    "hash": "8f87af6960037be85b8a82bbdf058c7b2edf257b6b5959964503984a4a7d99a8"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\head-before.txt",
+    "hash": "7419f74d2a2a9c594031dc3851b5293da2f348e4dac135df3b8f22b4432566da"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\integrity-after.json",
+    "hash": "951f71dad40208f0f1fa8aafadf97e144fddfa69d004ace81c16c3caadfcc46f"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\lint.log",
+    "hash": "ae47c6b78cb3aeb5ee0418e63ffc1503e4c1b6c65e93da36bf7f5c5b5ffcfcff"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\old-artifacts-before.json",
+    "hash": "c7f45d2b9a7f040f5873e8f1d15a6f83f35a1fff29bb350ec387932206a9b8a3"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\prepare.mjs",
+    "hash": "70c3005c809fc98e52e93041ae530764f83f99f3dd50f5ca8b3ab2d6d4b70b43"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa01-auth-browser.log",
+    "hash": "b1c46ebdffa116549794ff7be7cf5215f8ecbf64e082bf76a1c6216746384375"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa04-mutation-browser.log",
+    "hash": "5dd2496d39f048d0ab6c292815452dc7019b717342718b29c5e787b2d7822fc4"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa05-contact-browser.log",
+    "hash": "54c6b6b17c068c43b9d1840d2de304cf8bbb8931b4ab226163d49bd949cb53a9"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa06-about-browser.log",
+    "hash": "57b387f8a373e6629a9ef5c02e04420bc8fad54e678a99cff273e01c691538ed"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa08-contact-browser.log",
+    "hash": "75f6d0d6ba0dcd2da09a5ab8ff0c57e5a5693ff0d3acdea372417ee773f0a9be"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa09-contact-browser.log",
+    "hash": "35fbdde360aa6cb5db394e25ab6f24e0f97ae88f8ddbcab4bf40fe7399a83f1d"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa10-empty-state-browser.log",
+    "hash": "9207e1fac2cc14f2876b3c1f3ca769a007b822f9e24f09dd8551f4ea222b3985"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa11-detail-state-browser.log",
+    "hash": "87fe65e7c878b24bd9cd743399a092347f49698e6dc0fe2284d32f7492066e66"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa12-article-blocks-browser.log",
+    "hash": "2d32444c8465c552e0306182f36e44298b611598b96f19cc70b01557e1cfd2f6"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa13-baker-links-browser.log",
+    "hash": "3d3ddb41317cbd9fafaae577917d22f60c35d625ebb9cd678d3a8174f39e896e"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c3-admin-bilingual-browser.log",
+    "hash": "291dd28041fb9820153a4b12123d9522689379defbe672495a1ce07808ba2d29"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c4\\en-detail.png",
+    "hash": "823d1db859437b616b3d0046beb1ff1777e5bd44290310c9f7a83a8cde21a9b3"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c4\\en-empty-home-1280.png",
+    "hash": "33400c02ae76342180ed6705a045852f0310df54693421cdac9313eb66a699a0"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c4\\en-empty-home-375.png",
+    "hash": "ebc6b779da2a802613e630a60d15be389948b70325769a474b95fb00ec71e489"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c4\\en-empty-list.png",
+    "hash": "992971d7c2f39ec4bd5ea1a97eadbad680172369776ca099afdaefb564f2501a"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c4\\results.json",
+    "hash": "81fe39094d305ecfb47187b1c75845c55c3a9ad9a8573fa1924819b3ff5e81a1"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c4\\unknown-slug-404.png",
+    "hash": "fa7bc9e98f2407a9e8daf3fe87be72b22c49a89d23a898f64970e59c5f849f1f"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c4\\vi-only-unavailable.png",
+    "hash": "3ec7b73e6f8c86eb47483cc8b51a2cd9d79f6588a3f33e80f9124874ef510c53"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa14c4-public-bilingual-browser.log",
+    "hash": "90692e74c5ffb73bcde37d203574c67c99405232938444d0e2740a73e2cb08c4"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\configured\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\configured\\assets\\index-DRLQo_cA.js",
+    "hash": "9a50f9f8d9c5a77bb31d129490f8581afd7f4a0674ee314ddd4580dcf36a34cd"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\configured\\index.html",
+    "hash": "ef6673fd369efbe7546abd93bc6041e8e878c2e66e6a21783824b540b78b06ca"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\invalid\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\invalid\\assets\\index-BH2wHz_X.js",
+    "hash": "1038c79988de6d3d8127a6136c3ddae7207f42d2a07e471f9ab2e22460953c7a"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\invalid\\index.html",
+    "hash": "548d589c6fc8e30f164a110dfc585e410857eee41a0a255e4110b8815d6b0432"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\missing\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\missing\\assets\\index-D3JhMXUb.js",
+    "hash": "fe12adbd406db5612d06f0ca72bb06012c5fa75f5d0e714eb422663225df8e8f"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\missing\\index.html",
+    "hash": "57073496d3c71dc7675d7f55a8ea64c8f74abb4f6d3f8a2a9a6522c7625b840e"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\slash\\assets\\index-66ohp5eu.css",
+    "hash": "5f716a539e8bd5bd7c988446a450a1f66f2893c1dc8d38bee18103cc98a4adca"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\slash\\assets\\index-DveSueOB.js",
+    "hash": "dfad5ddd2ba4b585180ac9cecfedc64d6a0fde2dfb46c0767d26afaf01e1218c"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\builds\\slash\\index.html",
+    "hash": "b12f6050aebc72de0d7c4071dd9546cece3aee0a99c64b6185e53f3463ebd4e3"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\configured-header.png",
+    "hash": "08cdad3622ce93f359060219b641f72aa632f31ad1e7d8e993ffe18dc85e1bde"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\env\\configured\\.env.production",
+    "hash": "d6e425f0bce63c6b989811634f04a82f46dfff7176edc1d85555f42d282351e2"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\env\\dev-explicit\\.env.development",
+    "hash": "fc52ecaa7ff932502e0adafcc985a97fd6a1683f138b398d83d62dd3fe40288f"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\env\\dev-fallback\\.env.development",
+    "hash": "aaf17bc5977091f7b8e4e80dc1838995839bb9527b0c4efa27d3c07110b79506"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\env\\invalid\\.env.production",
+    "hash": "0c7bfb486a481b8bd3618d2b0cef1b66c708d50638e04edbc6fc2b46c16439e1"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\env\\missing\\.env.production",
+    "hash": "b9f20cbe7ee64a24bcf72554c123cf2e859b9b40d971361e31afd9242f2e1221"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\env\\slash\\.env.production",
+    "hash": "6fa88e51e974ad444445a87bd4d7c98609b6242f1551a6f3c9bc94d4cb7cff0e"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\public-config-invalid.png",
+    "hash": "52aa196a175685156e7761242bb23cd08452a1ae20f528869d316b67102b5a1b"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\public-config-missing.png",
+    "hash": "ef7fc6b4eb33268c2731d408da1ed88a3b65b2a2f322609c9d62d8a462e9a238"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15\\results.json",
+    "hash": "fa062694ebdafd875905278de81077b8f177f199e635cfe030b4984d00425dc6"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa15-admin-urls-browser.log",
+    "hash": "7dcdfe8a573a9e38c87bd06bff10a85c1b6494af539acf09e56c3aa8e3f703c6"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\dashboard-375.png",
+    "hash": "63d65bb5a938ec68ff084d9555cef025b8c5fd60ea57f18459dd7edbd664bc9d"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\dashboard-desktop-1440.png",
+    "hash": "289e18ac2acc5780b91dc9bc4fb955435c44c779dca2771af34c2245de3e3391"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\login-375.png",
+    "hash": "f9942675cdd41da3dc1ad01f7be4168279607fd0d647408fe10849714e4e8f3a"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\machine-modal-375.png",
+    "hash": "0337fa1853d1034d06a24309b1c39e7b5311934881bb6ed65dd6c5db373b98e4"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\machines-375.png",
+    "hash": "df666acdbdb94a711ecb918e243062dbff25880fa90902a35c62ff6cfc2d13ca"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\news-375.png",
+    "hash": "5d79e3c027280510f80ed57f936de8e5c61c0e524481b9d9d26cc26350092057"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\news-bilingual-modal-375.png",
+    "hash": "226d029196eeab353845ee4807bab186c639c84e9879990450006b487c2aef73"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\news-modal-tablet-768.png",
+    "hash": "3aed7648dfb1b3485f5ae2e1ee090096dfc5b19a7fa877452cdc6e15497c666e"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\results.json",
+    "hash": "7917646fbb53861af6bec6d7a8473c7b1fe8075127a346fe3cf9ca4fe84e4dce"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16\\sidebar-open-375.png",
+    "hash": "36a77b98a74e060d866c9b30fbf966ff9da3e12f57b905d00636277e193680bb"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16-admin-responsive-browser.log",
+    "hash": "fffb269572c8c39159dbd435016fb35eae1283c696e988957b42c5d5ed6ff057"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\qa16-output-redirect.mjs",
+    "hash": "7d7b845632361fc2eef9e0bfa3afa4877192e890a5e3df029e7bdfeabd569271"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\regression-results.json",
+    "hash": "4aaedf584166ade358c8d22fea1fd04ccf192a2a08cfde6642fa65e939b3ce67"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\run-regressions.mjs",
+    "hash": "d5834f2c6b27d363fbd16682ea4741953a95e0c61e1eead9f3f6c5852c9a1366"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\schema-static.log",
+    "hash": "3b669ad20b790deae6437e7ef0711f085df92cdbb1fc902bcaa9725ac6ff6bb5"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\source-before\\admin\\src\\services\\api.ts",
+    "hash": "ebd33d3464259be69d7d926d8a85df7a1f7c5d85180f453234e8b82e879b65f2"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\source-before\\api\\src\\modules\\news-events\\news-events.service.ts",
+    "hash": "7ed7137e51a4f6da38ff36f3db24434693f0f7d2d9df22097aa9240e7d791602"
+  },
+  {
+    "path": "artifacts\\final-01-fixes-2026-10-03\\source-before\\src\\context\\DataContext.tsx",
+    "hash": "7962843de7bea5c94f642a06c09d05399494655d75a3c87b4323fdd823ef36a5"
+  }
+]

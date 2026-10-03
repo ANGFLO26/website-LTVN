@@ -1,0 +1,131 @@
+{
+  "id": "FINAL-01-B1",
+  "severity": "P1",
+  "environment": "Production Admin build; Chromium UTC; all API requests intercepted; no DB",
+  "expected": "Entered eventEndAt is included in POST and PUT, then retained on reopen",
+  "actual": "POST and PUT omit eventEndAt; success closes modal; reopen loses the entered end date",
+  "enteredCreate": "2026-11-11T11:45",
+  "enteredEdit": "2026-11-12T12:45",
+  "afterCreate": "",
+  "afterEdit": "",
+  "requests": [
+    {
+      "method": "POST",
+      "payload": {
+        "type": "event",
+        "title": "Audit event end date",
+        "slug": "audit-event-end-date",
+        "shortDescription": null,
+        "thumbnailImageId": null,
+        "status": "draft",
+        "content": {
+          "version": 1,
+          "blocks": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "text": "Tiêu đề bài viết"
+              }
+            },
+            {
+              "type": "paragraph",
+              "data": {
+                "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+              }
+            }
+          ]
+        },
+        "location": null,
+        "eventStartAt": "2026-11-11T09:00:00.000Z",
+        "translations": {
+          "vi": {
+            "title": "Audit event end date",
+            "slug": "audit-event-end-date",
+            "shortDescription": null,
+            "location": null,
+            "content": {
+              "version": 1,
+              "blocks": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "text": "Tiêu đề bài viết"
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "data": {
+                    "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+                  }
+                }
+              ]
+            },
+            "seoTitle": null,
+            "seoDescription": null
+          }
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "payload": {
+        "type": "event",
+        "title": "Audit event end date",
+        "slug": "audit-event-end-date",
+        "shortDescription": null,
+        "thumbnailImageId": null,
+        "status": "draft",
+        "content": {
+          "version": 1,
+          "blocks": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "text": "Tiêu đề bài viết"
+              }
+            },
+            {
+              "type": "paragraph",
+              "data": {
+                "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+              }
+            }
+          ]
+        },
+        "location": null,
+        "eventStartAt": "2026-11-11T09:00:00.000Z",
+        "translations": {
+          "vi": {
+            "title": "Audit event end date",
+            "slug": "audit-event-end-date",
+            "shortDescription": null,
+            "location": null,
+            "content": {
+              "version": 1,
+              "blocks": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "text": "Tiêu đề bài viết"
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "data": {
+                    "text": "Nội dung chi tiết giới thiệu sự kiện hoặc công nghệ mới của PAC..."
+                  }
+                }
+              ]
+            },
+            "seoTitle": null,
+            "seoDescription": null
+          }
+        }
+      }
+    }
+  ]
+}

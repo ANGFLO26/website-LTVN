@@ -1,0 +1,8 @@
+{
+  "appliedAt": "2026-10-03T08:13:02.044Z",
+  "migrationFile": "0001_add_news_event_translations.sql",
+  "legacyNewsEventsCount": 3,
+  "backfilledTranslationsCount": 3,
+  "enTranslationsCount": 0,
+  "status": "MIGRATION_0001_APPLIED_SUCCESSFULLY"
+}

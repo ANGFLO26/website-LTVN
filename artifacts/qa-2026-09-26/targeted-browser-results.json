@@ -1,0 +1,75 @@
+[
+  {
+    "name": "About with three paragraphs renders",
+    "passed": true,
+    "detail": {
+      "errors": []
+    }
+  },
+  {
+    "name": "About tolerates shorter valid CMS article",
+    "passed": false,
+    "detail": {
+      "errors": [
+        "Cannot read properties of undefined (reading 'vi')"
+      ]
+    }
+  },
+  {
+    "name": "Catalog searches linked technical standard",
+    "passed": true,
+    "detail": {
+      "text": "PAC\nCHƯNG CẤT\nOptiDist 2\n\nThiết bị chưng cất khí quyển tự động (PAC OptiDist 2)\n\nỨNG DỤNG\nXăng · Diesel · Nhiên liệu hàng không\nTIÊU CHUẨN\nASTM D86\nXem chi tiết"
+    }
+  },
+  {
+    "name": "Catalog category filter",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "News filter Tất cả",
+    "passed": true,
+    "detail": {
+      "count": 2
+    }
+  },
+  {
+    "name": "News filter Dự án",
+    "passed": true,
+    "detail": {
+      "count": 2
+    }
+  },
+  {
+    "name": "News filter Sự kiện",
+    "passed": true,
+    "detail": {
+      "count": 1
+    }
+  },
+  {
+    "name": "News filter Tin tức",
+    "passed": true,
+    "detail": {
+      "count": 0
+    }
+  },
+  {
+    "name": "Empty news response removes stale content",
+    "passed": false,
+    "detail": {
+      "count": 2
+    }
+  },
+  {
+    "name": "Unknown product with populated catalog returns 404",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "Contact handles successful API response",
+    "passed": true,
+    "detail": {}
+  }
+]

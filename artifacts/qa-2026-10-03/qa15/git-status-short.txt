@@ -1,0 +1,97 @@
+git status --short
+Exit code: 0
+
+ M admin/src/App.tsx
+ M admin/src/admin.css
+ M admin/src/components/Header.tsx
+ M admin/src/components/Sidebar.tsx
+ M admin/src/pages/ContactsPage.tsx
+ M admin/src/pages/MachinesPage.tsx
+ M admin/src/pages/MediaPage.tsx
+ M admin/src/pages/NewsEventsPage.tsx
+ M admin/src/pages/SettingsPage.tsx
+ M admin/src/pages/StandardsPage.tsx
+ M admin/src/pages/UsersPage.tsx
+ M admin/src/services/api.ts
+ M admin/src/types/index.ts
+ M api/.env.example
+ M api/drizzle/meta/_journal.json
+ M api/package-lock.json
+ M api/package.json
+ M api/src/app.controller.ts
+ M api/src/app.module.ts
+ M api/src/database/schema.ts
+ M api/src/modules/contacts/contacts.controller.ts
+ M api/src/modules/contacts/contacts.service.ts
+ M api/src/modules/machines/machines.controller.ts
+ M api/src/modules/machines/machines.module.ts
+ M api/src/modules/machines/machines.service.ts
+ M api/src/modules/media/media.controller.ts
+ M api/src/modules/media/media.service.ts
+ M api/src/modules/news-events/news-events.controller.ts
+ M api/src/modules/news-events/news-events.module.ts
+ M api/src/modules/news-events/news-events.service.ts
+ M api/src/modules/standards/standards.controller.ts
+ M api/src/modules/standards/standards.service.ts
+ M api/src/modules/users/users.controller.ts
+ M api/src/modules/users/users.service.ts
+ M api/test/app.e2e-spec.ts
+ M src/components/Layout.tsx
+ M src/components/NewsCard.tsx
+ M src/context/DataContext.tsx
+ M src/data.ts
+ M src/i18n.tsx
+ M src/pages/AboutPage.tsx
+ M src/pages/ArticlePage.tsx
+ M src/pages/ContactPage.tsx
+ M src/pages/HomePage.tsx
+ M src/pages/NewsPage.tsx
+ M src/pages/ProductPage.tsx
+ M src/site-v7.css
+?? admin/.env.example
+?? admin/src/auth.css
+?? admin/src/components/ConfiguredExternalLink.tsx
+?? admin/src/config/
+?? admin/src/pages/LoginPage.tsx
+?? admin/src/services/auth.ts
+?? admin/src/services/machine-payload.ts
+?? api/AUTH.md
+?? api/drizzle/0001_add_news_event_translations.sql
+?? api/drizzle/meta/0001_snapshot.json
+?? api/src/modules/auth/
+?? api/src/modules/contacts/dto/
+?? api/src/modules/machines/dto/
+?? api/src/modules/machines/machines-admin.controller.ts
+?? api/src/modules/media/dto/
+?? api/src/modules/news-events/dto/
+?? api/src/modules/news-events/news-events-admin.controller.ts
+?? api/src/modules/standards/dto/
+?? api/src/modules/users/dto/
+?? api/test/auth.e2e-spec.ts
+?? api/test/content-visibility.e2e-spec.ts
+?? api/test/machines-mutation.e2e-spec.ts
+?? api/test/media-mutation.e2e-spec.ts
+?? api/test/news-mutation.e2e-spec.ts
+?? api/test/news-translations.e2e-spec.ts
+?? api/test/public-contact.e2e-spec.ts
+?? api/test/qa03-date-control.e2e-spec.ts
+?? api/test/standards-mutation.e2e-spec.ts
+?? api/test/user-relations.e2e-spec.ts
+?? api/test/users-mutation.e2e-spec.ts
+?? artifacts/qa-2026-09-26/
+?? artifacts/qa-2026-10-03/
+?? scripts/qa01-auth-browser.mjs
+?? scripts/qa04-mutation-browser.mjs
+?? scripts/qa05-contact-browser.mjs
+?? scripts/qa06-about-browser.mjs
+?? scripts/qa08-contact-browser.mjs
+?? scripts/qa09-contact-browser.mjs
+?? scripts/qa10-empty-state-browser.mjs
+?? scripts/qa11-detail-state-browser.mjs
+?? scripts/qa12-article-blocks-browser.mjs
+?? scripts/qa13-baker-links-browser.mjs
+?? scripts/qa14c1-schema-test.mjs
+?? scripts/qa14c3-admin-bilingual-browser.mjs
+?? scripts/qa14c4-public-bilingual-browser.mjs
+?? scripts/qa15-admin-urls-browser.mjs
+

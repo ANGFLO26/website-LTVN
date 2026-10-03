@@ -1,0 +1,13 @@
+{
+  "results": [
+    {
+      "id": "GATE",
+      "type": "REAL POSTGRESQL",
+      "result": "FAIL",
+      "error": "Error: spawn UNKNOWN\n    at ChildProcess.spawn (node:internal/child_process:441:11)\n    at spawn (node:child_process:796:9)\n    at command (file:///D:/Work/LTVN/Last/artifacts/final-02-postgres-2026-10-03/integration.mjs:46:15)\n    at file:///D:/Work/LTVN/Last/artifacts/final-02-postgres-2026-10-03/integration.mjs:88:15"
+    }
+  ],
+  "evidence": {},
+  "passed": 0,
+  "total": 1
+}

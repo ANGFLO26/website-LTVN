@@ -1,0 +1,25 @@
+admin\vite.config.ts:10:        target: 'http://localhost:3000',
+admin\index.html:5:    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+admin\index.html:8:    <link rel="preconnect" href="https://fonts.googleapis.com">
+admin\index.html:9:    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+admin\index.html:10:    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+admin\src\pages\ContactsPage.tsx:231:                <a href={`mailto:${viewingContact.email}`} style={{ color: '#38bdf8', fontSize: '0.85rem' }}>
+admin\src\pages\ContactsPage.tsx:237:                <a href={`tel:${viewingContact.phone}`} style={{ color: '#34d399', fontSize: '0.85rem' }}>
+admin\src\pages\MachinesPage.tsx:160:                        src={img?.publicUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><rect fill='%231e293b' width='60' height='60'/><text fill='%2364748b' font-family='sans-serif' font-size='9' dy='3' font-weight='bold' x='50%' y='50%' text-anchor='middle'>PAC</text></svg>"}
+admin\src\pages\MachinesPage.tsx:197:                          href={`http://localhost:5173/san-pham/${m.slug}`}
+admin\src\pages\MachinesPage.tsx:198:                          target="_blank"
+admin\src\pages\SettingsPage.tsx:39:                http://localhost:3000/api
+admin\src\pages\SettingsPage.tsx:45:                http://localhost:5174
+admin\src\pages\SettingsPage.tsx:53:                href="http://localhost:3000/api/docs"
+admin\src\pages\SettingsPage.tsx:54:                target="_blank"
+admin\src\pages\SettingsPage.tsx:59:                <span>Mở Swagger OpenAPI UI (/api/docs)</span>
+admin\src\pages\NewsEventsPage.tsx:471:                        href={`http://localhost:5173/tin-tuc/${item.slug}`}
+admin\src\pages\NewsEventsPage.tsx:472:                        target="_blank"
+admin\src\components\Header.tsx:35:              ? 'Đang kết nối tới NestJS API (http://localhost:3000/api)'
+admin\src\components\Header.tsx:47:          href="http://localhost:3000/api/docs"
+admin\src\components\Header.tsx:48:          target="_blank"
+admin\src\components\Header.tsx:51:          title="Mở tài liệu Swagger OpenAPI"
+admin\src\components\Header.tsx:53:          <span>Swagger Docs</span>
+admin\src\pages\MediaPage.tsx:119:                  target.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect fill='%231e293b' width='400' height='300'/><text fill='%2364748b' font-family='sans-serif' font-size='14' dy='5' font-weight='bold' x='50%' y='50%' text-anchor='middle'>Image Unavailable</text></svg>";
+admin\src\pages\MediaPage.tsx:220:                placeholder="https://... hoặc /assets/..."
+admin\src\pages\MediaPage.tsx:279:                      'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80';

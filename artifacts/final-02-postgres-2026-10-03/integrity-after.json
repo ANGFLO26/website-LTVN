@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "head": "6b0a76ec2bae5e099142d659a23a14f5f6dc20fc",
+  "sourceChanges": "NONE",
+  "testSourceChanges": "NONE",
+  "schemaMigrationChanges": "NONE",
+  "filesVerified": 667,
+  "oldArtifactFilesVerified": 337,
+  "oldArtifactsByteIdentical": true,
+  "addedOutsideFinal02": [],
+  "removed": [],
+  "commitPushResetRevertStash": false
+}

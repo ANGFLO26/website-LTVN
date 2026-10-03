@@ -1,0 +1,8 @@
+{
+  "archiveSHA256": "e2246ba91d22345bc3d017586c09ede52d9df180b1eeb480f050445f1cad84e2",
+  "strategy": "fresh local native cluster; no existing data or service",
+  "runtimeRoot": "C:\\Users\\taiphan\\AppData\\Local\\Temp\\ltvn-final02-fedfead39a2d4933b405dd34f5c12022",
+  "downloadUrl": "https://get.enterprisedb.com/postgresql/postgresql-18.6-5-windows-x64-binaries.zip",
+  "bin": "C:\\Users\\taiphan\\AppData\\Local\\Temp\\ltvn-final02-fedfead39a2d4933b405dd34f5c12022\\pgsql\\bin",
+  "extractedFiles": 1583
+}

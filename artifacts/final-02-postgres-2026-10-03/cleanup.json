@@ -1,0 +1,13 @@
+{
+  "apiStopped": true,
+  "testDatabaseDropped": false,
+  "postgresStopped": true,
+  "runtimeRemoved": true,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 57997,
+    "database": "ltvn_final02_test",
+    "user": "ltvn_final02"
+  },
+  "testOnlyTriggers": "NONE CREATED"
+}

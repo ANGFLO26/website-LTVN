@@ -1,0 +1,166 @@
+{
+  "runId": "FINAL02E_MUS4A91P_F0YH",
+  "timestamp": "2026-10-03T08:15:58.684Z",
+  "results": [
+    {
+      "id": "C1",
+      "name": "PostgreSQL locale CHECK rejects invalid locale (fr)",
+      "status": "PASS"
+    },
+    {
+      "id": "C2",
+      "name": "PostgreSQL event+locale UNIQUE rejects duplicate VI for same event",
+      "status": "PASS"
+    },
+    {
+      "id": "C3",
+      "name": "PostgreSQL global translation slug UNIQUE rejects reuse",
+      "status": "PASS"
+    },
+    {
+      "id": "C4",
+      "name": "PostgreSQL FK rejects nonexistent parent news_event_id",
+      "status": "PASS"
+    },
+    {
+      "id": "C5",
+      "name": "PostgreSQL parent DELETE cascades to both translations",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH_LOGIN",
+      "name": "POST /api/auth/login succeeds with valid credentials; no passwordHash leak",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH_ME",
+      "name": "GET /api/auth/me returns authenticated admin identity",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH_GUARD",
+      "name": "Unauthenticated request to protected endpoint rejected with 401",
+      "status": "PASS"
+    },
+    {
+      "id": "CRUD_USERS",
+      "name": "Users CREATE -> READ -> UPDATE -> READ -> physical DELETE; no passwordHash",
+      "status": "PASS"
+    },
+    {
+      "id": "CRUD_STANDARDS",
+      "name": "Standards CREATE -> READ -> UPDATE -> READ -> DELETE; real PostgreSQL persistence",
+      "status": "PASS"
+    },
+    {
+      "id": "CRUD_MEDIA",
+      "name": "Media metadata CREATE -> READ -> DELETE; real PostgreSQL persistence",
+      "status": "PASS"
+    },
+    {
+      "id": "CRUD_MACHINES",
+      "name": "Machines draft hidden / published visible; child cascade delete verified",
+      "status": "PASS"
+    },
+    {
+      "id": "NEWS_VI_ONLY",
+      "name": "News VI-only creates parent row, mirrors legacy fields to VI, EN is absent",
+      "status": "PASS"
+    },
+    {
+      "id": "B1_DATES",
+      "name": "B1: eventEndAt update to B2 then to null physically persists as NULL",
+      "status": "PASS"
+    },
+    {
+      "id": "NEWS_BILINGUAL",
+      "name": "News bilingual stores VI + EN translations; parent mirrors VI, no EN overwrite",
+      "status": "PASS"
+    },
+    {
+      "id": "B2_VALIDATION",
+      "name": "B2: Invalid VI title/slug updates rejected with 400; DB state strictly unmodified",
+      "status": "PASS"
+    },
+    {
+      "id": "EN_ISOLATION",
+      "name": "EN-only update isolation: EN updated, VI and parent legacy fields completely unchanged",
+      "status": "PASS"
+    },
+    {
+      "id": "VI_ISOLATION",
+      "name": "VI-only update isolation: VI updated and mirrored to parent, EN completely unchanged",
+      "status": "PASS"
+    },
+    {
+      "id": "POLICY_A",
+      "name": "Policy A: VI list has VI-only+bilingual, EN list has bilingual only, drafts hidden, 404 on missing locale",
+      "status": "PASS"
+    },
+    {
+      "id": "B3_LEGACY",
+      "name": "B3 compatibility: Legacy parent without translation works on VI, returns 404 on EN",
+      "status": "PASS"
+    },
+    {
+      "id": "CONTACTS",
+      "name": "Contacts: Public 6-field POST, DB verification, injection rejected, Admin GET/PATCH/DELETE",
+      "status": "PASS"
+    },
+    {
+      "id": "ROLLBACK",
+      "name": "Real transaction rollback: Translation UNIQUE conflict rolls back parent + VI; zero orphans",
+      "status": "PASS"
+    },
+    {
+      "id": "DATA_INTEGRITY",
+      "name": "Data integrity audit: 0 orphan translations, 0 duplicate locales, 0 invalid locales, 0 duplicate slugs",
+      "status": "PASS"
+    },
+    {
+      "id": "CLEANUP",
+      "name": "Cleanup test data only: All FINAL02E run rows removed; remaining test rows = 0 across all tables",
+      "status": "PASS"
+    },
+    {
+      "id": "DATA_PROTECTION",
+      "name": "Existing project data integrity: All pre-existing rows intact and unaffected",
+      "status": "PASS"
+    }
+  ],
+  "evidence": {
+    "identity": {
+      "database": "neondb",
+      "username": "neondb_owner",
+      "address": "127.0.0.1/32",
+      "port": 5432,
+      "version": "PostgreSQL 18.6 (4e955f5) on aarch64-unknown-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit"
+    },
+    "preCounts": {
+      "users": 2,
+      "standards": 17,
+      "media_assets": 16,
+      "machines": 13,
+      "machine_specs": 39,
+      "machine_applications": 37,
+      "machine_highlights": 39,
+      "machine_standards": 19,
+      "news_events": 3,
+      "news_event_translations": 3,
+      "contacts": 6
+    },
+    "postCounts": {
+      "users": 2,
+      "standards": 17,
+      "media_assets": 16,
+      "machines": 13,
+      "machine_specs": 39,
+      "machine_applications": 37,
+      "machine_highlights": 39,
+      "machine_standards": 19,
+      "news_events": 3,
+      "news_event_translations": 3,
+      "contacts": 6
+    }
+  }
+}

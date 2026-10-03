@@ -1,0 +1,1219 @@
+{
+  "passed": 15,
+  "total": 15,
+  "results": [
+    {
+      "id": "T1",
+      "name": "Login fits 375 with accessible inputs/buttons",
+      "result": "PASS"
+    },
+    {
+      "id": "T2",
+      "name": "Dashboard uses full mobile width without permanent sidebar",
+      "result": "PASS"
+    },
+    {
+      "id": "T3",
+      "name": "Drawer opens and closes through X/backdrop/Escape; focus is contained",
+      "result": "PASS"
+    },
+    {
+      "id": "T4",
+      "name": "Selecting a menu changes the active view and closes the mobile drawer",
+      "result": "PASS"
+    },
+    {
+      "id": "T5",
+      "name": "Machines table scrolls locally; Create/Edit/Delete remain reachable",
+      "result": "PASS"
+    },
+    {
+      "id": "T6",
+      "name": "Machine editor, applications/highlights/specs/standards fit one column",
+      "result": "PASS"
+    },
+    {
+      "id": "T7",
+      "name": "News list preserves readable translation badge and reachable Create/Edit",
+      "result": "PASS"
+    },
+    {
+      "id": "T8",
+      "name": "VI/English tabs, JSON and SEO fields fit; authored values survive tab changes",
+      "result": "PASS"
+    },
+    {
+      "id": "T9",
+      "name": "Media cards and create modal handle long filename/URL without clipping",
+      "result": "PASS"
+    },
+    {
+      "id": "T10",
+      "name": "Standards/Users/Settings/Contacts pages and forms remain usable",
+      "result": "PASS"
+    },
+    {
+      "id": "T11",
+      "name": "Mobile Header controls fit without overlap and preserve QA-15 actions",
+      "result": "PASS"
+    },
+    {
+      "id": "T12",
+      "name": "Desktop keeps 260px sidebar, groups, active state and two-column form",
+      "result": "PASS"
+    },
+    {
+      "id": "T13",
+      "name": "Tablet uses drawer; resize across 1024px resets overlay and scroll lock",
+      "result": "PASS"
+    },
+    {
+      "id": "T14",
+      "name": "Long Machine/News forms scroll top-to-bottom while Save/Cancel remain reachable",
+      "result": "PASS"
+    },
+    {
+      "id": "T15",
+      "name": "All core pages fit document width at 375/768/1440, including long text fixtures",
+      "result": "PASS"
+    }
+  ],
+  "matrix": [
+    {
+      "page": "Login",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": null,
+      "main": null,
+      "header": null,
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Dashboard",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 812,
+        "right": 0,
+        "bottom": 812,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 1434.46875,
+        "right": 375,
+        "bottom": 1434.46875,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 125,
+        "right": 375,
+        "bottom": 125,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Máy Phân Tích PAC",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 812,
+        "right": 0,
+        "bottom": 812,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 812,
+        "right": 375,
+        "bottom": 812,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 125,
+        "right": 375,
+        "bottom": 125,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tin Tức & Sự Kiện",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 812,
+        "right": 0,
+        "bottom": 812,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 812,
+        "right": 375,
+        "bottom": 812,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 125,
+        "right": 375,
+        "bottom": 125,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Thư Viện Media",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 812,
+        "right": 0,
+        "bottom": 812,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 812,
+        "right": 375,
+        "bottom": 812,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 125,
+        "right": 375,
+        "bottom": 125,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tiêu Chuẩn Quốc Tế",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 812,
+        "right": 0,
+        "bottom": 812,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 812,
+        "right": 375,
+        "bottom": 812,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 125,
+        "right": 375,
+        "bottom": 125,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tài Khoản Quản Trị",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 812,
+        "right": 0,
+        "bottom": 812,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 812,
+        "right": 375,
+        "bottom": 812,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 125,
+        "right": 375,
+        "bottom": 125,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Cấu Hình API",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 812,
+        "right": 0,
+        "bottom": 812,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 1128.984375,
+        "right": 375,
+        "bottom": 1128.984375,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 125,
+        "right": 375,
+        "bottom": 125,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Yêu Cầu Liên Hệ",
+      "width": 375,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 812,
+        "right": 0,
+        "bottom": 812,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 812,
+        "right": 375,
+        "bottom": 812,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 125,
+        "right": 375,
+        "bottom": 125,
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Login",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": null,
+      "main": null,
+      "header": null,
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Dashboard",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 0,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 1051.046875,
+        "right": 768,
+        "bottom": 1051.046875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 80.21875,
+        "right": 768,
+        "bottom": 80.21875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Máy Phân Tích PAC",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 0,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 900,
+        "right": 768,
+        "bottom": 900,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 80.21875,
+        "right": 768,
+        "bottom": 80.21875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tin Tức & Sự Kiện",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 0,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 900,
+        "right": 768,
+        "bottom": 900,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 80.21875,
+        "right": 768,
+        "bottom": 80.21875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Thư Viện Media",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 0,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 900,
+        "right": 768,
+        "bottom": 900,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 80.21875,
+        "right": 768,
+        "bottom": 80.21875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tiêu Chuẩn Quốc Tế",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 0,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 900,
+        "right": 768,
+        "bottom": 900,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 80.21875,
+        "right": 768,
+        "bottom": 80.21875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tài Khoản Quản Trị",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 0,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 900,
+        "right": 768,
+        "bottom": 900,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 80.21875,
+        "right": 768,
+        "bottom": 80.21875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Cấu Hình API",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 0,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 900,
+        "right": 768,
+        "bottom": 900,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 80.21875,
+        "right": 768,
+        "bottom": 80.21875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Yêu Cầu Liên Hệ",
+      "width": 768,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "documentWidth": 768,
+      "bodyWidth": 768,
+      "overflow": 0,
+      "sidebar": {
+        "x": -260,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 0,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 900,
+        "right": 768,
+        "bottom": 900,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 80.21875,
+        "right": 768,
+        "bottom": 80.21875,
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Login",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": null,
+      "main": null,
+      "header": null,
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Dashboard",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": {
+        "x": 0,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 260,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "header": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 70,
+        "right": 1440,
+        "bottom": 70,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Máy Phân Tích PAC",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": {
+        "x": 0,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 260,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "header": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 70,
+        "right": 1440,
+        "bottom": 70,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tin Tức & Sự Kiện",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": {
+        "x": 0,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 260,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "header": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 70,
+        "right": 1440,
+        "bottom": 70,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Thư Viện Media",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": {
+        "x": 0,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 260,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "header": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 70,
+        "right": 1440,
+        "bottom": 70,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tiêu Chuẩn Quốc Tế",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": {
+        "x": 0,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 260,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "header": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 70,
+        "right": 1440,
+        "bottom": 70,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Tài Khoản Quản Trị",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": {
+        "x": 0,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 260,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "header": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 70,
+        "right": 1440,
+        "bottom": 70,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Cấu Hình API",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": {
+        "x": 0,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 260,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "header": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 70,
+        "right": 1440,
+        "bottom": 70,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    },
+    {
+      "page": "Yêu Cầu Liên Hệ",
+      "width": 1440,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "overflow": 0,
+      "sidebar": {
+        "x": 0,
+        "y": 0,
+        "width": 260,
+        "height": 900,
+        "right": 260,
+        "bottom": 900,
+        "clientWidth": 259,
+        "scrollWidth": 259
+      },
+      "main": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "header": {
+        "x": 260,
+        "y": 0,
+        "width": 1180,
+        "height": 70,
+        "right": 1440,
+        "bottom": 70,
+        "clientWidth": 1180,
+        "scrollWidth": 1180
+      },
+      "headerClipped": false,
+      "modal": null,
+      "modalBody": null
+    }
+  ],
+  "baselineMetrics": [],
+  "proof": {
+    "network": "external traffic blocked; API mocked",
+    "migration": "NOT EXECUTED",
+    "tableScroll": {
+      "machines": {
+        "width": 341,
+        "scrollWidth": 884,
+        "scrollLeft": 543,
+        "overflowX": "auto"
+      }
+    },
+    "modalScroll": {
+      "Máy Phân Tích PAC": {
+        "client": 632,
+        "scroll": 745,
+        "reachedScrollTop": 113,
+        "returnedToTop": true
+      },
+      "Tin Tức & Sự Kiện": {
+        "client": 632,
+        "scroll": 1242,
+        "reachedScrollTop": 610,
+        "returnedToTop": true
+      }
+    }
+  },
+  "errors": [],
+  "unexpectedRequests": []
+}

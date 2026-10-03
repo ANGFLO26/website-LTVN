@@ -1,0 +1,19 @@
+{
+  "verifiedAt": "2026-10-03T08:12:37.580Z",
+  "exitCode": 0,
+  "sqlDump": {
+    "path": "D:\\Work\\LTVN\\Last\\artifacts\\final-02e-2026-10-03\\backup\\neondb_backup_2026-10-03T08-12-35-021Z.sql",
+    "exists": true,
+    "sizeBytes": 82008,
+    "isValidFormat": true
+  },
+  "jsonDump": {
+    "path": "D:\\Work\\LTVN\\Last\\artifacts\\final-02e-2026-10-03\\backup\\neondb_snapshot_2026-10-03T08-12-35-021Z.json",
+    "exists": true,
+    "sizeBytes": 106468,
+    "tableCount": 11,
+    "totalRows": 204
+  },
+  "durationMs": 2558,
+  "status": "VERIFIED_SUCCESSFUL"
+}
