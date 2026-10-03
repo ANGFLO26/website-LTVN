@@ -50,6 +50,8 @@ export const users = pgTable(
     fullName: varchar('full_name', { length: 255 }).notNull(),
     role: varchar('role', { length: 30 }).notNull(), // admin / editor
     status: varchar('status', { length: 30 }).default('active').notNull(), // active / inactive
+    failedLoginAttempts: integer('failed_login_attempts').default(0).notNull(),
+    lockedUntil: timestamp('locked_until', { withTimezone: true }),
     lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
@@ -281,6 +283,39 @@ export const newsEvents = pgTable(
 );
 
 // ============================================================================
+// 10b. news_event_translations — Bản dịch đa ngôn ngữ cho Tin tức & Sự kiện
+// ============================================================================
+export const newsEventTranslations = pgTable(
+  'news_event_translations',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    newsEventId: uuid('news_event_id')
+      .notNull()
+      .references(() => newsEvents.id, { onDelete: 'cascade' }),
+    locale: varchar('locale', { length: 10 }).notNull(), // 'vi' | 'en'
+    title: varchar('title', { length: 255 }).notNull(),
+    // Note: Global unique slug in news_event_translations is a stronger constraint
+    // than ERD recommendation to allow the current route /tin-tuc/:slug to resolve
+    // uniquely without requiring a locale prefix in v1.
+    slug: varchar('slug', { length: 255 }).notNull().unique(),
+    shortDescription: text('short_description'),
+    content: jsonb('content').$type<ContentJsonb>(),
+    location: varchar('location', { length: 500 }),
+    seoTitle: varchar('seo_title', { length: 255 }),
+    seoDescription: text('seo_description'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    check('news_event_translations_locale_check', sql`${table.locale} in ('vi', 'en')`),
+    unique('news_event_translations_event_locale_unique').on(table.newsEventId, table.locale),
+    index('news_event_translations_event_id_idx').on(table.newsEventId),
+    index('news_event_translations_locale_idx').on(table.locale),
+    index('news_event_translations_slug_idx').on(table.slug),
+  ]
+);
+
+// ============================================================================
 // 11. contacts — Contact form
 // ============================================================================
 export const contacts = pgTable(
@@ -401,7 +436,7 @@ export const machineStandardsRelations = relations(machineStandards, ({ one }) =
   }),
 }));
 
-export const newsEventsRelations = relations(newsEvents, ({ one }) => ({
+export const newsEventsRelations = relations(newsEvents, ({ one, many }) => ({
   thumbnailImage: one(mediaAssets, {
     fields: [newsEvents.thumbnailImageId],
     references: [mediaAssets.id],
@@ -410,12 +445,66 @@ export const newsEventsRelations = relations(newsEvents, ({ one }) => ({
     fields: [newsEvents.authorId],
     references: [users.id],
   }),
+  translations: many(newsEventTranslations),
 }));
 
-export const contactsRelations = relations(contacts, ({ one }) => ({
+export const newsEventTranslationsRelations = relations(newsEventTranslations, ({ one }) => ({
+  newsEvent: one(newsEvents, {
+    fields: [newsEventTranslations.newsEventId],
+    references: [newsEvents.id],
+  }),
+}));
+
+export const contactsRelations = relations(contacts, ({ one, many }) => ({
   assignedUser: one(users, {
     fields: [contacts.assignedTo],
     references: [users.id],
+  }),
+  outboxEntries: many(contactOutbox),
+}));
+
+// ============================================================================
+// 12. contact_outbox — Transactional outbox for Contact notifications
+// ============================================================================
+export const contactOutbox = pgTable(
+  'contact_outbox',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    contactId: uuid('contact_id')
+      .notNull()
+      .references(() => contacts.id, { onDelete: 'restrict' }),
+    eventType: varchar('event_type', { length: 100 }).notNull(),
+    status: varchar('status', { length: 30 }).default('pending').notNull(),
+    attemptCount: integer('attempt_count').default(0).notNull(),
+    nextAttemptAt: timestamp('next_attempt_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    lastError: text('last_error'),
+    processedAt: timestamp('processed_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    check(
+      'contact_outbox_status_check',
+      sql`${table.status} in ('pending', 'processing', 'sent', 'failed')`
+    ),
+    index('contact_outbox_status_next_attempt_idx').on(
+      table.status,
+      table.nextAttemptAt
+    ),
+    index('contact_outbox_contact_id_idx').on(table.contactId),
+  ]
+);
+
+export const contactOutboxRelations = relations(contactOutbox, ({ one }) => ({
+  contact: one(contacts, {
+    fields: [contactOutbox.contactId],
+    references: [contacts.id],
   }),
 }));
 
@@ -452,5 +541,11 @@ export type NewMachineStandard = InferInsertModel<typeof machineStandards>;
 export type NewsEvent = InferSelectModel<typeof newsEvents>;
 export type NewNewsEvent = InferInsertModel<typeof newsEvents>;
 
+export type NewsEventTranslation = InferSelectModel<typeof newsEventTranslations>;
+export type NewNewsEventTranslation = InferInsertModel<typeof newsEventTranslations>;
+
 export type Contact = InferSelectModel<typeof contacts>;
 export type NewContact = InferInsertModel<typeof contacts>;
+
+export type ContactOutbox = InferSelectModel<typeof contactOutbox>;
+export type NewContactOutbox = InferInsertModel<typeof contactOutbox>;

@@ -9,6 +9,7 @@ import { MachinesModule } from './modules/machines/machines.module.js';
 import { NewsEventsModule } from './modules/news-events/news-events.module.js';
 import { ContactsModule } from './modules/contacts/contacts.module.js';
 import { UsersModule } from './modules/users/users.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UsersModule } from './modules/users/users.module.js';
       envFilePath: ['.env', 'api/.env'],
     }),
     DatabaseModule,
+    AuthModule,
     StandardsModule,
     MediaModule,
     MachinesModule,

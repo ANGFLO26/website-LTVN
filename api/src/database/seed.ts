@@ -20,19 +20,57 @@ function getDatabaseUrl(): string {
   return process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/ltvn_db';
 }
 
-const databaseUrl = getDatabaseUrl();
-console.log('🌱 Bắt đầu nạp TOÀN DIỆN 100% dữ liệu từ Website chính vào PostgreSQL...');
-console.log(`🔗 Database: ${databaseUrl.replace(/:[^:@]+@/, ':****@')}\n`);
+export function assertSeedAllowed(env?: string): void {
+  const normalized = env?.trim().toLowerCase();
+  if (normalized === 'production') {
+    throw new Error('Seed is disabled in production');
+  }
+}
 
-const client = postgres(databaseUrl);
-const db = drizzle(client, { schema });
+export function getNodeEnv(): string | undefined {
+  if (process.env.NODE_ENV !== undefined && process.env.NODE_ENV !== '') {
+    return process.env.NODE_ENV;
+  }
+  try {
+    const envPath = resolve(__dirname, '../../.env');
+    const envContent = readFileSync(envPath, 'utf-8');
+    const match = envContent.match(/NODE_ENV=["']?([^"'\r\n]+)["']?/);
+    if (match && match[1]) return match[1];
+  } catch {
+    // ignore
+  }
+  return undefined;
+}
+
+export function isDirectExecution(): boolean {
+  if (!process.argv[1]) return false;
+  try {
+    const entryPath = resolve(process.argv[1]).toLowerCase();
+    const currentPath = resolve(fileURLToPath(import.meta.url)).toLowerCase();
+    return entryPath === currentPath;
+  } catch {
+    return false;
+  }
+}
+
+let client: postgres.Sql;
+let db: ReturnType<typeof drizzle<typeof schema>>;
 
 const USERS = {
   admin: '11111111-1111-4111-8111-111111111111',
   editor: '22222222-2222-4222-8222-222222222222',
 };
 
-async function seed() {
+export async function seed() {
+  assertSeedAllowed(getNodeEnv());
+
+  const databaseUrl = getDatabaseUrl();
+  console.log('🌱 Bắt đầu nạp TOÀN DIỆN 100% dữ liệu từ Website chính vào PostgreSQL...');
+  console.log(`🔗 Database: ${databaseUrl.replace(/:[^:@]+@/, ':****@')}\n`);
+
+  client = postgres(databaseUrl);
+  db = drizzle(client, { schema });
+
   try {
     console.log('[1/9] Dọn dẹp dữ liệu cũ...');
     await db.delete(schema.machineStandards);
@@ -41,6 +79,7 @@ async function seed() {
     await db.delete(schema.machineApplications);
     await db.delete(schema.machineImages);
     await db.delete(schema.newsEvents);
+    await db.delete(schema.contactOutbox);
     await db.delete(schema.contacts);
     await db.delete(schema.machines);
     await db.delete(schema.standards);
@@ -1720,8 +1759,18 @@ async function seed() {
     console.error('❌ Lỗi khi nạp dữ liệu vào database:', error);
     process.exit(1);
   } finally {
-    await client.end();
+    if (client) {
+      await client.end();
+    }
   }
 }
 
-seed();
+if (isDirectExecution()) {
+  try {
+    assertSeedAllowed(getNodeEnv());
+  } catch (error) {
+    console.error(`❌ ${(error as Error).message}`);
+    process.exit(1);
+  }
+  void seed();
+}

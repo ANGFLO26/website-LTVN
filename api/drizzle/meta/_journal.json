@@ -8,6 +8,27 @@
       "when": 1789403231025,
       "tag": "0000_known_stryfe",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790960350648,
+      "tag": "0001_add_news_event_translations",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791020399570,
+      "tag": "0002_ancient_vapor",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791023000837,
+      "tag": "0003_red_hellfire_club",
+      "breakpoints": true
     }
   ]
 }
