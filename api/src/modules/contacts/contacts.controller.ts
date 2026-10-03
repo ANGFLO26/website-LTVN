@@ -6,9 +6,14 @@ import {
   Delete,
   Body,
   Param,
+  ValidationPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ContactsService } from './contacts.service.js';
+import { Public } from '../auth/public.decorator.js';
+import { PublicContactDto } from './dto/public-contact.dto.js';
 import type * as schema from '../../database/schema.js';
 
 @ApiTags('Contacts')
@@ -30,8 +35,19 @@ export class ContactsController {
   }
 
   @Post()
+  @Public()
+  @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({ summary: 'Submit a new contact request' })
-  create(@Body() data: schema.NewContact) {
+  @ApiResponse({ status: 202, description: 'Yêu cầu liên hệ đã được tiếp nhận và đưa vào hàng đợi xử lý' })
+  @ApiResponse({ status: 400, description: 'Invalid visitor data or a non-whitelisted property' })
+  create(@Body(new ValidationPipe({
+    expectedType: PublicContactDto,
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    forbidUnknownValues: true,
+    transformOptions: { enableImplicitConversion: false },
+  })) data: PublicContactDto) {
     return this.contactsService.create(data);
   }
 
