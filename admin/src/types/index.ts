@@ -30,6 +30,10 @@ export interface MediaAsset {
   createdAt: string;
 }
 
+export type MediaCreateInput = Pick<MediaAsset,
+  'fileName' | 'storageKey' | 'publicUrl' | 'altText' | 'mimeType' | 'sizeBytes' | 'width' | 'height'
+>;
+
 export type MachineStatus = 'draft' | 'published' | 'archived';
 
 export interface MachineImage {
@@ -132,6 +136,21 @@ export interface ContentJsonb {
   blocks: ContentBlock[];
 }
 
+export interface NewsEventTranslation {
+  title: string;
+  slug: string;
+  shortDescription?: string | null;
+  content?: ContentJsonb | null;
+  location?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+}
+
+export interface NewsEventTranslations {
+  vi: NewsEventTranslation | null;
+  en: NewsEventTranslation | null;
+}
+
 export interface NewsEvent {
   id: string;
   type: NewsEventType;
@@ -148,6 +167,7 @@ export interface NewsEvent {
   location?: string | null;
   authorId?: string | null;
   author?: User;
+  translations?: NewsEventTranslations;
   createdAt: string;
   updatedAt: string;
 }

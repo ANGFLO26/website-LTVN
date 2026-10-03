@@ -1,7 +1,10 @@
+import { adminFetch } from './auth';
+import { machineMutationPayload } from './machine-payload';
 import type {
   Machine,
   Standard,
   MediaAsset,
+  MediaCreateInput,
   NewsEvent,
   Contact,
   User,
@@ -1720,10 +1723,23 @@ function setStored<T>(key: string, data: T): void {
   }
 }
 
-// HTTP request helper with timeout and fallback
-async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T | null> {
+export class ApiError extends Error {
+  status: number;
+  data?: unknown;
+
+  constructor(message: string, status: number, data?: unknown) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.data = data;
+  }
+}
+
+// HTTP request helper with strict error propagation and 204 handling
+async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  let res: Response;
   try {
-    const res = await fetch(endpoint, {
+    res = await adminFetch(endpoint, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -1731,14 +1747,51 @@ async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T
       },
       signal: AbortSignal.timeout(6000),
     });
-    if (!res.ok) {
-      console.warn(`[API] ${options?.method || 'GET'} ${endpoint} status ${res.status}`);
-      return null;
-    }
-    return (await res.json()) as T;
   } catch (err) {
-    console.warn(`[API] ${options?.method || 'GET'} ${endpoint} network failure:`, err);
-    return null;
+    if (err instanceof ApiError) {
+      throw err;
+    }
+    const message = err instanceof Error ? err.message : 'Lỗi kết nối mạng tới máy chủ.';
+    throw new ApiError(message, 0);
+  }
+
+  if (!res.ok) {
+    let errorMsg = `Yêu cầu thất bại (HTTP ${res.status})`;
+    let errorData: unknown = undefined;
+    try {
+      const body = await res.json();
+      errorData = body;
+      if (body && typeof body === 'object') {
+        if (typeof body.message === 'string') {
+          errorMsg = body.message;
+        } else if (Array.isArray(body.message) && typeof body.message[0] === 'string') {
+          errorMsg = body.message.join(', ');
+        } else if (typeof body.error === 'string') {
+          errorMsg = body.error;
+        }
+      }
+    } catch {
+      if (res.statusText) {
+        errorMsg = `${errorMsg}: ${res.statusText}`;
+      }
+    }
+    throw new ApiError(errorMsg, res.status, errorData);
+  }
+
+  // Handle 204 No Content or empty responses as successful
+  if (res.status === 204) {
+    return undefined as unknown as T;
+  }
+
+  const text = await res.text();
+  if (!text || !text.trim()) {
+    return undefined as unknown as T;
+  }
+
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return undefined as unknown as T;
   }
 }
 
@@ -1747,7 +1800,7 @@ export const api = {
   // Check backend health
   async checkBackend(): Promise<boolean> {
     try {
-      const res = await fetch('/api', { method: 'GET', signal: AbortSignal.timeout(2000) });
+      const res = await adminFetch('/api', { method: 'GET', signal: AbortSignal.timeout(2000) });
       return res.ok;
     } catch {
       return false;
@@ -1756,292 +1809,339 @@ export const api = {
 
   // Machines
   async getMachines(): Promise<Machine[]> {
-    const remote = await apiRequest<Machine[]>('/api/machines');
-    if (remote && Array.isArray(remote)) {
-      setStored('machines', remote);
-      return remote;
+    try {
+      const remote = await apiRequest<Machine[]>('/api/admin/machines');
+      if (remote && Array.isArray(remote)) {
+        setStored('machines', remote);
+        return remote;
+      }
+    } catch {
+      // Read fallback preserved
     }
     return getStored('machines', INITIAL_MACHINES);
   },
 
   async saveMachine(machine: Machine): Promise<Machine> {
-    let saved: Machine | null = null;
     const isExisting = Boolean(machine.id && isValidUuid(machine.id));
+    const payload = machineMutationPayload(machine);
 
+    let saved: Machine;
     if (isExisting) {
       saved = await apiRequest<Machine>(`/api/machines/${machine.id}`, {
         method: 'PUT',
-        body: JSON.stringify(machine),
+        body: JSON.stringify(payload),
       });
-    }
-
-    if (!saved) {
+    } else {
       saved = await apiRequest<Machine>('/api/machines', {
         method: 'POST',
-        body: JSON.stringify(machine),
+        body: JSON.stringify(payload),
       });
     }
 
-    const result = saved || {
-      ...machine,
-      id: machine.id || crypto.randomUUID(),
-      updatedAt: new Date().toISOString(),
-      createdAt: machine.createdAt || new Date().toISOString(),
-    };
-
     const list = getStored('machines', INITIAL_MACHINES);
-    const idx = list.findIndex((m) => m.id === result.id);
+    const idx = list.findIndex((m) => m.id === saved.id);
     if (idx >= 0) {
-      list[idx] = result;
+      list[idx] = saved;
     } else {
-      list.unshift(result);
+      list.unshift(saved);
     }
     setStored('machines', list);
-    return result;
+    return saved;
   },
 
   async deleteMachine(id: string): Promise<void> {
-    if (isValidUuid(id)) {
-      await apiRequest(`/api/machines/${id}`, { method: 'DELETE' });
+    if (!isValidUuid(id)) {
+      throw new ApiError('ID máy không hợp lệ.', 400);
     }
+    await apiRequest(`/api/machines/${id}`, { method: 'DELETE' });
     const list = getStored('machines', INITIAL_MACHINES).filter((m) => m.id !== id);
     setStored('machines', list);
   },
 
   // Standards
   async getStandards(): Promise<Standard[]> {
-    const remote = await apiRequest<Standard[]>('/api/standards');
-    if (remote && Array.isArray(remote)) {
-      setStored('standards', remote);
-      return remote;
+    try {
+      const remote = await apiRequest<Standard[]>('/api/standards');
+      if (remote && Array.isArray(remote)) {
+        setStored('standards', remote);
+        return remote;
+      }
+    } catch {
+      // Read fallback preserved
     }
     return getStored('standards', INITIAL_STANDARDS);
   },
 
   async saveStandard(standard: Standard): Promise<Standard> {
-    let saved: Standard | null = null;
     const isExisting = Boolean(standard.id && isValidUuid(standard.id));
+    const payload = {
+      code: standard.code,
+      organization: standard.organization,
+      year: standard.year,
+      title: standard.title,
+      description: standard.description,
+    };
 
+    let saved: Standard;
     if (isExisting) {
       saved = await apiRequest<Standard>(`/api/standards/${standard.id}`, {
         method: 'PUT',
-        body: JSON.stringify(standard),
+        body: JSON.stringify(payload),
       });
-    }
-
-    if (!saved) {
+    } else {
       saved = await apiRequest<Standard>('/api/standards', {
         method: 'POST',
-        body: JSON.stringify(standard),
+        body: JSON.stringify(payload),
       });
     }
 
-    const result = saved || {
-      ...standard,
-      id: standard.id || crypto.randomUUID(),
-      createdAt: standard.createdAt || new Date().toISOString(),
-    };
-
     const list = getStored('standards', INITIAL_STANDARDS);
-    const idx = list.findIndex((s) => s.id === result.id);
+    const idx = list.findIndex((s) => s.id === saved.id);
     if (idx >= 0) {
-      list[idx] = result;
+      list[idx] = saved;
     } else {
-      list.unshift(result);
+      list.unshift(saved);
     }
     setStored('standards', list);
-    return result;
+    return saved;
   },
 
   async deleteStandard(id: string): Promise<void> {
-    if (isValidUuid(id)) {
-      await apiRequest(`/api/standards/${id}`, { method: 'DELETE' });
+    if (!isValidUuid(id)) {
+      throw new ApiError('ID tiêu chuẩn không hợp lệ.', 400);
     }
+    await apiRequest(`/api/standards/${id}`, { method: 'DELETE' });
     const list = getStored('standards', INITIAL_STANDARDS).filter((s) => s.id !== id);
     setStored('standards', list);
   },
 
   // Media
   async getMedia(): Promise<MediaAsset[]> {
-    const remote = await apiRequest<MediaAsset[]>('/api/media');
-    if (remote && Array.isArray(remote)) {
-      setStored('media', remote);
-      return remote;
+    try {
+      const remote = await apiRequest<MediaAsset[]>('/api/media');
+      if (remote && Array.isArray(remote)) {
+        setStored('media', remote);
+        return remote;
+      }
+    } catch {
+      // Read fallback preserved
     }
     return getStored('media', INITIAL_MEDIA);
   },
 
-  async saveMedia(asset: MediaAsset): Promise<MediaAsset> {
+  async saveMedia(asset: MediaCreateInput & Partial<Pick<MediaAsset, 'id' | 'createdAt'>>): Promise<MediaAsset> {
+    const payload: MediaCreateInput = {
+      fileName: asset.fileName,
+      storageKey: asset.storageKey,
+      publicUrl: asset.publicUrl,
+      altText: asset.altText,
+      mimeType: asset.mimeType,
+      sizeBytes: asset.sizeBytes,
+      width: asset.width,
+      height: asset.height,
+    };
     const saved = await apiRequest<MediaAsset>('/api/media', {
       method: 'POST',
-      body: JSON.stringify(asset),
+      body: JSON.stringify(payload),
     });
 
-    const result = saved || {
-      ...asset,
-      id: asset.id || crypto.randomUUID(),
-      createdAt: asset.createdAt || new Date().toISOString(),
-    };
-
     const list = getStored('media', INITIAL_MEDIA);
-    const idx = list.findIndex((m) => m.id === result.id);
+    const idx = list.findIndex((m) => m.id === saved.id);
     if (idx >= 0) {
-      list[idx] = result;
+      list[idx] = saved;
     } else {
-      list.unshift(result);
+      list.unshift(saved);
     }
     setStored('media', list);
-    return result;
+    return saved;
   },
 
   async deleteMedia(id: string): Promise<void> {
-    if (isValidUuid(id)) {
-      await apiRequest(`/api/media/${id}`, { method: 'DELETE' });
+    if (!isValidUuid(id)) {
+      throw new ApiError('ID media không hợp lệ.', 400);
     }
+    await apiRequest(`/api/media/${id}`, { method: 'DELETE' });
     const list = getStored('media', INITIAL_MEDIA).filter((m) => m.id !== id);
     setStored('media', list);
   },
 
   // News Events
   async getNewsEvents(): Promise<NewsEvent[]> {
-    const remote = await apiRequest<NewsEvent[]>('/api/news-events');
-    if (remote && Array.isArray(remote)) {
-      setStored('news_events', remote);
-      return remote;
+    try {
+      const remote = await apiRequest<NewsEvent[]>('/api/admin/news-events');
+      if (remote && Array.isArray(remote)) {
+        setStored('news_events', remote);
+        return remote;
+      }
+    } catch {
+      // Read fallback preserved
     }
     return getStored('news_events', INITIAL_NEWS);
   },
 
   async saveNewsEvent(item: NewsEvent): Promise<NewsEvent> {
-    let saved: NewsEvent | null = null;
     const isExisting = Boolean(item.id && isValidUuid(item.id));
+    const payload: Record<string, any> = {
+      type: item.type,
+      title: item.title,
+      slug: item.slug,
+      shortDescription: item.shortDescription,
+      thumbnailImageId: item.thumbnailImageId === undefined ? undefined : item.thumbnailImageId?.trim() || null,
+      status: item.status,
+      content: item.content,
+      location: item.location,
+      eventStartAt: item.eventStartAt,
+      eventEndAt: item.eventEndAt,
+    };
 
+    if (item.translations) {
+      const transPayload: Record<string, any> = {};
+      if (item.translations.vi) {
+        transPayload.vi = item.translations.vi;
+      }
+      if (item.translations.en && item.translations.en.title && item.translations.en.title.trim()) {
+        transPayload.en = item.translations.en;
+      }
+      if (Object.keys(transPayload).length > 0) {
+        payload.translations = transPayload;
+      }
+    }
+
+    let saved: NewsEvent;
     if (isExisting) {
       saved = await apiRequest<NewsEvent>(`/api/news-events/${item.id}`, {
         method: 'PUT',
-        body: JSON.stringify(item),
+        body: JSON.stringify(payload),
       });
-    }
-
-    if (!saved) {
+    } else {
       saved = await apiRequest<NewsEvent>('/api/news-events', {
         method: 'POST',
-        body: JSON.stringify(item),
+        body: JSON.stringify(payload),
       });
     }
 
-    const result = saved || {
-      ...item,
-      id: item.id || crypto.randomUUID(),
-      updatedAt: new Date().toISOString(),
-      createdAt: item.createdAt || new Date().toISOString(),
-    };
-
     const list = getStored('news_events', INITIAL_NEWS);
-    const idx = list.findIndex((n) => n.id === result.id);
+    const idx = list.findIndex((n) => n.id === saved.id);
     if (idx >= 0) {
-      list[idx] = result;
+      list[idx] = saved;
     } else {
-      list.unshift(result);
+      list.unshift(saved);
     }
     setStored('news_events', list);
-    return result;
+    return saved;
   },
 
   async deleteNewsEvent(id: string): Promise<void> {
-    if (isValidUuid(id)) {
-      await apiRequest(`/api/news-events/${id}`, { method: 'DELETE' });
+    if (!isValidUuid(id)) {
+      throw new ApiError('ID bài viết không hợp lệ.', 400);
     }
+    await apiRequest(`/api/news-events/${id}`, { method: 'DELETE' });
     const list = getStored('news_events', INITIAL_NEWS).filter((n) => n.id !== id);
     setStored('news_events', list);
   },
 
   // Contacts
   async getContacts(): Promise<Contact[]> {
-    const remote = await apiRequest<Contact[]>('/api/contacts');
-    if (remote && Array.isArray(remote)) {
-      setStored('contacts', remote);
-      return remote;
+    try {
+      const remote = await apiRequest<Contact[]>('/api/contacts');
+      if (remote && Array.isArray(remote)) {
+        setStored('contacts', remote);
+        return remote;
+      }
+    } catch {
+      // Read fallback preserved
     }
     return getStored('contacts', INITIAL_CONTACTS);
   },
 
   async updateContactStatus(id: string, status: Contact['status'], note?: string): Promise<void> {
-    if (isValidUuid(id)) {
-      await apiRequest(`/api/contacts/${id}/status`, {
-        method: 'PATCH',
-        body: JSON.stringify({ status, adminNote: note }),
-      });
+    if (!isValidUuid(id)) {
+      throw new ApiError('ID liên hệ không hợp lệ.', 400);
     }
+    const updated = await apiRequest<Contact>(`/api/contacts/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, adminNote: note }),
+    });
+
     const list = getStored('contacts', INITIAL_CONTACTS);
     const target = list.find((c) => c.id === id);
     if (target) {
-      target.status = status;
-      if (note !== undefined) target.adminNote = note;
-      if (status === 'resolved') target.resolvedAt = new Date().toISOString();
-      target.updatedAt = new Date().toISOString();
+      if (updated && updated.status) {
+        target.status = updated.status;
+        target.adminNote = updated.adminNote;
+        target.resolvedAt = updated.resolvedAt;
+        target.updatedAt = updated.updatedAt;
+      } else {
+        target.status = status;
+        if (note !== undefined) target.adminNote = note;
+        if (status === 'resolved') target.resolvedAt = new Date().toISOString();
+        target.updatedAt = new Date().toISOString();
+      }
       setStored('contacts', list);
     }
   },
 
   async deleteContact(id: string): Promise<void> {
-    if (isValidUuid(id)) {
-      await apiRequest(`/api/contacts/${id}`, { method: 'DELETE' });
+    if (!isValidUuid(id)) {
+      throw new ApiError('ID liên hệ không hợp lệ.', 400);
     }
+    await apiRequest(`/api/contacts/${id}`, { method: 'DELETE' });
     const list = getStored('contacts', INITIAL_CONTACTS).filter((c) => c.id !== id);
     setStored('contacts', list);
   },
 
   // Users
   async getUsers(): Promise<User[]> {
-    const remote = await apiRequest<User[]>('/api/users');
-    if (remote && Array.isArray(remote)) {
-      setStored('users', remote);
-      return remote;
+    try {
+      const remote = await apiRequest<User[]>('/api/users');
+      if (remote && Array.isArray(remote)) {
+        setStored('users', remote);
+        return remote;
+      }
+    } catch {
+      // Read fallback preserved
     }
     return getStored('users', INITIAL_USERS);
   },
 
   async saveUser(user: User): Promise<User> {
-    let saved: User | null = null;
     const isExisting = Boolean(user.id && isValidUuid(user.id));
+    const payload = {
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role,
+      status: user.status,
+    };
 
+    let saved: User;
     if (isExisting) {
       saved = await apiRequest<User>(`/api/users/${user.id}`, {
         method: 'PUT',
-        body: JSON.stringify(user),
+        body: JSON.stringify(payload),
       });
-    }
-
-    if (!saved) {
+    } else {
       saved = await apiRequest<User>('/api/users', {
         method: 'POST',
-        body: JSON.stringify(user),
+        body: JSON.stringify(payload),
       });
     }
 
-    const result = saved || {
-      ...user,
-      id: user.id || crypto.randomUUID(),
-      updatedAt: new Date().toISOString(),
-      createdAt: user.createdAt || new Date().toISOString(),
-    };
-
     const list = getStored('users', INITIAL_USERS);
-    const idx = list.findIndex((u) => u.id === result.id);
+    const idx = list.findIndex((u) => u.id === saved.id);
     if (idx >= 0) {
-      list[idx] = result;
+      list[idx] = saved;
     } else {
-      list.unshift(result);
+      list.unshift(saved);
     }
     setStored('users', list);
-    return result;
+    return saved;
   },
 
   async deleteUser(id: string): Promise<void> {
-    if (isValidUuid(id)) {
-      await apiRequest(`/api/users/${id}`, { method: 'DELETE' });
+    if (!isValidUuid(id)) {
+      throw new ApiError('ID tài khoản không hợp lệ.', 400);
     }
+    await apiRequest(`/api/users/${id}`, { method: 'DELETE' });
     const list = getStored('users', INITIAL_USERS).filter((u) => u.id !== id);
     setStored('users', list);
   },

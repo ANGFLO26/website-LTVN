@@ -5,14 +5,16 @@ import type { Standard } from '../types';
 
 interface Props {
   standards: Standard[];
-  onSave: (std: Standard) => void;
-  onDelete: (id: string) => void;
+  onSave: (std: Standard) => Promise<void> | void;
+  onDelete: (id: string) => Promise<void> | void;
 }
 
 export const StandardsPage: React.FC<Props> = ({ standards, onSave, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStd, setEditingStd] = useState<Standard | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const emptyStandard: Standard = {
     id: '',
@@ -26,19 +28,30 @@ export const StandardsPage: React.FC<Props> = ({ standards, onSave, onDelete }) 
 
   const handleOpenCreate = () => {
     setEditingStd({ ...emptyStandard });
+    setSaveError(null);
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (std: Standard) => {
     setEditingStd({ ...std });
+    setSaveError(null);
     setIsModalOpen(true);
   };
 
-  const handleSave = () => {
-    if (!editingStd || !editingStd.code.trim()) return;
-    onSave(editingStd);
-    setIsModalOpen(false);
-    setEditingStd(null);
+  const handleSave = async () => {
+    if (!editingStd || !editingStd.code.trim() || isSaving) return;
+    setSaveError(null);
+    setIsSaving(true);
+    try {
+      await onSave(editingStd);
+      setIsModalOpen(false);
+      setEditingStd(null);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Lưu tiêu chuẩn thất bại. Vui lòng kiểm tra lại.';
+      setSaveError(msg);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const filtered = standards.filter(
@@ -133,9 +146,13 @@ export const StandardsPage: React.FC<Props> = ({ standards, onSave, onDelete }) 
                       <button
                         className="btn-icon"
                         title="Xóa tiêu chuẩn"
-                        onClick={() => {
+                        onClick={async () => {
                           if (window.confirm(`Xóa tiêu chuẩn "${std.code}"?`)) {
-                            onDelete(std.id);
+                            try {
+                              await onDelete(std.id);
+                            } catch {
+                              // Error handled by App toast
+                            }
                           }
                         }}
                       >
@@ -157,15 +174,20 @@ export const StandardsPage: React.FC<Props> = ({ standards, onSave, onDelete }) 
           title={editingStd.id ? 'Sửa Tiêu Chuẩn' : 'Thêm Tiêu Chuẩn Mới'}
           footer={
             <>
-              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
+              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)} disabled={isSaving}>
                 Hủy
               </button>
-              <button className="btn btn-primary" onClick={handleSave}>
-                Lưu Tiêu Chuẩn
+              <button className="btn btn-primary" onClick={handleSave} disabled={isSaving}>
+                {isSaving ? 'Đang lưu...' : 'Lưu Tiêu Chuẩn'}
               </button>
             </>
           }
         >
+          {saveError && (
+            <div className="modal-error-alert" role="alert">
+              <span>{saveError}</span>
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div className="form-row">
               <div className="form-group">

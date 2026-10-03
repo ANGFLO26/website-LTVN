@@ -33,7 +33,7 @@ export const DashboardPage: React.FC<Props> = ({
           <h1>Tổng Quan Hệ Thống</h1>
           <p>Báo cáo hoạt động website và danh sách thiết bị phân tích PAC</p>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div className="page-actions" style={{ display: 'flex', gap: 10 }}>
           <button className="btn btn-secondary" onClick={() => onNavigate('media')}>
             <ImageIcon size={16} />
             <span>Thư Viện Ảnh</span>
@@ -78,7 +78,7 @@ export const DashboardPage: React.FC<Props> = ({
       </div>
 
       {/* Grid Content */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24 }}>
+      <div className="dashboard-grid">
         {/* Urgent Contacts */}
         <div className="card">
           <div className="card-header">

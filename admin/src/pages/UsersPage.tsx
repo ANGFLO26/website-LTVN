@@ -6,14 +6,16 @@ import type { User } from '../types';
 
 interface Props {
   users: User[];
-  onSave: (user: User) => void;
-  onDelete: (id: string) => void;
+  onSave: (user: User) => Promise<void> | void;
+  onDelete: (id: string) => Promise<void> | void;
 }
 
 export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const emptyUser: User = {
     id: '',
@@ -28,19 +30,30 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
 
   const handleOpenCreate = () => {
     setEditingUser({ ...emptyUser });
+    setSaveError(null);
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (u: User) => {
     setEditingUser({ ...u });
+    setSaveError(null);
     setIsModalOpen(true);
   };
 
-  const handleSave = () => {
-    if (!editingUser || !editingUser.email.trim() || !editingUser.fullName.trim()) return;
-    onSave(editingUser);
-    setIsModalOpen(false);
-    setEditingUser(null);
+  const handleSave = async () => {
+    if (!editingUser || !editingUser.email.trim() || !editingUser.fullName.trim() || isSaving) return;
+    setSaveError(null);
+    setIsSaving(true);
+    try {
+      await onSave(editingUser);
+      setIsModalOpen(false);
+      setEditingUser(null);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Lưu tài khoản thất bại. Vui lòng kiểm tra lại.';
+      setSaveError(msg);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const filtered = users.filter(
@@ -136,9 +149,13 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
                       <button
                         className="btn-icon"
                         title="Xóa tài khoản"
-                        onClick={() => {
+                        onClick={async () => {
                           if (window.confirm(`Xóa tài khoản "${u.fullName}"?`)) {
-                            onDelete(u.id);
+                            try {
+                              await onDelete(u.id);
+                            } catch {
+                              // Error handled by App toast
+                            }
                           }
                         }}
                       >
@@ -160,15 +177,20 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
           title={editingUser.id ? 'Sửa Tài Khoản' : 'Thêm Tài Khoản Mới'}
           footer={
             <>
-              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
+              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)} disabled={isSaving}>
                 Hủy
               </button>
-              <button className="btn btn-primary" onClick={handleSave}>
-                Lưu Tài Khoản
+              <button className="btn btn-primary" onClick={handleSave} disabled={isSaving}>
+                {isSaving ? 'Đang lưu...' : 'Lưu Tài Khoản'}
               </button>
             </>
           }
         >
+          {saveError && (
+            <div className="modal-error-alert" role="alert">
+              <span>{saveError}</span>
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div className="form-group">
               <label>Họ và Tên Đầy Đủ *</label>

@@ -3,13 +3,15 @@ import { Plus, Search, Edit2, Trash2, ExternalLink, PlusCircle, Layers } from 'l
 import { StatusBadge } from '../components/StatusBadge';
 import { Modal } from '../components/Modal';
 import type { Machine, Standard, MediaAsset } from '../types';
+import { buildPublicUrl } from '../config/urls';
+import { ConfiguredExternalLink } from '../components/ConfiguredExternalLink';
 
 interface Props {
   machines: Machine[];
   standards: Standard[];
   media: MediaAsset[];
-  onSave: (machine: Machine) => void;
-  onDelete: (id: string) => void;
+  onSave: (machine: Machine) => Promise<void> | void;
+  onDelete: (id: string) => Promise<void> | void;
 }
 
 export const MachinesPage: React.FC<Props> = ({
@@ -24,6 +26,8 @@ export const MachinesPage: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMachine, setEditingMachine] = useState<Machine | null>(null);
   const [activeTab, setActiveTab] = useState<'info' | 'apps' | 'highlights' | 'specs' | 'standards'>('info');
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const emptyMachine: Machine = {
     id: '',
@@ -32,7 +36,7 @@ export const MachinesPage: React.FC<Props> = ({
     model: '',
     shortDescription: '',
     description: '',
-    mainImageId: media[0]?.id || '',
+    mainImageId: media[0]?.id || null,
     status: 'draft',
     sortOrder: machines.length + 1,
     publishedAt: null,
@@ -47,26 +51,37 @@ export const MachinesPage: React.FC<Props> = ({
   const handleOpenCreate = () => {
     setEditingMachine({ ...emptyMachine });
     setActiveTab('info');
+    setSaveError(null);
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (m: Machine) => {
     setEditingMachine(JSON.parse(JSON.stringify(m)));
     setActiveTab('info');
+    setSaveError(null);
     setIsModalOpen(true);
   };
 
-  const handleSave = () => {
-    if (!editingMachine || !editingMachine.name.trim()) return;
+  const handleSave = async () => {
+    if (!editingMachine || !editingMachine.name.trim() || isSaving) return;
     if (!editingMachine.slug) {
       editingMachine.slug = editingMachine.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
     }
-    onSave(editingMachine);
-    setIsModalOpen(false);
-    setEditingMachine(null);
+    setSaveError(null);
+    setIsSaving(true);
+    try {
+      await onSave(editingMachine);
+      setIsModalOpen(false);
+      setEditingMachine(null);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Lưu thông tin máy thất bại. Vui lòng kiểm tra lại.';
+      setSaveError(msg);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const filteredMachines = machines.filter((m) => {
@@ -180,15 +195,14 @@ export const MachinesPage: React.FC<Props> = ({
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'inline-flex', gap: 6 }}>
-                        <a
-                          href={`http://localhost:5173/san-pham/${m.slug}`}
-                          target="_blank"
-                          rel="noreferrer"
+                        <ConfiguredExternalLink
+                          href={buildPublicUrl(`/san-pham/${m.slug}`)}
                           className="btn-icon"
                           title="Xem trang sản phẩm trên website"
+                          unavailableReason="Chưa cấu hình VITE_PUBLIC_SITE_URL hợp lệ."
                         >
                           <ExternalLink size={16} color="#38bdf8" />
-                        </a>
+                        </ConfiguredExternalLink>
                         <button
                           className="btn-icon"
                           title="Sửa máy"
@@ -199,9 +213,13 @@ export const MachinesPage: React.FC<Props> = ({
                         <button
                           className="btn-icon"
                           title="Xóa máy"
-                          onClick={() => {
+                          onClick={async () => {
                             if (window.confirm(`Xóa máy "${m.name}"?`)) {
-                              onDelete(m.id);
+                              try {
+                                await onDelete(m.id);
+                              } catch {
+                                // Error handled by App toast
+                              }
                             }
                           }}
                         >
@@ -226,15 +244,20 @@ export const MachinesPage: React.FC<Props> = ({
           maxWidth="750px"
           footer={
             <>
-              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
+              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)} disabled={isSaving}>
                 Hủy bỏ
               </button>
-              <button className="btn btn-primary" onClick={handleSave}>
-                Lưu Thay Đổi
+              <button className="btn btn-primary" onClick={handleSave} disabled={isSaving}>
+                {isSaving ? 'Đang lưu...' : 'Lưu Thay Đổi'}
               </button>
             </>
           }
         >
+          {saveError && (
+            <div className="modal-error-alert" role="alert">
+              <span>{saveError}</span>
+            </div>
+          )}
           {/* Sub Navigation Tabs */}
           <div className="sub-tabs">
             <button
@@ -337,7 +360,7 @@ export const MachinesPage: React.FC<Props> = ({
                   className="form-control"
                   value={editingMachine.mainImageId || ''}
                   onChange={(e) =>
-                    setEditingMachine({ ...editingMachine, mainImageId: e.target.value })
+                    setEditingMachine({ ...editingMachine, mainImageId: e.target.value || null })
                   }
                 >
                   <option value="">-- Chưa chọn ảnh --</option>
@@ -386,7 +409,7 @@ export const MachinesPage: React.FC<Props> = ({
           {/* Tab 2: Applications */}
           {activeTab === 'apps' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="editor-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
                   Danh sách ứng dụng phân tích mẫu của máy
                 </span>
@@ -412,6 +435,7 @@ export const MachinesPage: React.FC<Props> = ({
               {(editingMachine.applications || []).map((app, idx) => (
                 <div
                   key={app.id || idx}
+                  className="editor-fields"
                   style={{
                     display: 'flex',
                     gap: 12,
@@ -462,7 +486,7 @@ export const MachinesPage: React.FC<Props> = ({
           {/* Tab 3: Highlights */}
           {activeTab === 'highlights' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="editor-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
                   Các tính năng nổi bật vượt trội của máy
                 </span>
@@ -489,6 +513,7 @@ export const MachinesPage: React.FC<Props> = ({
               {(editingMachine.highlights || []).map((hl, idx) => (
                 <div
                   key={hl.id || idx}
+                  className="editor-fields"
                   style={{
                     display: 'flex',
                     gap: 12,
@@ -539,7 +564,7 @@ export const MachinesPage: React.FC<Props> = ({
           {/* Tab 4: Specs */}
           {activeTab === 'specs' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="editor-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
                   Thông số kỹ thuật phân theo nhóm (Performance, Sample, Environment,...)
                 </span>
@@ -567,6 +592,7 @@ export const MachinesPage: React.FC<Props> = ({
               {(editingMachine.specs || []).map((sp, idx) => (
                 <div
                   key={sp.id || idx}
+                  className="editor-grid"
                   style={{
                     display: 'grid',
                     gridTemplateColumns: '1.2fr 1.5fr 1.5fr 0.8fr auto',
@@ -638,7 +664,7 @@ export const MachinesPage: React.FC<Props> = ({
           {/* Tab 5: Standards */}
           {activeTab === 'standards' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="editor-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
                   Liên kết các tiêu chuẩn quốc tế (ASTM, ISO, GPA) áp dụng cho phương pháp thử của thiết bị này
                 </span>
@@ -672,6 +698,7 @@ export const MachinesPage: React.FC<Props> = ({
                 (editingMachine.standards || []).map((st, idx) => (
                   <div
                     key={st.standardId || idx}
+                    className="editor-grid"
                     style={{
                       display: 'grid',
                       gridTemplateColumns: '2fr 2fr auto',

@@ -6,8 +6,8 @@ import type { Contact } from '../types';
 
 interface Props {
   contacts: Contact[];
-  onUpdateStatus: (id: string, status: Contact['status'], note?: string) => void;
-  onDelete: (id: string) => void;
+  onUpdateStatus: (id: string, status: Contact['status'], note?: string) => Promise<void> | void;
+  onDelete: (id: string) => Promise<void> | void;
 }
 
 export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDelete }) => {
@@ -15,16 +15,28 @@ export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDele
   const [statusFilter, setStatusFilter] = useState<'all' | 'new' | 'processing' | 'resolved' | 'spam'>('all');
   const [viewingContact, setViewingContact] = useState<Contact | null>(null);
   const [adminNoteInput, setAdminNoteInput] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const handleOpenDetail = (contact: Contact) => {
     setViewingContact(contact);
     setAdminNoteInput(contact.adminNote || '');
+    setSaveError(null);
   };
 
-  const handleSaveDetail = () => {
-    if (!viewingContact) return;
-    onUpdateStatus(viewingContact.id, viewingContact.status, adminNoteInput);
-    setViewingContact(null);
+  const handleSaveDetail = async () => {
+    if (!viewingContact || isSaving) return;
+    setSaveError(null);
+    setIsSaving(true);
+    try {
+      await onUpdateStatus(viewingContact.id, viewingContact.status, adminNoteInput);
+      setViewingContact(null);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Cập nhật trạng thái liên hệ thất bại. Vui lòng thử lại.';
+      setSaveError(msg);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const filtered = contacts.filter((c) => {
@@ -147,9 +159,13 @@ export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDele
                       <button
                         className="btn-icon"
                         title="Xóa liên hệ"
-                        onClick={() => {
+                        onClick={async () => {
                           if (window.confirm(`Xóa yêu cầu từ "${c.fullName}"?`)) {
-                            onDelete(c.id);
+                            try {
+                              await onDelete(c.id);
+                            } catch {
+                              // Error handled by App toast
+                            }
                           }
                         }}
                       >
@@ -172,18 +188,24 @@ export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDele
           title="Chi Tiết Yêu Cầu Khách Hàng"
           footer={
             <>
-              <button className="btn btn-secondary" onClick={() => setViewingContact(null)}>
+              <button className="btn btn-secondary" onClick={() => setViewingContact(null)} disabled={isSaving}>
                 Đóng
               </button>
-              <button className="btn btn-primary" onClick={handleSaveDetail}>
-                Lưu Trạng Thái & Ghi Chú
+              <button className="btn btn-primary" onClick={handleSaveDetail} disabled={isSaving}>
+                {isSaving ? 'Đang lưu...' : 'Lưu Trạng Thái & Ghi Chú'}
               </button>
             </>
           }
         >
+          {saveError && (
+            <div className="modal-error-alert" role="alert">
+              <span>{saveError}</span>
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             {/* Customer info card */}
             <div
+              className="contact-info-grid"
               style={{
                 background: '#1e293b',
                 padding: 16,

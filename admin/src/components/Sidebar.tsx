@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   LayoutDashboard,
   Cpu,
@@ -8,28 +8,70 @@ import {
   Inbox,
   Users,
   Settings,
+  LogOut,
+  X,
 } from 'lucide-react';
 import type { AdminView } from '../types';
+import type { AdminIdentity } from '../services/auth';
 
 interface Props {
+  user: AdminIdentity;
+  onLogout: () => void;
   currentView: AdminView;
   onNavigate: (view: AdminView) => void;
   newContactsCount: number;
+  smallScreen: boolean;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export const Sidebar: React.FC<Props> = ({
+  user,
+  onLogout,
   currentView,
   onNavigate,
   newContactsCount,
+  smallScreen,
+  isOpen,
+  onClose,
 }) => {
+  const drawer = useRef<HTMLElement>(null);
+  // Only the mobile overlay owns focus/scroll; desktop navigation stays unchanged.
+  useEffect(() => {
+    if (!smallScreen || !isOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    drawer.current?.querySelector<HTMLButtonElement>('.sidebar-close')?.focus();
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key !== 'Tab') return;
+      const controls = drawer.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+      if (!controls?.length) return;
+      const first = controls[0], last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    window.addEventListener('keydown', keydown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', keydown);
+      previousFocus?.focus();
+    };
+  }, [smallScreen, isOpen, onClose]);
   return (
-    <aside className="admin-sidebar">
+    <aside ref={drawer} id="admin-navigation" className={`admin-sidebar ${isOpen ? 'is-open' : ''}`}
+      inert={smallScreen && !isOpen} role={smallScreen && isOpen ? 'dialog' : undefined}
+      aria-modal={smallScreen && isOpen ? true : undefined} aria-label="Menu quản trị">
       <div className="sidebar-brand">
         <div className="brand-icon">LT</div>
         <div className="brand-info">
           <h2>LTVN Portal</h2>
           <span>PAC Instruments</span>
         </div>
+        <button type="button" className="btn-icon sidebar-close" onClick={onClose} aria-label="Đóng menu quản trị">
+          <X size={22} aria-hidden="true" />
+        </button>
       </div>
 
       <nav className="sidebar-menu">
@@ -104,9 +146,12 @@ export const Sidebar: React.FC<Props> = ({
       <div className="sidebar-footer">
         <div className="user-avatar">AD</div>
         <div className="user-details">
-          <div className="user-name">Admin LTVN</div>
-          <div className="user-role">Super Administrator</div>
+          <div className="user-name">{user.fullName}</div>
+          <div className="user-role">ADMIN</div>
         </div>
+        <button type="button" className="btn-icon admin-logout" onClick={onLogout} aria-label="Đăng xuất" title="Đăng xuất">
+          <LogOut size={18} aria-hidden="true" />
+        </button>
       </div>
     </aside>
   );

@@ -43,8 +43,8 @@ export const Modal: React.FC<Props> = ({
       >
         <div className="modal-header">
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{title}</h3>
-          <button className="btn-icon" onClick={onClose}>
-            <X size={20} />
+          <button type="button" className="btn-icon" onClick={onClose} aria-label="Đóng hộp thoại">
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
 

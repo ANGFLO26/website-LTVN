@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { Plus, Search, Trash2, Copy, Check, Image as ImageIcon } from 'lucide-react';
 import { Modal } from '../components/Modal';
-import type { MediaAsset } from '../types';
+import type { MediaAsset, MediaCreateInput } from '../types';
 
 interface Props {
   media: MediaAsset[];
-  onSave: (asset: MediaAsset) => void;
-  onDelete: (id: string) => void;
+  onSave: (asset: MediaCreateInput) => Promise<void> | void;
+  onDelete: (id: string) => Promise<void> | void;
 }
 
 export const MediaPage: React.FC<Props> = ({ media, onSave, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
-  const [newAsset, setNewAsset] = useState<Partial<MediaAsset>>({
+  const [newAsset, setNewAsset] = useState<Partial<MediaCreateInput>>({
     fileName: '',
     publicUrl: '',
     altText: '',
@@ -30,10 +32,9 @@ export const MediaPage: React.FC<Props> = ({ media, onSave, onDelete }) => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!newAsset.fileName || !newAsset.publicUrl) return;
-    const asset: MediaAsset = {
-      id: crypto.randomUUID(),
+    const asset: MediaCreateInput = {
       fileName: newAsset.fileName,
       storageKey: `uploads/${newAsset.fileName}`,
       publicUrl: newAsset.publicUrl,
@@ -42,19 +43,29 @@ export const MediaPage: React.FC<Props> = ({ media, onSave, onDelete }) => {
       sizeBytes: Number(newAsset.sizeBytes) || 120000,
       width: Number(newAsset.width) || 1200,
       height: Number(newAsset.height) || 800,
-      createdAt: new Date().toISOString(),
     };
-    onSave(asset);
-    setIsModalOpen(false);
-    setNewAsset({
-      fileName: '',
-      publicUrl: '',
-      altText: '',
-      mimeType: 'image/jpeg',
-      sizeBytes: 150000,
-      width: 1200,
-      height: 800,
-    });
+    if (typeof setSaveError === 'function') setSaveError(null);
+    if (typeof setIsSaving === 'function') setIsSaving(true);
+    try {
+      await onSave(asset);
+      setIsModalOpen(false);
+      setNewAsset({
+        fileName: '',
+        publicUrl: '',
+        altText: '',
+        mimeType: 'image/jpeg',
+        sizeBytes: 150000,
+        width: 1200,
+        height: 800,
+      });
+    } catch (err: unknown) {
+      if (typeof setSaveError === 'function') {
+        const msg = err instanceof Error ? err.message : 'Thêm media thất bại. Vui lòng kiểm tra lại.';
+        setSaveError(msg);
+      }
+    } finally {
+      if (typeof setIsSaving === 'function') setIsSaving(false);
+    }
   };
 
   const filtered = media.filter(
@@ -149,9 +160,13 @@ export const MediaPage: React.FC<Props> = ({ media, onSave, onDelete }) => {
                 <button
                   className="btn-icon"
                   title="Xóa tệp media"
-                  onClick={() => {
+                  onClick={async () => {
                     if (window.confirm(`Xóa tệp "${item.fileName}"?`)) {
-                      onDelete(item.id);
+                      try {
+                        await onDelete(item.id);
+                      } catch {
+                        // Error handled by App toast
+                      }
                     }
                   }}
                 >
@@ -171,15 +186,20 @@ export const MediaPage: React.FC<Props> = ({ media, onSave, onDelete }) => {
           title="Thêm Tệp Hình Ảnh Vào Thư Viện"
           footer={
             <>
-              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
+              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)} disabled={isSaving}>
                 Hủy
               </button>
-              <button className="btn btn-primary" onClick={handleCreate}>
-                Lưu Vào Thư Viện
+              <button className="btn btn-primary" onClick={handleCreate} disabled={isSaving}>
+                {isSaving ? 'Đang lưu...' : 'Lưu Vào Thư Viện'}
               </button>
             </>
           }
         >
+          {saveError && (
+            <div className="modal-error-alert" role="alert">
+              <span>{saveError}</span>
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div className="form-group">
               <label>Tên Tệp Tin *</label>
