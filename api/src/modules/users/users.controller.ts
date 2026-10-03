@@ -6,10 +6,11 @@ import {
   Delete,
   Body,
   Param,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service.js';
-import type * as schema from '../../database/schema.js';
+import type { CreateUserDto, UpdateUserDto } from './dto/user-mutation.dto.js';
 
 @ApiTags('Users')
 @Controller('users')
@@ -31,13 +32,13 @@ export class UsersController {
 
   @Post()
   @ApiOperation({ summary: 'Create new user account' })
-  create(@Body() data: schema.NewUser) {
+  create(@Body() data: CreateUserDto) {
     return this.usersService.create(data);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update user account' })
-  update(@Param('id') id: string, @Body() data: Partial<schema.NewUser>) {
+  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() data: UpdateUserDto) {
     return this.usersService.update(id, data);
   }
 

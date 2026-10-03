@@ -2,8 +2,7 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { eq, desc } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
-
-import { sanitizeUuid } from '../../common/uuid.util.js';
+import type { CreateMediaDto } from './dto/create-media.dto.js';
 
 @Injectable()
 export class MediaService {
@@ -25,9 +24,18 @@ export class MediaService {
     return result;
   }
 
-  async create(data: schema.NewMediaAsset) {
-    const cleanData = sanitizeUuid(data);
-    const [created] = await this.db.insert(schema.mediaAssets).values(cleanData).returning();
+  async create(data: CreateMediaDto) {
+    const insert: schema.NewMediaAsset = {
+      fileName: data.fileName,
+      storageKey: data.storageKey,
+      publicUrl: data.publicUrl,
+      altText: data.altText,
+      mimeType: data.mimeType,
+      sizeBytes: data.sizeBytes,
+      width: data.width,
+      height: data.height,
+    };
+    const [created] = await this.db.insert(schema.mediaAssets).values(insert).returning();
     return created;
   }
 

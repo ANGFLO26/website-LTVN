@@ -5,10 +5,19 @@ import {
   Delete,
   Body,
   Param,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MediaService } from './media.service.js';
-import type * as schema from '../../database/schema.js';
+import { CreateMediaDto } from './dto/create-media.dto.js';
+
+const createMediaValidation = new ValidationPipe({
+  expectedType: CreateMediaDto,
+  transform: true,
+  whitelist: true,
+  forbidUnknownValues: true,
+  transformOptions: { enableImplicitConversion: false },
+});
 
 @ApiTags('Media')
 @Controller('media')
@@ -30,7 +39,7 @@ export class MediaController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new media record' })
-  create(@Body() data: schema.NewMediaAsset) {
+  create(@Body(createMediaValidation) data: CreateMediaDto) {
     return this.mediaService.create(data);
   }
 

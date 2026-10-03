@@ -6,10 +6,21 @@ import {
   Delete,
   Body,
   Param,
+  ParseUUIDPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { StandardsService } from './standards.service.js';
-import type * as schema from '../../database/schema.js';
+import { CreateStandardDto, UpdateStandardDto } from './dto/standard-mutation.dto.js';
+
+const validationOptions = {
+  transform: true,
+  whitelist: true,
+  forbidUnknownValues: true,
+  transformOptions: { enableImplicitConversion: false },
+};
+const createValidation = new ValidationPipe({ ...validationOptions, expectedType: CreateStandardDto });
+const updateValidation = new ValidationPipe({ ...validationOptions, expectedType: UpdateStandardDto });
 
 @ApiTags('Standards')
 @Controller('standards')
@@ -31,13 +42,13 @@ export class StandardsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new standard' })
-  create(@Body() data: schema.NewStandard) {
+  create(@Body(createValidation) data: CreateStandardDto) {
     return this.standardsService.create(data);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update an existing standard' })
-  update(@Param('id') id: string, @Body() data: Partial<schema.NewStandard>) {
+  update(@Param('id', new ParseUUIDPipe()) id: string, @Body(updateValidation) data: UpdateStandardDto) {
     return this.standardsService.update(id, data);
   }
 

@@ -3,7 +3,7 @@ import { eq, desc } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
 
-import { sanitizeUuid } from '../../common/uuid.util.js';
+import type { CreateUserDto, UpdateUserDto } from './dto/user-mutation.dto.js';
 
 @Injectable()
 export class UsersService {
@@ -43,13 +43,16 @@ export class UsersService {
     return user;
   }
 
-  async create(data: schema.NewUser) {
-    const cleanData = sanitizeUuid(data);
+  async create(data: CreateUserDto) {
     const [created] = await this.db
       .insert(schema.users)
       .values({
-        ...cleanData,
-        passwordHash: cleanData.passwordHash || '$2b$10$defaultPasswordHashPlaceholder',
+        email: data.email,
+        fullName: data.fullName,
+        role: data.role,
+        status: data.status,
+        // Retain the existing non-login placeholder; provisioning is outside QA-03.
+        passwordHash: '$2b$10$defaultPasswordHashPlaceholder',
       })
       .returning({
         id: schema.users.id,
@@ -64,10 +67,16 @@ export class UsersService {
     return created;
   }
 
-  async update(id: string, data: Partial<schema.NewUser>) {
+  async update(id: string, data: UpdateUserDto) {
     const [updated] = await this.db
       .update(schema.users)
-      .set({ ...data, updatedAt: new Date() })
+      .set({
+        email: data.email,
+        fullName: data.fullName,
+        role: data.role,
+        status: data.status,
+        updatedAt: new Date(),
+      })
       .where(eq(schema.users.id, id))
       .returning({
         id: schema.users.id,

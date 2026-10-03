@@ -6,9 +6,12 @@ import {
   Delete,
   Body,
   Param,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { MachinesService, type CreateMachineDto } from './machines.service.js';
+import { MachinesService } from './machines.service.js';
+import type { CreateMachineDto, UpdateMachineDto } from './dto/machine-mutation.dto.js';
+import { Public } from '../auth/public.decorator.js';
 
 @ApiTags('Machines')
 @Controller('machines')
@@ -16,16 +19,19 @@ export class MachinesController {
   constructor(private readonly machinesService: MachinesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all PAC machines with full relations' })
+  @Public()
+  @ApiOperation({ summary: 'Get published PAC machines with full relations' })
   @ApiResponse({ status: 200, description: 'List of machines with specs, applications, highlights' })
   findAll() {
-    return this.machinesService.findAll();
+    return this.machinesService.findPublished();
   }
 
   @Get(':idOrSlug')
-  @ApiOperation({ summary: 'Get a machine by UUID or URL slug' })
+  @Public()
+  @ApiOperation({ summary: 'Get a published machine by UUID or URL slug' })
+  @ApiResponse({ status: 404, description: 'Machine is not published or does not exist' })
   findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.machinesService.findOne(idOrSlug);
+    return this.machinesService.findPublishedByIdOrSlug(idOrSlug);
   }
 
   @Post()
@@ -36,7 +42,7 @@ export class MachinesController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a PAC machine and sub-specs' })
-  update(@Param('id') id: string, @Body() data: Partial<CreateMachineDto>) {
+  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() data: UpdateMachineDto) {
     return this.machinesService.update(id, data);
   }
 

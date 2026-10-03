@@ -2,8 +2,7 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { eq, asc } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
-
-import { sanitizeUuid } from '../../common/uuid.util.js';
+import type { CreateStandardDto, UpdateStandardDto } from './dto/standard-mutation.dto.js';
 
 @Injectable()
 export class StandardsService {
@@ -22,16 +21,28 @@ export class StandardsService {
     return result;
   }
 
-  async create(data: schema.NewStandard) {
-    const cleanData = sanitizeUuid(data);
-    const [created] = await this.db.insert(schema.standards).values(cleanData).returning();
+  async create(data: CreateStandardDto) {
+    const [created] = await this.db.insert(schema.standards).values({
+      code: data.code,
+      organization: data.organization,
+      year: data.year,
+      title: data.title,
+      description: data.description,
+    }).returning();
     return created;
   }
 
-  async update(id: string, data: Partial<schema.NewStandard>) {
+  async update(id: string, data: UpdateStandardDto) {
     const [updated] = await this.db
       .update(schema.standards)
-      .set({ ...data, updatedAt: new Date() })
+      .set({
+        code: data.code,
+        organization: data.organization,
+        year: data.year,
+        title: data.title,
+        description: data.description,
+        updatedAt: new Date(),
+      })
       .where(eq(schema.standards.id, id))
       .returning();
     if (!updated) throw new NotFoundException(`Standard with id ${id} not found`);

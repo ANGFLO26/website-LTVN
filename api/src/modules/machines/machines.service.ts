@@ -1,42 +1,26 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
 
-import { sanitizeUuid, isValidUuid } from '../../common/uuid.util.js';
-
-export interface CreateMachineDto extends schema.NewMachine {
-  specs?: Array<{
-    groupName: string;
-    specName: string;
-    specValue: string;
-    unit?: string | null;
-    sortOrder?: number;
-  }>;
-  applications?: Array<{
-    title: string;
-    description?: string | null;
-    sortOrder?: number;
-  }>;
-  highlights?: Array<{
-    title: string;
-    description?: string | null;
-    icon?: string | null;
-    sortOrder?: number;
-  }>;
-  standards?: Array<{
-    standardId: string;
-    note?: string | null;
-    sortOrder?: number;
-  }>;
-}
+import { isValidUuid } from '../../common/uuid.util.js';
+import type { CreateMachineDto, UpdateMachineDto } from './dto/machine-mutation.dto.js';
 
 @Injectable()
 export class MachinesService {
   constructor(@Inject(DRIZZLE) private readonly db: DrizzleDb) {}
 
-  async findAll() {
+  findAll() {
+    return this.queryAll(false);
+  }
+
+  findPublished() {
+    return this.queryAll(true);
+  }
+
+  private async queryAll(publishedOnly: boolean) {
     return this.db.query.machines.findMany({
+      where: publishedOnly ? eq(schema.machines.status, 'published') : undefined,
       orderBy: (machines, { asc }) => [asc(machines.sortOrder)],
       with: {
         mainImage: true,
@@ -58,11 +42,21 @@ export class MachinesService {
     });
   }
 
-  async findOne(idOrSlug: string) {
+  findOne(idOrSlug: string) {
+    return this.queryOne(idOrSlug, false);
+  }
+
+  findPublishedByIdOrSlug(idOrSlug: string) {
+    return this.queryOne(idOrSlug, true);
+  }
+
+  private async queryOne(idOrSlug: string, publishedOnly: boolean) {
     const isUuid = isValidUuid(idOrSlug);
     const machine = await this.db.query.machines.findFirst({
-      where: (machines, { eq }) =>
+      where: (machines, { eq, and }) => and(
         isUuid ? eq(machines.id, idOrSlug) : eq(machines.slug, idOrSlug),
+        publishedOnly ? eq(machines.status, 'published') : undefined,
+      ),
       with: {
         mainImage: true,
         specs: true,
@@ -79,21 +73,44 @@ export class MachinesService {
     return machine;
   }
 
-  async create(data: CreateMachineDto) {
-    const { specs, applications, highlights, standards, ...rawFields } = data;
-    const machineFields = sanitizeUuid(rawFields);
-    if (machineFields.mainImageId && !isValidUuid(machineFields.mainImageId)) {
-      machineFields.mainImageId = null;
+  private writableFields(data: UpdateMachineDto) {
+    let mainImageId = data.mainImageId;
+    if (mainImageId !== undefined && mainImageId !== null) {
+      if (typeof mainImageId !== 'string') {
+        throw new BadRequestException('mainImageId must be a UUID or null');
+      }
+      mainImageId = mainImageId.trim() || null;
+      if (mainImageId !== null && !isValidUuid(mainImageId)) {
+        throw new BadRequestException('mainImageId must be a UUID or null');
+      }
     }
+
+    // Enforce the allowlist at runtime, even for older clients posting metadata.
+    return {
+      name: data.name,
+      slug: data.slug,
+      model: data.model,
+      shortDescription: data.shortDescription,
+      description: data.description,
+      mainImageId,
+      status: data.status,
+      sortOrder: data.sortOrder,
+    };
+  }
+
+  async create(data: CreateMachineDto) {
+    const { specs, applications, highlights, standards } = data;
+    const machineFields = this.writableFields(data);
 
     const machineId = await this.db.transaction(async (tx) => {
       const [machine] = await tx
         .insert(schema.machines)
         .values({
           ...machineFields,
+          name: data.name,
           slug:
             machineFields.slug ||
-            machineFields.name
+            data.name
               .toLowerCase()
               .replace(/[^a-z0-9]+/g, '-')
               .replace(/^-|-$/g, ''),
@@ -154,12 +171,9 @@ export class MachinesService {
     return this.findOne(machineId);
   }
 
-  async update(id: string, data: Partial<CreateMachineDto>) {
-    const { specs, applications, highlights, standards, ...rawFields } = data;
-    const machineFields = { ...rawFields };
-    if (machineFields.mainImageId !== undefined && machineFields.mainImageId && !isValidUuid(machineFields.mainImageId)) {
-      machineFields.mainImageId = null;
-    }
+  async update(id: string, data: UpdateMachineDto) {
+    const { specs, applications, highlights, standards } = data;
+    const machineFields = this.writableFields(data);
 
     await this.db.transaction(async (tx) => {
       const [updated] = await tx
