@@ -35,12 +35,22 @@ export type Office = {
 
 export type NewsType = 'news' | 'event' | 'project'
 
+export type NewsBlock =
+  | { type: 'heading'; level?: number; text: LocalizedText }
+  | { type: 'paragraph'; text: LocalizedText }
+  | { type: 'bullet_list'; items: LocalizedText[] }
+  | { type: 'numbered_list'; items: LocalizedText[] }
+  | { type: 'image'; url: string; alt?: LocalizedText; caption?: LocalizedText }
+  | { type: 'quote'; text: LocalizedText; author?: LocalizedText }
 export type NewsItem = {
   slug: string
+  slugEn?: string
+  slugs?: LocalizedText
   type: NewsType
   year: string
   title: LocalizedText
   excerpt: LocalizedText
+  location?: LocalizedText
   image: string
   imageFit?: 'cover' | 'contain'
   relatedProduct?: string
@@ -52,6 +62,13 @@ export type NewsItem = {
     to: string
   }
   paragraphs: LocalizedText[]
+  blocks?: NewsBlock[]
+  blocksByLocale?: {
+    vi: NewsBlock[]
+    en: NewsBlock[]
+  }
+  /** true when an authored English translation exists (Policy A) */
+  hasEnglish?: boolean
 }
 
 export const newsTypeLabels: Record<NewsType, LocalizedText> = {

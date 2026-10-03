@@ -11,6 +11,7 @@ import { CustomerShowcase } from '../components/CustomerShowcase'
 import { PageIntro, SectionHeading } from '../components/PageElements'
 import { RegionalPresence } from '../components/RegionalPresence'
 import { useSiteData } from '../context/DataContext'
+import type { NewsBlock } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
@@ -49,7 +50,9 @@ export function AboutPage() {
         : 'Handle technical, spare-parts and after-sales requirements.',
     },
   ]
-  const caseStudy = newsItems.find((item) => item.slug === 'hoi-thao-van-an-toan')
+  const caseStudyRaw = newsItems.find((item) => item.slug === 'hoi-thao-van-an-toan' || item.slugEn === 'hoi-thao-van-an-toan')
+  // Policy A: hide case study in EN mode if it has no authored EN translation
+  const caseStudy = caseStudyRaw && (language !== 'en' || caseStudyRaw.hasEnglish) ? caseStudyRaw : undefined
 
   return (
     <>
@@ -138,12 +141,32 @@ export function AboutPage() {
               <span className="eyebrow">{t('realCaseStudy')}</span>
               <h2 id="case-study-title">{content(caseStudy.title)}</h2>
               <p className="case-study-lead">{content(caseStudy.excerpt)}</p>
-              <dl className="case-study-facts">
-                <div><dt>{t('caseContext')}</dt><dd>{content(caseStudy.paragraphs[0])}</dd></div>
-                <div><dt>{t('caseApproach')}</dt><dd>{content(caseStudy.paragraphs[2])}</dd></div>
-                <div><dt>{t('caseValue')}</dt><dd>{content(caseStudy.paragraphs[1])}</dd></div>
-              </dl>
-              <Link to={`/tin-tuc/${caseStudy.slug}`} className="text-link">{t('viewCaseStudy')} <ArrowRight size={16} aria-hidden="true" /></Link>
+              {(() => {
+                const caseStudyParagraphs = caseStudy.blocksByLocale
+                  ? caseStudy.blocksByLocale[language].filter((b): b is Extract<NewsBlock, { type: 'paragraph' }> => b.type === 'paragraph').map((b) => b.text)
+                  : caseStudy.paragraphs
+
+                return (
+                  <>
+                    {(caseStudyParagraphs?.[0] || caseStudyParagraphs?.[2] || caseStudyParagraphs?.[1]) && (
+                      <dl className="case-study-facts">
+                        {caseStudyParagraphs?.[0] && (
+                          <div><dt>{t('caseContext')}</dt><dd>{content(caseStudyParagraphs[0])}</dd></div>
+                        )}
+                        {caseStudyParagraphs?.[2] && (
+                          <div><dt>{t('caseApproach')}</dt><dd>{content(caseStudyParagraphs[2])}</dd></div>
+                        )}
+                        {caseStudyParagraphs?.[1] && (
+                          <div><dt>{t('caseValue')}</dt><dd>{content(caseStudyParagraphs[1])}</dd></div>
+                        )}
+                      </dl>
+                    )}
+                    <Link to={`/tin-tuc/${language === 'en' && caseStudy.slugEn ? caseStudy.slugEn : caseStudy.slug}`} className="text-link">
+                      {t('viewCaseStudy')} <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                  </>
+                )
+              })()}
             </div>
           </div>
         </section>

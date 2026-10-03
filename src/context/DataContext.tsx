@@ -5,8 +5,10 @@ import {
   newsItems as defaultNewsItems,
   getProductBySlug as getStaticProductBySlug,
   getNewsBySlug as getStaticNewsBySlug,
+  localized,
   type Product,
   type NewsItem,
+  type NewsBlock,
   type LocalizedText,
   type ProductFamily,
   type NewsType,
@@ -56,12 +58,29 @@ export interface ApiMachine {
   }>
 }
 
+interface ApiNewsTranslation {
+  title: string
+  slug: string
+  shortDescription?: string | null
+  content?: {
+    version: number
+    blocks: Array<{
+      type: string
+      data: Record<string, unknown>
+    }>
+  } | null
+  location?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+}
+
 export interface ApiNewsEvent {
   id: string
   type: string
   title: string
   slug: string
   shortDescription?: string | null
+  location?: string | null
   thumbnailImageId?: string | null
   status: 'draft' | 'published' | 'archived'
   publishedAt?: string | null
@@ -77,6 +96,10 @@ export interface ApiNewsEvent {
       data: Record<string, unknown>
     }>
   } | null
+  translations?: {
+    vi: ApiNewsTranslation | null
+    en: ApiNewsTranslation | null
+  }
 }
 
 interface DataContextType {
@@ -183,9 +206,126 @@ function adaptMachineToProduct(m: ApiMachine): Product {
   }
 }
 
+
+
+
+/**
+ * Parse a content JSONB tree into an array of NewsBlocks for a specific locale.
+ * Operates purely on the single locale's content tree without cross-referencing or parallel index-zipping.
+ */
+function parseBlocksForLocale(
+  content: ApiNewsTranslation['content'] | undefined | null,
+  locale: 'vi' | 'en',
+): NewsBlock[] {
+  if (!content || !content.blocks || !Array.isArray(content.blocks)) return []
+
+  const validBlocks = content.blocks.filter(
+    (b): b is { type: string; data: Record<string, unknown> } =>
+      b != null && typeof b === 'object' && typeof b.type === 'string',
+  )
+
+  const result: NewsBlock[] = []
+
+  for (const b of validBlocks) {
+    const data = (b.data && typeof b.data === 'object' ? b.data : {}) as Record<string, unknown>
+
+    const extractText = (val: unknown): string => {
+      if (typeof val === 'string') return val
+      if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+        const obj = val as Record<string, unknown>
+        if (typeof obj[locale] === 'string') return obj[locale]
+      }
+      return ''
+    }
+
+    const toLoc = (textVal: unknown): LocalizedText => {
+      const txt = extractText(textVal)
+      return locale === 'vi' ? { vi: txt, en: '' } : { vi: '', en: txt }
+    }
+
+    switch (b.type) {
+      case 'heading': {
+        const text = extractText(data.text)
+        if (text) {
+          const level = typeof data.level === 'number' && [2, 3, 4].includes(data.level) ? data.level : 2
+          result.push({
+            type: 'heading',
+            level,
+            text: toLoc(data.text),
+          })
+        }
+        break
+      }
+      case 'paragraph': {
+        const text = extractText(data.text)
+        if (text) {
+          result.push({
+            type: 'paragraph',
+            text: toLoc(data.text),
+          })
+        }
+        break
+      }
+      case 'bullet_list':
+      case 'numbered_list': {
+        const rawItems = Array.isArray(data.items) ? data.items : []
+        const items: LocalizedText[] = []
+        for (const item of rawItems) {
+          const text = extractText(item)
+          if (text) {
+            items.push(toLoc(item))
+          }
+        }
+        if (items.length > 0) {
+          result.push({
+            type: b.type as 'bullet_list' | 'numbered_list',
+            items,
+          })
+        }
+        break
+      }
+      case 'image': {
+        const rawUrl = data.url || data.src || data.publicUrl
+        if (typeof rawUrl === 'string' && rawUrl.trim().length > 0) {
+          const trimmedUrl = rawUrl.trim()
+          if (!trimmedUrl.toLowerCase().startsWith('javascript:')) {
+            result.push({
+              type: 'image',
+              url: trimmedUrl,
+              alt: data.alt ? toLoc(data.alt) : undefined,
+              caption: data.caption ? toLoc(data.caption) : undefined,
+            })
+          }
+        }
+        break
+      }
+      case 'quote': {
+        const text = extractText(data.text)
+        if (text) {
+          result.push({
+            type: 'quote',
+            text: toLoc(data.text),
+            author: data.author ? toLoc(data.author) : undefined,
+          })
+        }
+        break
+      }
+      default:
+        // Safely skip malformed / unknown blocks
+        break
+    }
+  }
+
+  return result
+}
+
 function adaptNewsToItem(n: ApiNewsEvent): NewsItem {
+  const viSlug = n.translations?.vi?.slug || n.slug
+  const enSlug = n.translations?.en?.slug || undefined
+  const slugs: LocalizedText = { vi: viSlug, en: enSlug || '' }
+
   const image = n.thumbnailImage?.publicUrl || (
-    n.slug === 'chuyen-giao-dfa-70xi'
+    viSlug === 'chuyen-giao-dfa-70xi'
       ? '/images/news/phase-dfa-70xi-transparent.png'
       : '/images/hero/portfolio-hero-v5.png'
   )
@@ -193,57 +333,86 @@ function adaptNewsToItem(n: ApiNewsEvent): NewsItem {
     ? new Date(n.publishedAt).getFullYear().toString()
     : new Date(n.createdAt).getFullYear().toString()
 
-  let paragraphs: LocalizedText[] = []
-  if (n.content && n.content.blocks && Array.isArray(n.content.blocks)) {
-    const pBlocks = n.content.blocks.filter((b) => b.type === 'paragraph' && b.data?.text)
-    if (pBlocks.length > 0) {
-      paragraphs = pBlocks.map((b) => autoLocalized(String(b.data.text)))
-    }
-  }
+  // Determine if authored EN translation exists
+  const hasAuthoredEn = !!(n.translations?.en?.title && String(n.translations.en.title).trim().length > 0)
+
+  // Parse VI and EN content blocks independently (never zipped by index)
+  const viContentTree = n.translations?.vi ? n.translations.vi.content : n.content
+  const enContentTree = hasAuthoredEn ? (n.translations!.en!.content || null) : null
+
+  const viBlocks = parseBlocksForLocale(viContentTree, 'vi')
+  // Legacy responses are VI-only; inline EN values cannot establish an EN article.
+  const enBlocks = parseBlocksForLocale(enContentTree, 'en')
+  const hasEnglish = hasAuthoredEn
+
+  // Build title and excerpt from authored translations (zero synthetic calls)
+  const viTitle = n.translations?.vi?.title || n.title || ''
+  const enTitle = hasAuthoredEn ? n.translations!.en!.title : ''
+  const title: LocalizedText = { vi: viTitle, en: enTitle }
+
+  const viExcerpt = n.translations?.vi ? (n.translations.vi.shortDescription || '') : (n.shortDescription || '')
+  const enExcerpt = hasAuthoredEn ? (n.translations!.en!.shortDescription || '') : ''
+  const excerpt: LocalizedText = { vi: viExcerpt, en: enExcerpt }
+
+  // Location
+  const viLocation = n.translations?.vi
+    ? (n.translations.vi.location || '')
+    : (n.location || '')
+  const enLocation = hasAuthoredEn ? (n.translations!.en!.location || '') : ''
+  const location: LocalizedText | undefined = (viLocation || enLocation)
+    ? { vi: viLocation, en: enLocation }
+    : undefined
+
+  const paragraphs = viBlocks
+    .filter((b): b is Extract<NewsBlock, { type: 'paragraph' }> => b.type === 'paragraph')
+    .map((b) => b.text)
 
   let nextAction: NewsItem['nextAction'] = undefined
   let relatedProduct: string | undefined = undefined
 
-  if (n.slug === 'ban-giao-pac-optidist-2') {
+  if (viSlug === 'ban-giao-pac-optidist-2') {
     relatedProduct = 'optidist'
-  } else if (n.slug === 'hoi-thao-van-an-toan') {
+  } else if (viSlug === 'hoi-thao-van-an-toan') {
+    // Route /baker-hughes is intentionally closed (QA-13); do not attach dead link CTA
+    nextAction = undefined
+  } else if (viSlug === 'chuyen-giao-dfa-70xi') {
     nextAction = {
-      eyebrow: autoLocalized('GIẢI PHÁP LIÊN QUAN'),
-      title: autoLocalized('Tìm hiểu giải pháp van an toàn cho nhà máy'),
-      description: autoLocalized(
-        'Xem danh mục van an toàn Consolidated và các thiết bị hỗ trợ vận hành hiện có trên website.',
-      ),
-      label: autoLocalized('Xem giải pháp van Baker Hughes'),
-      to: '/baker-hughes',
-    }
-  } else if (n.slug === 'chuyen-giao-dfa-70xi') {
-    nextAction = {
-      eyebrow: autoLocalized('TRAO ĐỔI THEO ỨNG DỤNG'),
-      title: autoLocalized('Bạn đang cần thiết bị xác định điểm đông đặc?'),
-      description: autoLocalized(
+      eyebrow: localized('TRAO ĐỔI THEO ỨNG DỤNG', 'APPLICATION-LED DISCUSSION'),
+      title: localized('Bạn đang cần thiết bị xác định điểm đông đặc?', 'Do you need an instrument for freezing-point determination?'),
+      description: localized(
         'Chia sẻ loại mẫu, phương pháp hoặc tiêu chuẩn áp dụng để đội ngũ kỹ thuật tiếp nhận đúng nhu cầu.',
+        'Share the sample type, method or applicable standard so our technical team can review the right requirement.',
       ),
-      label: autoLocalized('Trao đổi về ứng dụng này'),
+      label: localized('Trao đổi về ứng dụng này', 'Discuss this application'),
       to: '/lien-he?chu-de=phase-70xi',
     }
   }
 
   const type: NewsType =
-    n.slug === 'ban-giao-pac-optidist-2' || n.slug === 'chuyen-giao-dfa-70xi'
+    viSlug === 'ban-giao-pac-optidist-2' || viSlug === 'chuyen-giao-dfa-70xi'
       ? 'project'
       : (n.type as NewsType) || 'news'
 
   return {
-    slug: n.slug,
+    slug: viSlug,
+    slugEn: enSlug,
+    slugs,
     type,
     year,
-    title: autoLocalized(n.title),
-    excerpt: autoLocalized(n.shortDescription || ''),
+    title,
+    excerpt,
+    location,
     image,
-    imageFit: n.slug === 'chuyen-giao-dfa-70xi' ? 'contain' : 'cover',
+    imageFit: viSlug === 'chuyen-giao-dfa-70xi' ? 'contain' : 'cover',
     relatedProduct,
     nextAction,
     paragraphs,
+    blocks: viBlocks,
+    blocksByLocale: {
+      vi: viBlocks,
+      en: enBlocks,
+    },
+    hasEnglish,
   }
 }
 
@@ -264,7 +433,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
       if (machinesRes && machinesRes.ok) {
         const machinesData = (await machinesRes.json()) as ApiMachine[]
-        if (Array.isArray(machinesData) && machinesData.length > 0) {
+        if (Array.isArray(machinesData)) {
           const published = machinesData.filter((m) => m.status === 'published')
           const adaptedProducts = published.map(adaptMachineToProduct)
           setProducts(adaptedProducts)
@@ -274,7 +443,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
       if (newsRes && newsRes.ok) {
         const newsData = (await newsRes.json()) as ApiNewsEvent[]
-        if (Array.isArray(newsData) && newsData.length > 0) {
+        if (Array.isArray(newsData)) {
           const published = newsData.filter((n) => n.status === 'published')
           const adaptedNews = published.map(adaptNewsToItem)
           setNewsItems(adaptedNews)
@@ -324,7 +493,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const getNewsBySlug = useCallback(
     (slug?: string) => {
       if (!slug) return undefined
-      return newsItems.find((n) => n.slug === slug) || getStaticNewsBySlug(slug)
+      return (
+        newsItems.find(
+          (n) =>
+            n.slug === slug ||
+            n.slugEn === slug ||
+            n.slugs?.vi === slug ||
+            n.slugs?.en === slug,
+        ) || getStaticNewsBySlug(slug)
+      )
     },
     [newsItems],
   )

@@ -257,7 +257,7 @@ export function HomePage() {
             }
           />
           <div className="news-grid home-news-grid">
-            {newsItems.slice(0, 3).map((item) => <NewsCard key={item.slug} item={item} />)}
+            {(language === 'en' ? newsItems.filter((item) => item.hasEnglish) : newsItems).slice(0, 3).map((item) => <NewsCard key={item.slug} item={item} />)}
           </div>
         </div>
       </section>

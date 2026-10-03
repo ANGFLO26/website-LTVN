@@ -4,12 +4,13 @@ import { newsTypeLabels, type NewsItem } from '../data'
 import { useLanguage } from '../i18n'
 
 export function NewsCard({ item }: { item: NewsItem }) {
-  const { content, t } = useLanguage()
+  const { content, t, language } = useLanguage()
+  const itemSlug = language === 'en' && item.slugEn ? item.slugEn : item.slug
 
   return (
     <article className={`news-card hover-scale ${item.imageFit === 'contain' ? 'news-card-equipment' : ''}`}>
       <Link
-        to={`/tin-tuc/${item.slug}`}
+        to={`/tin-tuc/${itemSlug}`}
         className="news-image-link"
         aria-label={`${t('readArticle')}: ${content(item.title)}`}
       >
@@ -21,10 +22,10 @@ export function NewsCard({ item }: { item: NewsItem }) {
           <span>{item.year}</span>
         </div>
         <h3>
-          <Link to={`/tin-tuc/${item.slug}`}>{content(item.title)}</Link>
+          <Link to={`/tin-tuc/${itemSlug}`}>{content(item.title)}</Link>
         </h3>
         <p>{content(item.excerpt)}</p>
-        <Link to={`/tin-tuc/${item.slug}`} className="text-link">
+        <Link to={`/tin-tuc/${itemSlug}`} className="text-link">
           {t('readArticle')} <ArrowRight size={16} aria-hidden="true" />
         </Link>
       </div>

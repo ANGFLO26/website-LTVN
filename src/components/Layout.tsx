@@ -8,9 +8,10 @@ import {
   Phone,
   X,
 } from 'lucide-react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
+import { useSiteData } from '../context/DataContext'
 import { offices } from '../data'
-import { useLanguage, type UiKey } from '../i18n'
+import { useLanguage, type UiKey, type Language } from '../i18n'
 
 const navItems: Array<{ to: string; end?: boolean; key?: UiKey; label?: string }> = [
   { to: '/', key: 'home' as const, end: true },
@@ -25,6 +26,27 @@ const navItems: Array<{ to: string; end?: boolean; key?: UiKey; label?: string }
 function Header() {
   const [open, setOpen] = useState(false)
   const { language, setLanguage, t } = useLanguage()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { getNewsBySlug } = useSiteData()
+
+  const handleSwitchLanguage = (targetLang: Language) => {
+    if (targetLang === language) return
+    setLanguage(targetLang)
+
+    const match = location.pathname.match(/^\/tin-tuc\/([^/]+)$/)
+    if (match) {
+      const currentSlug = match[1]
+      const currentItem = getNewsBySlug(currentSlug)
+      if (currentItem) {
+        if (targetLang === 'en' && currentItem.hasEnglish && currentItem.slugEn) {
+          navigate(`/tin-tuc/${currentItem.slugEn}`)
+        } else if (targetLang === 'vi' && currentItem.slug) {
+          navigate(`/tin-tuc/${currentItem.slug}`)
+        }
+      }
+    }
+  }
 
   useEffect(() => {
     if (!open) return
@@ -70,7 +92,7 @@ function Header() {
             <button
               type="button"
               className={language === 'vi' ? 'active' : ''}
-              onClick={() => setLanguage('vi')}
+              onClick={() => handleSwitchLanguage('vi')}
               aria-pressed={language === 'vi'}
             >
               VI
@@ -79,7 +101,7 @@ function Header() {
             <button
               type="button"
               className={language === 'en' ? 'active' : ''}
-              onClick={() => setLanguage('en')}
+              onClick={() => handleSwitchLanguage('en')}
               aria-pressed={language === 'en'}
             >
               EN

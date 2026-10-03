@@ -12,14 +12,15 @@ export function ProductPage() {
   const { content, language, t } = useLanguage()
   usePageTitle(product?.model ?? t('productFallbackTitle'))
 
+  if (loading) {
+    return (
+      <section className="container not-found" style={{ minHeight: '50vh', justifyContent: 'center' }}>
+        <p>{language === 'vi' ? 'Đang tải thông tin sản phẩm...' : 'Loading product information...'}</p>
+      </section>
+    )
+  }
+
   if (!product) {
-    if (loading || products.length === 0) {
-      return (
-        <section className="container not-found" style={{ minHeight: '50vh', justifyContent: 'center' }}>
-          <p>{language === 'vi' ? 'Đang tải thông tin sản phẩm...' : 'Loading product information...'}</p>
-        </section>
-      )
-    }
     return (
       <section className="not-found container">
         <span className="eyebrow">404</span>
@@ -29,7 +30,7 @@ export function ProductPage() {
     )
   }
 
-  const catalogPath = product.family === 'pac' ? '/pac' : '/baker-hughes'
+  const catalogPath = product.family === 'pac' ? '/pac' : undefined
   const relatedProducts = products
     .filter((item) => item.family === product.family && item.slug !== product.slug)
     .slice(0, 3)
@@ -40,7 +41,12 @@ export function ProductPage() {
         <div className="container">
           <div className="breadcrumbs">
             <Link to="/">{t('home')}</Link><span>/</span>
-            <Link to={catalogPath}>{product.family === 'pac' ? 'PAC' : 'Baker Hughes'}</Link><span>/</span>
+            {catalogPath ? (
+              <Link to={catalogPath}>{product.family === 'pac' ? 'PAC' : 'Baker Hughes'}</Link>
+            ) : (
+              <span>{product.family === 'pac' ? 'PAC' : 'Baker Hughes'}</span>
+            )}
+            <span>/</span>
             <span>{product.model}</span>
           </div>
           <div className="product-detail-grid">
@@ -152,7 +158,9 @@ export function ProductPage() {
         <div className="container">
           <div className="section-heading">
             <div><h2>{t('relatedProducts')}</h2></div>
-            <Link to={catalogPath} className="text-link"><ArrowLeft size={16} aria-hidden="true" /> {t('backToCatalog')}</Link>
+            {catalogPath && (
+              <Link to={catalogPath} className="text-link"><ArrowLeft size={16} aria-hidden="true" /> {t('backToCatalog')}</Link>
+            )}
           </div>
           <div className="product-grid three-columns">
             {relatedProducts.map((item) => <ProductCard key={item.slug} product={item} />)}

@@ -9,17 +9,20 @@ import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
 export function NewsPage() {
-  const { content, t } = useLanguage()
+  const { content, t, language } = useLanguage()
   const { newsItems } = useSiteData()
   const [filter, setFilter] = useState<'all' | NewsType>('all')
   usePageTitle(t('news'))
 
-  const featured = newsItems.find((item) => item.slug === 'hoi-thao-van-an-toan') ?? newsItems[0]
+  // Policy A: In EN mode, only show items with authored English translation
+  const localeItems = language === 'en' ? newsItems.filter((item) => item.hasEnglish) : newsItems
+
+  const featured = localeItems.find((item) => item.slug === 'hoi-thao-van-an-toan') ?? localeItems[0]
   const filteredItems = useMemo(
     () => filter === 'all'
-      ? newsItems.filter((item) => item.slug !== featured?.slug)
-      : newsItems.filter((item) => item.type === filter),
-    [featured?.slug, filter, newsItems],
+      ? localeItems.filter((item) => item.slug !== featured?.slug)
+      : localeItems.filter((item) => item.type === filter),
+    [featured?.slug, filter, localeItems],
   )
   const filterOptions = [
     { value: 'all' as const, label: t('updatesAll') },
@@ -41,7 +44,7 @@ export function NewsPage() {
         }
         aside={
           featured ? (
-            <Link to={`/tin-tuc/${featured.slug}`} className="news-hero-feature">
+            <Link to={`/tin-tuc/${language === 'en' && featured.slugEn ? featured.slugEn : featured.slug}`} className="news-hero-feature">
               <img src={featured.image} alt="" aria-hidden="true" />
               <div>
                 <span>{t('featuredFieldStory')}</span>

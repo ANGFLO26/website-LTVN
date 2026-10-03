@@ -1,57 +1,90 @@
 import { CheckCircle2, ClipboardList, Mail, MapPin, Phone } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
-import { useSearchParams } from 'react-router'
+import { useState, useRef, type FormEvent } from 'react'
 import { OfficeNetwork } from '../components/OfficeNetwork'
 import { PageIntro } from '../components/PageElements'
-import { useSiteData } from '../context/DataContext'
 import { offices } from '../data'
 import { usePageTitle } from '../hooks'
 import { useLanguage } from '../i18n'
 
+const requestTypes = [
+  ['quotation', 'contactRequestQuotation'],
+  ['product_consultation', 'contactRequestProductConsultation'],
+  ['technical_support', 'contactRequestTechnicalSupport'],
+  ['maintenance_repair', 'contactRequestMaintenanceRepair'],
+  ['partnership', 'contactRequestPartnership'],
+  ['other', 'contactRequestOther'],
+] as const
+
 export function ContactPage() {
   const { content, t } = useLanguage()
-  const { products } = useSiteData()
-  const [searchParams] = useSearchParams()
   const [submitted, setSubmitted] = useState(false)
-  const selectedProduct = searchParams.get('san-pham') ?? ''
-  const selectedGroup = searchParams.get('nhom') ?? ''
-  const selectedTopic = searchParams.get('chu-de') ?? ''
-  const selectedInterest = selectedProduct
-    || (selectedGroup === 'pac' ? 'group-pac' : '')
-    || (selectedGroup === 'baker-hughes' ? 'group-baker-hughes' : '')
-    || (selectedTopic === 'phase-70xi' ? 'topic-phase-70xi' : '')
-  const [interest, setInterest] = useState(selectedInterest)
+  const [submitError, setSubmitError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const isSubmittingRef = useRef(false)
   usePageTitle(t('contact'))
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (isSubmittingRef.current) return
     const form = event.currentTarget
     const formData = new FormData(form)
-    const name = (formData.get('name') as string)?.trim() ?? ''
-    const contactMethod = (formData.get('contact') as string)?.trim() ?? ''
-    const product = (formData.get('product') as string)?.trim() ?? ''
+    const fullName = (formData.get('fullName') as string)?.trim() ?? ''
+    const companyName = (formData.get('companyName') as string)?.trim() ?? ''
+    const email = (formData.get('email') as string)?.trim() ?? ''
+    const phone = (formData.get('phone') as string)?.trim() ?? ''
+    const requestType = (formData.get('requestType') as string)?.trim() ?? ''
     const message = (formData.get('message') as string)?.trim() ?? ''
 
-    const isEmail = contactMethod.includes('@')
+    const nameInput = form.elements.namedItem('fullName') as HTMLInputElement
+    const companyInput = form.elements.namedItem('companyName') as HTMLInputElement
+    const requestTypeInput = form.elements.namedItem('requestType') as HTMLSelectElement
+    const phoneInput = form.elements.namedItem('phone') as HTMLInputElement
+    const messageInput = form.elements.namedItem('message') as HTMLTextAreaElement
+    nameInput.setCustomValidity(fullName ? '' : t('contactNameRequired'))
+    companyInput.setCustomValidity(companyName ? '' : t('contactCompanyRequired'))
+    requestTypeInput.setCustomValidity(requestTypes.some(([value]) => value === requestType) ? '' : t('contactRequestTypeRequired'))
+    messageInput.setCustomValidity(message ? '' : t('contactMessageRequired'))
+    const phoneDigits = phone.replace(/\D/g, '').length
+    const validPhone = /^\+?[0-9 ().-]+$/.test(phone) && phoneDigits >= 7 && phoneDigits <= 15
+    phoneInput.setCustomValidity(validPhone ? '' : t('contactPhoneInvalid'))
+    if (!form.reportValidity()) return
+
     const payload = {
-      fullName: name,
-      companyName: '',
-      email: isEmail ? contactMethod : 'info@customer.vn',
-      phone: !isEmail ? contactMethod : '',
-      subject: product ? `Quan tâm: ${product}` : 'Yêu cầu tư vấn kỹ thuật từ Website',
+      fullName,
+      companyName,
+      email,
+      phone,
+      requestType,
       message: message,
     }
 
+    if (isSubmittingRef.current) return
+    isSubmittingRef.current = true
+    setIsSubmitting(true)
+    setSubmitError('')
+    setSubmitted(false)
     try {
-      await fetch('/api/contacts', {
+      const response = await fetch('/api/contacts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
+      if (response.ok) {
+        setSubmitted(true)
+        setSubmitError('')
+      } else if (response.status === 400) {
+        setSubmitted(false)
+        setSubmitError(t('contactValidationError'))
+      } else {
+        setSubmitted(false)
+        setSubmitError(t('contactServerError'))
+      }
     } catch {
-      // Graceful fallback if backend is offline
+      setSubmitted(false)
+      setSubmitError(t('contactNetworkError'))
     } finally {
-      setSubmitted(true)
+      isSubmittingRef.current = false
+      setIsSubmitting(false)
     }
   }
 
@@ -96,7 +129,10 @@ export function ContactPage() {
               <div><MapPin aria-hidden="true" /><span><small>{t('mainOffice')}</small><strong>{content(offices[0].address)}</strong></span></div>
             </div>
           </div>
-          <form className="contact-form" onSubmit={handleSubmit}>
+          <form className="contact-form" onSubmit={handleSubmit} onInput={(event) => {
+            const target = event.target
+            if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) target.setCustomValidity('')
+          }}>
             <div className="contact-form-heading">
               <span className="eyebrow">{t('contactFormEyebrow')}</span>
               <h2>{t('contactFormTitle')}</h2>
@@ -106,29 +142,41 @@ export function ContactPage() {
             <div className="form-grid contact-form-grid">
               <label>
                 <span>{t('fullName')} *</span>
-                <input name="name" required autoComplete="name" />
+                <input name="fullName" required maxLength={255} autoComplete="name" />
               </label>
               <label>
-                <span>{t('contactMethod')} *</span>
-                <input name="contact" required autoComplete="email" aria-describedby="contact-method-hint" />
-                <small id="contact-method-hint">{t('contactMethodHint')}</small>
+                <span>{t('contactCompany')} *</span>
+                <input name="companyName" required maxLength={255} autoComplete="organization" />
+              </label>
+              <label>
+                <span>{t('phone')} *</span>
+                <input name="phone" type="tel" required maxLength={50} autoComplete="tel" />
+              </label>
+              <label>
+                <span>{t('email')} *</span>
+                <input name="email" type="email" required maxLength={255} autoComplete="email" />
               </label>
               <label className="form-wide">
-                <span>{t('interest')}</span>
-                <select name="product" value={interest} onChange={(e) => setInterest(e.target.value)}>
-                  <option value="">{t('selectProduct')}</option>
-                  <option value="group-pac">{t('pacSolutionInterest')}</option>
-                  <option value="group-baker-hughes">{t('bakerSolutionInterest')}</option>
-                  <option value="topic-phase-70xi">{t('phase70XiInterest')}</option>
-                  {products.map((product) => <option key={product.slug} value={product.slug}>{product.brand} · {product.model}</option>)}
+                <span>{t('contactRequestType')} *</span>
+                <select name="requestType" required defaultValue="">
+                  <option value="" disabled>{t('contactSelectRequestType')}</option>
+                  {requestTypes.map(([value, label]) => <option key={value} value={value}>{t(label)}</option>)}
                 </select>
               </label>
               <label className="form-wide">
                 <span>{t('message')} *</span>
-                <textarea name="message" rows={5} required />
+                <textarea name="message" rows={5} required maxLength={5000} />
               </label>
             </div>
-            <button type="submit" className="button button-primary">{t('sendRequest')}</button>
+            <button
+              type="submit"
+              className="button button-primary"
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+            >
+              {t('sendRequest')}
+            </button>
+            {submitError && <p className="form-status" role="alert">{submitError}</p>}
             {submitted && <p className="form-status" role="status"><CheckCircle2 aria-hidden="true" /> {t('formReady')}</p>}
           </form>
         </div>
