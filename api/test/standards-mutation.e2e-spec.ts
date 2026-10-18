@@ -78,7 +78,7 @@ describe('QA-03 Standards: mutation allowlist, UUID route and server-owned dates
   const compiler = drizzle.mock({ schema });
   const actor = {
     id: randomUUID(), email: 'standards-admin@example.invalid', fullName: 'Standards Admin',
-    role: 'admin', status: 'active', deletedAt: null,
+    role: 'admin', status: 'active', deletedAt: null, tokenVersion: 0,
   };
   const adminFetch = vi.fn(async (url: string, options?: RequestInit): Promise<Response> => {
     const call = options?.method === 'PUT'
@@ -130,7 +130,7 @@ describe('QA-03 Standards: mutation allowlist, UUID route and server-owned dates
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: actor.id });
+    token = await module.get(JwtService).signAsync({ sub: actor.id, tokenVersion: actor.tokenVersion });
   });
 
   beforeEach(() => { stored = structuredClone(original); writes.length = 0; adminFetch.mockClear(); });

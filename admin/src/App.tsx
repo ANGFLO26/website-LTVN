@@ -8,8 +8,11 @@ import { MediaPage } from './pages/MediaPage';
 import { NewsEventsPage } from './pages/NewsEventsPage';
 import { ContactsPage } from './pages/ContactsPage';
 import { UsersPage } from './pages/UsersPage';
+import { RedirectsPage } from './pages/RedirectsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { LoginPage } from './pages/LoginPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { auth, AUTH_EXPIRED_EVENT, type AdminIdentity } from './services/auth';
 import { api } from './services/api';
 import type {
@@ -21,6 +24,7 @@ import type {
   NewsEvent,
   Contact,
   User,
+  Redirect,
 } from './types';
 import './admin.css';
 
@@ -39,6 +43,10 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
   const [news, setNews] = useState<NewsEvent[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [redirects, setRedirects] = useState<Redirect[]>([]);
+  const [failedResources, setFailedResources] = useState<string[]>([]);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [redirectsLoading, setRedirectsLoading] = useState(false);
 
   // Show toast helper
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
@@ -54,29 +62,45 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
   };
 
   // Load initial data
-  const loadData = async () => {
+  const loadData = useCallback(async (showLoading = true) => {
+    if (showLoading) setDataLoading(true);
+    const [m, s, med, n, c, u] = await Promise.allSettled([
+      api.getMachines(),
+      api.getStandards(),
+      api.getMedia(),
+      api.getNewsEvents(),
+      api.getContacts(),
+      api.getUsers(),
+    ]);
+    const failed: string[] = [];
+    if (m.status === 'fulfilled') setMachines(m.value); else { setMachines([]); failed.push('machines'); }
+    if (s.status === 'fulfilled') setStandards(s.value); else { setStandards([]); failed.push('standards'); }
+    if (med.status === 'fulfilled') setMedia(med.value); else { setMedia([]); failed.push('media'); }
+    if (n.status === 'fulfilled') setNews(n.value); else { setNews([]); failed.push('news-events'); }
+    if (c.status === 'fulfilled') setContacts(c.value); else { setContacts([]); failed.push('contacts'); }
+    if (u.status === 'fulfilled') setUsers(u.value); else { setUsers([]); failed.push('users'); }
+    setFailedResources(previous => [...previous.filter(resource => resource === 'redirects'), ...failed]);
+    setDataLoading(false);
+    return failed.length === 0;
+  }, []);
+
+  const loadRedirects = useCallback(async () => {
+    setRedirectsLoading(true);
     try {
-      const [m, s, med, n, c, u] = await Promise.all([
-        api.getMachines(),
-        api.getStandards(),
-        api.getMedia(),
-        api.getNewsEvents(),
-        api.getContacts(),
-        api.getUsers(),
-      ]);
-      setMachines(m);
-      setStandards(s);
-      setMedia(med);
-      setNews(n);
-      setContacts(c);
-      setUsers(u);
-    } catch (err) {
-      console.error('Failed to load data:', err);
+      setRedirects(await api.getRedirects());
+      setFailedResources(previous => previous.filter(resource => resource !== 'redirects'));
+      return true;
+    } catch {
+      setRedirects([]);
+      setFailedResources(previous => [...new Set([...previous, 'redirects'])]);
+      return false;
+    } finally {
+      setRedirectsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadData();
+    void Promise.resolve().then(() => loadData(false));
 
     // Check backend connection
     api.checkBackend().then((online) => setBackendConnected(online));
@@ -85,7 +109,7 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
     }, 15000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [loadData]);
 
   // Handlers for Machines
   const handleSaveMachine = async (m: Machine) => {
@@ -180,9 +204,14 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
   };
 
   // Handlers for Contacts
-  const handleUpdateContactStatus = async (id: string, status: Contact['status'], note?: string) => {
+  const handleUpdateContactStatus = async (
+    id: string,
+    status: Contact['status'],
+    note?: string,
+    assignedTo?: string | null,
+  ) => {
     try {
-      await api.updateContactStatus(id, status, note);
+      await api.updateContactStatus(id, status, note, assignedTo);
       setContacts(await api.getContacts());
       showToast('Đã cập nhật trạng thái liên hệ!', 'success');
     } catch (err) {
@@ -225,13 +254,59 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
     }
   };
 
+  // Handlers for Redirects (PR-12B)
+  const handleSaveRedirect = async (r: Partial<Redirect> & { sourcePath: string; destinationPath: string }) => {
+    try {
+      await api.saveRedirect(r);
+      setRedirects(await api.getRedirects());
+      showToast('Đã lưu quy tắc chuyển hướng 301!', 'success');
+    } catch (err) {
+      showToast(getErrorMessage(err, 'Lưu quy tắc chuyển hướng thất bại.'), 'error');
+      throw err;
+    }
+  };
+
+  const handleToggleRedirect = async (id: string) => {
+    try {
+      await api.toggleRedirect(id);
+      setRedirects(await api.getRedirects());
+      showToast('Đã cập nhật trạng thái chuyển hướng!', 'success');
+    } catch (err) {
+      showToast(getErrorMessage(err, 'Cập nhật trạng thái chuyển hướng thất bại.'), 'error');
+      throw err;
+    }
+  };
+
+  const handleDeleteRedirect = async (id: string) => {
+    try {
+      await api.deleteRedirect(id);
+      setRedirects(await api.getRedirects());
+      showToast('Đã xóa quy tắc chuyển hướng 301!', 'success');
+    } catch (err) {
+      showToast(getErrorMessage(err, 'Xóa quy tắc chuyển hướng thất bại.'), 'error');
+      throw err;
+    }
+  };
+
   const handleResetData = async () => {
-    localStorage.clear();
-    await loadData();
-    showToast('Đã khôi phục dữ liệu mẫu gốc!', 'success');
+    const success = await loadData();
+    showToast(success ? 'Đã tải lại dữ liệu từ máy chủ.' : 'Một số dữ liệu chưa tải được. Vui lòng thử lại.', success ? 'success' : 'error');
   };
 
   const newContactsCount = contacts.filter((c) => c.status === 'new').length;
+  const viewResources: Record<AdminView, string[]> = {
+    dashboard: ['machines', 'media', 'news-events', 'contacts'],
+    machines: ['machines', 'standards', 'media'],
+    standards: ['standards'],
+    media: ['media'],
+    'news-events': ['news-events', 'media'],
+    contacts: ['contacts'],
+    users: ['users'],
+    redirects: ['redirects'],
+    settings: [],
+  };
+  const currentViewFailed = failedResources.some(resource => viewResources[currentView].includes(resource));
+  const currentViewLoading = currentView === 'redirects' ? redirectsLoading : currentView !== 'settings' && dataLoading;
 
   useEffect(() => {
     const breakpoint = window.matchMedia('(max-width: 1023px)');
@@ -240,7 +315,13 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
     return () => breakpoint.removeEventListener('change', update);
   }, []);
 
-  const navigate = (view: AdminView) => { setCurrentView(view); setSidebarOpen(false); };
+  const navigate = (view: AdminView) => {
+    setCurrentView(view);
+    setSidebarOpen(false);
+    if (view === 'redirects') {
+      void loadRedirects();
+    }
+  };
 
   return (
     <div className="admin-shell">
@@ -262,10 +343,28 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
 
       {/* Main Panel */}
       <div className="admin-main" inert={smallScreen && sidebarOpen}>
-        <Header currentView={currentView} backendConnected={backendConnected}
-          sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen(open => !open)} />
+        <Header
+          currentView={currentView}
+          backendConnected={backendConnected}
+          sidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarOpen(open => !open)}
+          newContactsCount={newContactsCount}
+          onNavigate={navigate}
+        />
 
         <main className="admin-content">
+          {currentViewLoading ? (
+            <div role="status" className="card" style={{ padding: 24 }}>Đang tải dữ liệu từ máy chủ...</div>
+          ) : currentViewFailed ? (
+            <div role="alert" className="card" style={{ padding: 24 }}>
+              <h1>Không tải được dữ liệu từ máy chủ</h1>
+              <p>Danh sách hiện chưa được xác minh. Vui lòng kiểm tra kết nối và thử lại.</p>
+              <button className="btn btn-primary" type="button" onClick={() => {
+                if (currentView === 'redirects') void loadRedirects();
+                else void loadData();
+              }}>Thử lại</button>
+            </div>
+          ) : <>
           {currentView === 'dashboard' && (
             <DashboardPage
               machines={machines}
@@ -315,6 +414,7 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
           {currentView === 'contacts' && (
             <ContactsPage
               contacts={contacts}
+              users={users}
               onUpdateStatus={handleUpdateContactStatus}
               onDelete={handleDeleteContact}
             />
@@ -323,8 +423,18 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
           {currentView === 'users' && (
             <UsersPage
               users={users}
+              currentUserId={user.id}
               onSave={handleSaveUser}
               onDelete={handleDeleteUser}
+            />
+          )}
+
+          {currentView === 'redirects' && (
+            <RedirectsPage
+              redirects={redirects}
+              onSave={handleSaveRedirect}
+              onToggle={handleToggleRedirect}
+              onDelete={handleDeleteRedirect}
             />
           )}
 
@@ -335,6 +445,7 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
               onPasswordChanged={() => onLogout('Đổi mật khẩu thành công. Vui lòng đăng nhập lại.')}
             />
           )}
+          </>}
         </main>
       </div>
 
@@ -355,8 +466,38 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
 
 export function App() {
   const [user, setUser] = useState<AdminIdentity | null>(null);
-  const [checking, setChecking] = useState(true);
+  const [checking, setChecking] = useState(() => Boolean(auth.getSession()));
   const [message, setMessage] = useState('');
+
+  // Password recovery routing state: token is kept strictly in component memory
+  const [resetToken, setResetToken] = useState<string | null>(() => {
+    try {
+      const url = new URL(window.location.href);
+      const token = url.searchParams.get('token');
+      if (token && token.trim()) {
+        url.searchParams.delete('token');
+        const cleanPath = url.pathname.replace(/\/reset-password\/?$/, '') || '/';
+        const cleanQuery = url.searchParams.toString() ? `?${url.searchParams.toString()}` : '';
+        const cleanUrl = cleanPath + cleanQuery + url.hash;
+        window.history.replaceState({}, document.title, cleanUrl);
+        return token.trim();
+      }
+    } catch {
+      // Ignore URL parse error in non-browser or test contexts
+    }
+    return null;
+  });
+
+  const [authView, setAuthView] = useState<'login' | 'forgot' | 'reset'>(() => {
+    try {
+      if (window.location.pathname.includes('/reset-password') || new URLSearchParams(window.location.search).has('token')) {
+        return 'reset';
+      }
+    } catch {
+      // Ignore
+    }
+    return 'login';
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -366,9 +507,7 @@ export function App() {
       setMessage('Phiên đăng nhập không còn hợp lệ. Vui lòng đăng nhập lại.');
     };
     window.addEventListener(AUTH_EXPIRED_EVENT, handleExpired);
-    if (!auth.getSession()) {
-      setChecking(false);
-    } else {
+    if (auth.getSession()) {
       auth.me().then((identity) => {
         if (!cancelled && auth.getSession()) setUser(identity);
       }).catch(() => {
@@ -398,8 +537,52 @@ export function App() {
   }
 
   if (checking) return <main className="auth-screen auth-loading" role="status">Đang xác minh phiên đăng nhập…</main>;
-  if (!user) return <LoginPage message={message} onAuthenticated={(identity) => { setMessage(''); setUser(identity); }} />;
+
+  if (!user) {
+    if (authView === 'reset' || resetToken) {
+      return (
+        <ResetPasswordPage
+          token={resetToken ?? ''}
+          onResetSuccess={(msg) => {
+            setResetToken(null);
+            setAuthView('login');
+            setMessage(msg);
+          }}
+          onRequestNewLink={() => {
+            setResetToken(null);
+            setAuthView('forgot');
+          }}
+        />
+      );
+    }
+
+    if (authView === 'forgot') {
+      return (
+        <ForgotPasswordPage
+          onBackToLogin={() => {
+            setAuthView('login');
+          }}
+        />
+      );
+    }
+
+    return (
+      <LoginPage
+        message={message}
+        onAuthenticated={(identity) => {
+          setMessage('');
+          setUser(identity);
+        }}
+        onForgotPassword={() => {
+          setMessage('');
+          setAuthView('forgot');
+        }}
+      />
+    );
+  }
+
   return <AdminDashboard user={user} onLogout={logout} />;
 }
+
 
 export default App;

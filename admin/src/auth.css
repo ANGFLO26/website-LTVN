@@ -41,7 +41,92 @@
 .auth-loading { color: var(--text-muted); }
 .admin-logout { margin-left: auto; flex-shrink: 0; }
 
+.auth-link-btn {
+  background: transparent;
+  border: none;
+  color: var(--primary, #3b82f6);
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.auth-link-btn:hover {
+  color: #60a5fa;
+}
+
+.auth-back-link {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 0;
+}
+.auth-back-link:hover {
+  color: var(--text-main, #f8fafc);
+}
+
+.auth-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.auth-input-group input {
+  padding-right: 40px;
+  margin-bottom: 0;
+}
+.auth-eye-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  min-height: auto !important;
+  margin-top: 0 !important;
+}
+.auth-eye-btn:hover {
+  color: var(--text-main, #f8fafc);
+}
+
+.auth-password-criteria {
+  background: var(--bg-card-subtle, #1e293b);
+  border: 1px solid var(--border-subtle, #334155);
+  border-radius: var(--radius-sm, 6px);
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 6px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+.auth-success-box {
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  border-radius: var(--radius-md, 8px);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 @media (max-width: 440px) {
   .auth-screen { padding: 16px; }
-  .auth-card { padding: 24px; }
+  .auth-card { padding: 20px 16px; }
+  .auth-password-criteria { grid-template-columns: 1fr; }
 }

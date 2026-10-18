@@ -5,7 +5,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { getTableName, type SQL } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
-import { drizzle } from 'drizzle-orm/postgres-js';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module.js';
@@ -18,15 +17,17 @@ type NewsQuery = NonNullable<Parameters<DrizzleDb['query']['newsEvents']['findMa
 describe('QA-14C2: News & Events Bilingual Backend Architecture', () => {
   let app: INestApplication<App>;
   let token: string;
-  const compiler = drizzle.mock({ schema });
 
   const admin: schema.User = {
     id: randomUUID(),
     email: 'admin-qa14@ltvietnam.com.vn',
     fullName: 'QA-14 Admin',
     passwordHash: `secret-hash-${randomBytes(16).toString('hex')}`,
+    tokenVersion: 0,
     role: 'admin',
     status: 'active',
+    failedLoginAttempts: 0,
+    lockedUntil: null,
     lastLoginAt: null,
     deletedAt: null,
     createdAt: new Date(),
@@ -83,7 +84,7 @@ describe('QA-14C2: News & Events Bilingual Backend Architecture', () => {
               },
             }),
             update: (table: PgTable) => ({
-              set: (data: Row) => ({
+              set: (_data: Row) => ({
                 where: (_condition: SQL) => {
                   const name = getTableName(table);
                   if (name === 'news_events') {
@@ -113,8 +114,8 @@ describe('QA-14C2: News & Events Bilingual Backend Architecture', () => {
             return { returning: () => Promise.resolve([{ id: randomUUID() }]) };
           },
         }),
-        update: (table: PgTable) => ({
-          set: (data: Row) => ({
+        update: (_table: PgTable) => ({
+          set: (_data: Row) => ({
             where: (_cond: SQL) => {
               return { returning: () => Promise.resolve([{ id: randomUUID() }]) };
             },
@@ -123,7 +124,7 @@ describe('QA-14C2: News & Events Bilingual Backend Architecture', () => {
         query: {
           users: { findFirst: () => Promise.resolve(admin) },
           newsEventTranslations: {
-            findFirst: ({ where }: any) => {
+            findFirst: () => {
               // Extract slug value if possible
               const match = translationsStore.find((t) => t.slug);
               return Promise.resolve(match);
@@ -140,7 +141,7 @@ describe('QA-14C2: News & Events Bilingual Backend Architecture', () => {
               }));
               return Promise.resolve(results);
             },
-            findFirst: (options: any) => {
+            findFirst: () => {
               const item = newsStore[newsStore.length - 1];
               if (!item) return Promise.resolve(null);
               return Promise.resolve({
@@ -157,7 +158,7 @@ describe('QA-14C2: News & Events Bilingual Backend Architecture', () => {
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: admin.id });
+    token = await module.get(JwtService).signAsync({ sub: admin.id, tokenVersion: admin.tokenVersion });
   });
 
   beforeEach(() => {

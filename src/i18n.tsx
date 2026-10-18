@@ -302,12 +302,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = language
-    const copyIndex = language === 'vi' ? 0 : 1
-    const description = uiCopy.siteMetaDescription[copyIndex]
-    document.querySelector('meta[name="description"]')?.setAttribute('content', description)
-    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description)
-    document.querySelector('meta[property="og:locale"]')?.setAttribute('content', language === 'vi' ? 'vi_VN' : 'en_US')
-
     try {
       window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
     } catch {

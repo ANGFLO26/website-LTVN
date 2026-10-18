@@ -112,6 +112,9 @@ export class MachinesService {
             machineFields.slug ||
             data.name
               .toLowerCase()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .replace(/[đĐ]/g, 'd')
               .replace(/[^a-z0-9]+/g, '-')
               .replace(/^-|-$/g, ''),
         })

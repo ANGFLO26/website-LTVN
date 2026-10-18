@@ -2,17 +2,25 @@ import { ArrowRight } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
+import { DataLoadError } from '../components/DataLoadError'
 import { EmptyState, PageIntro, SectionHeading } from '../components/PageElements'
 import { useSiteData } from '../context/DataContext'
 import { newsTypeLabels, type NewsType } from '../data'
-import { usePageTitle } from '../hooks'
+import { useSeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
 
 export function NewsPage() {
   const { content, t, language } = useLanguage()
-  const { newsItems } = useSiteData()
+  const { newsItems, newsStatus, refreshData } = useSiteData()
   const [filter, setFilter] = useState<'all' | NewsType>('all')
-  usePageTitle(t('news'))
+  useSeoHead({
+    title: t('news'),
+    description: language === 'vi'
+      ? 'Cập nhật tin tức hoạt động, dự án chuyển giao công nghệ và sự kiện hội thảo kỹ thuật của LT Việt Nam.'
+      : 'Latest updates on operations, technology handovers and technical seminars from LT Vietnam.',
+    canonicalPath: '/tin-tuc-su-kien',
+    type: 'website',
+  })
 
   // Policy A: In EN mode, only show items with authored English translation
   const localeItems = language === 'en' ? newsItems.filter((item) => item.hasEnglish) : newsItems
@@ -80,7 +88,11 @@ export function NewsPage() {
             </div>
             <span className="news-result-count" aria-live="polite">{filteredItems.length} {t('postsCount')}</span>
           </div>
-          {filteredItems.length ? (
+          {newsStatus === 'loading' ? (
+            <p role="status">{language === 'vi' ? 'Đang tải bài viết...' : 'Loading articles...'}</p>
+          ) : newsStatus === 'error' ? (
+            <DataLoadError onRetry={refreshData} />
+          ) : filteredItems.length ? (
             <div className="news-grid">
               {filteredItems.map((item) => <NewsCard key={item.slug} item={item} />)}
             </div>

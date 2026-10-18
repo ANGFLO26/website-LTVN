@@ -6,7 +6,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { isISO8601 } from 'class-validator';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
 

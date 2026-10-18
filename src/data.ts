@@ -77,10 +77,6 @@ export const newsTypeLabels: Record<NewsType, LocalizedText> = {
   project: localized('Dự án', 'Projects'),
 }
 
-// Cleaned up: Machines and News items are dynamically served from PostgreSQL Database
-export const products: Product[] = []
-export const newsItems: NewsItem[] = []
-
 export const offices: Office[] = [
   {
     city: localized('Hà Nội', 'Hanoi'),
@@ -113,8 +109,3 @@ export const offices: Office[] = [
   },
 ]
 
-export const getProductBySlug = (slug?: string) =>
-  products.find((product) => product.slug === slug)
-
-export const getNewsBySlug = (slug?: string) =>
-  newsItems.find((item) => item.slug === slug)

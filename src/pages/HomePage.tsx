@@ -2,16 +2,24 @@ import { useState, type KeyboardEvent } from 'react'
 import { ArrowRight, ClipboardCheck, LifeBuoy, Wrench } from 'lucide-react'
 import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
+import { DataLoadError } from '../components/DataLoadError'
 import { SectionHeading } from '../components/PageElements'
 import { useSiteData } from '../context/DataContext'
-import { usePageTitle } from '../hooks'
+import { useSeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
 
 export function HomePage() {
   const { language, t } = useLanguage()
-  const { newsItems } = useSiteData()
+  const { newsItems, newsStatus, refreshData } = useSiteData()
   const [activeSupportStep, setActiveSupportStep] = useState(0)
-  usePageTitle(t('home'))
+  useSeoHead({
+    title: t('home'),
+    description: language === 'vi'
+      ? 'LT Việt Nam cung cấp thiết bị phân tích PAC, van điều khiển Masoneilan, van an toàn Consolidated và dịch vụ kỹ thuật.'
+      : 'LT Vietnam supplies PAC analytical instruments, Masoneilan control valves, Consolidated safety valves and technical services.',
+    canonicalPath: '/',
+    type: 'website',
+  })
 
   const supportSteps = [
     {
@@ -256,9 +264,15 @@ export function HomePage() {
               </Link>
             }
           />
-          <div className="news-grid home-news-grid">
-            {(language === 'en' ? newsItems.filter((item) => item.hasEnglish) : newsItems).slice(0, 3).map((item) => <NewsCard key={item.slug} item={item} />)}
-          </div>
+          {newsStatus === 'loading' ? (
+            <p role="status">{language === 'vi' ? 'Đang tải bài viết...' : 'Loading articles...'}</p>
+          ) : newsStatus === 'error' ? (
+            <DataLoadError onRetry={refreshData} />
+          ) : (
+            <div className="news-grid home-news-grid">
+              {(language === 'en' ? newsItems.filter((item) => item.hasEnglish) : newsItems).slice(0, 3).map((item) => <NewsCard key={item.slug} item={item} />)}
+            </div>
+          )}
         </div>
       </section>
 

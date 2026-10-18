@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Plus, Search, Edit2, Trash2, ShieldCheck, UserCheck } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2 } from 'lucide-react';
 import { StatusBadge } from '../components/StatusBadge';
 import { Modal } from '../components/Modal';
 import type { User } from '../types';
 
 interface Props {
   users: User[];
+  currentUserId?: string;
   onSave: (user: User) => Promise<void> | void;
   onDelete: (id: string) => Promise<void> | void;
 }
 
-export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
+export const UsersPage: React.FC<Props> = ({ users, currentUserId, onSave, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -42,6 +43,12 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
 
   const handleSave = async () => {
     if (!editingUser || !editingUser.email.trim() || !editingUser.fullName.trim() || isSaving) return;
+    if (currentUserId && editingUser.id === currentUserId) {
+      if (editingUser.status !== 'active' || editingUser.role !== 'admin') {
+        setSaveError('Không thể tự khóa hoặc hạ quyền tài khoản Quản trị viên đang đăng nhập.');
+        return;
+      }
+    }
     setSaveError(null);
     setIsSaving(true);
     try {
@@ -61,6 +68,8 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
       u.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const isEditingSelf = Boolean(currentUserId && editingUser?.id && editingUser.id === currentUserId);
 
   return (
     <div>
@@ -104,67 +113,82 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((u) => (
-                <tr key={u.id}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div
-                        style={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: '50%',
-                          background: u.role === 'admin' ? '#4f46e5' : '#0284c7',
-                          color: 'white',
-                          fontWeight: 700,
-                          fontSize: '0.78rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        {u.fullName.slice(0, 2).toUpperCase()}
+              {filtered.map((u) => {
+                const isSelf = Boolean(currentUserId && u.id === currentUserId);
+                return (
+                  <tr key={u.id}>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div
+                          style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: '50%',
+                            background: u.role === 'admin' ? '#4f46e5' : '#0284c7',
+                            color: 'white',
+                            fontWeight: 700,
+                            fontSize: '0.78rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          {u.fullName.slice(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span>{u.fullName}</span>
+                            {isSelf && (
+                              <span className="badge" style={{ background: '#1e293b', color: '#38bdf8', fontSize: '0.68rem' }}>
+                                Bạn
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div style={{ fontWeight: 700, fontSize: '0.92rem' }}>{u.fullName}</div>
-                    </div>
-                  </td>
-                  <td style={{ color: '#38bdf8' }}>{u.email}</td>
-                  <td>
-                    <StatusBadge status={u.role} />
-                  </td>
-                  <td>
-                    <StatusBadge status={u.status} />
-                  </td>
-                  <td style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
-                    {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString('vi-VN') : 'Chưa đăng nhập'}
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <div style={{ display: 'inline-flex', gap: 6 }}>
-                      <button
-                        className="btn-icon"
-                        title="Sửa tài khoản"
-                        onClick={() => handleOpenEdit(u)}
-                      >
-                        <Edit2 size={16} />
-                      </button>
-                      <button
-                        className="btn-icon"
-                        title="Xóa tài khoản"
-                        onClick={async () => {
-                          if (window.confirm(`Xóa tài khoản "${u.fullName}"?`)) {
-                            try {
-                              await onDelete(u.id);
-                            } catch {
-                              // Error handled by App toast
+                    </td>
+                    <td style={{ color: '#38bdf8' }}>{u.email}</td>
+                    <td>
+                      <StatusBadge status={u.role} />
+                    </td>
+                    <td>
+                      <StatusBadge status={u.status} />
+                    </td>
+                    <td style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
+                      {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString('vi-VN') : 'Chưa đăng nhập'}
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <div style={{ display: 'inline-flex', gap: 6 }}>
+                        <button
+                          className="btn-icon"
+                          title="Sửa tài khoản"
+                          onClick={() => handleOpenEdit(u)}
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                        <button
+                          className="btn-icon"
+                          title={isSelf ? 'Không thể tự xóa tài khoản đang đăng nhập' : 'Xóa tài khoản'}
+                          disabled={isSelf}
+                          style={isSelf ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
+                          onClick={async () => {
+                            if (isSelf) return;
+                            if (window.confirm(`Xóa tài khoản "${u.fullName}"?`)) {
+                              try {
+                                await onDelete(u.id);
+                              } catch {
+                                // Error handled by App toast
+                              }
                             }
-                          }
-                        }}
-                      >
-                        <Trash2 size={16} color="#f87171" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                          }}
+                        >
+                          <Trash2 size={16} color="#f87171" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -224,6 +248,7 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
                 <select
                   className="form-control"
                   value={editingUser.role}
+                  disabled={isEditingSelf}
                   onChange={(e) =>
                     setEditingUser({
                       ...editingUser,
@@ -241,6 +266,7 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
                 <select
                   className="form-control"
                   value={editingUser.status}
+                  disabled={isEditingSelf}
                   onChange={(e) =>
                     setEditingUser({
                       ...editingUser,
@@ -253,6 +279,11 @@ export const UsersPage: React.FC<Props> = ({ users, onSave, onDelete }) => {
                 </select>
               </div>
             </div>
+            {isEditingSelf && (
+              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                Lưu ý: Để đảm bảo an toàn, bạn không thể tự hạ quyền hoặc tự khóa tài khoản đang đăng nhập.
+              </div>
+            )}
           </div>
         </Modal>
       )}

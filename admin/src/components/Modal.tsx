@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useId } from 'react';
 import { X } from 'lucide-react';
 
 interface Props {
@@ -18,6 +18,8 @@ export const Modal: React.FC<Props> = ({
   footer,
   maxWidth = '680px',
 }) => {
+  const titleId = useId();
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -38,11 +40,14 @@ export const Modal: React.FC<Props> = ({
     <div className="modal-overlay" onClick={onClose}>
       <div
         className="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         style={{ maxWidth }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{title}</h3>
+          <h3 id={titleId} style={{ fontSize: '1.1rem', fontWeight: 700 }}>{title}</h3>
           <button type="button" className="btn-icon" onClick={onClose} aria-label="Đóng hộp thoại">
             <X size={20} aria-hidden="true" />
           </button>

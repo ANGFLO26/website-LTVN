@@ -1,32 +1,52 @@
 import { ArrowLeft, Check, Phone, Send } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { ProductCard } from '../components/ProductCard'
+import { DataLoadError } from '../components/DataLoadError'
 import { useSiteData } from '../context/DataContext'
-import { usePageTitle } from '../hooks'
+import { SeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
 
 export function ProductPage() {
   const { slug } = useParams()
-  const { getProductBySlug, products, loading } = useSiteData()
+  const { getProductBySlug, products, productsStatus, refreshData } = useSiteData()
   const product = getProductBySlug(slug)
   const { content, language, t } = useLanguage()
-  usePageTitle(product?.model ?? t('productFallbackTitle'))
 
-  if (loading) {
+  if (productsStatus === 'loading') {
     return (
-      <section className="container not-found" style={{ minHeight: '50vh', justifyContent: 'center' }}>
-        <p>{language === 'vi' ? 'Đang tải thông tin sản phẩm...' : 'Loading product information...'}</p>
-      </section>
+      <>
+        <SeoHead
+          title={language === 'vi' ? 'Đang tải thông tin sản phẩm...' : 'Loading product information...'}
+          robots="noindex,nofollow"
+        />
+        <section className="container not-found" style={{ minHeight: '50vh', justifyContent: 'center' }}>
+          <p>{language === 'vi' ? 'Đang tải thông tin sản phẩm...' : 'Loading product information...'}</p>
+        </section>
+      </>
     )
+  }
+
+  if (productsStatus === 'error') {
+    return <>
+      <SeoHead title={t('productNotFound')} robots="noindex,nofollow" />
+      <section className="container" style={{ paddingBlock: '4rem' }}><DataLoadError onRetry={refreshData} /></section>
+    </>
   }
 
   if (!product) {
     return (
-      <section className="not-found container">
-        <span className="eyebrow">404</span>
-        <h1>{t('productNotFound')}</h1>
-        <Link to="/pac" className="button button-primary">{t('backToCatalog')}</Link>
-      </section>
+      <>
+        <SeoHead
+          title={t('productNotFound')}
+          canonicalPath={`/san-pham/${slug}`}
+          robots="noindex,nofollow"
+        />
+        <section className="not-found container">
+          <span className="eyebrow">404</span>
+          <h1>{t('productNotFound')}</h1>
+          <Link to="/pac" className="button button-primary">{t('backToCatalog')}</Link>
+        </section>
+      </>
     )
   }
 
@@ -37,6 +57,14 @@ export function ProductPage() {
 
   return (
     <>
+      <SeoHead
+        title={product.model}
+        description={content(product.summary) || content(product.name)}
+        canonicalPath={`/san-pham/${product.slug}`}
+        robots="index,follow"
+        image={product.image}
+        type="website"
+      />
       <section className="product-detail-hero">
         <div className="container">
           <div className="breadcrumbs">

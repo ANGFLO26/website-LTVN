@@ -1,10 +1,18 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  ConflictException,
+  BadRequestException,
+  HttpException,
+} from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
 
 import { isValidUuid } from '../../common/uuid.util.js';
 import { CONTACT_REQUEST_TYPES, type PublicContactDto } from './dto/public-contact.dto.js';
+import { ADMIN_CONTACT_STATUSES, type AdminUpdateContactDto } from './dto/admin-update-contact.dto.js';
 
 @Injectable()
 export class ContactsService {
@@ -65,14 +73,22 @@ export class ContactsService {
     });
   }
 
-  async update(id: string, data: Partial<schema.NewContact>) {
-    const updatePayload: Record<string, unknown> = {
-      ...data,
-      updatedAt: new Date(),
-    };
-    if (updatePayload.assignedTo !== undefined && updatePayload.assignedTo && !isValidUuid(updatePayload.assignedTo as string)) {
-      updatePayload.assignedTo = null;
+  async update(id: string, data: AdminUpdateContactDto) {
+    if (!isValidUuid(id)) throw new BadRequestException('ID liên hệ không hợp lệ.');
+    const updatePayload: Partial<schema.NewContact> = { updatedAt: new Date() };
+    if (data.status !== undefined) {
+      if (!ADMIN_CONTACT_STATUSES.includes(data.status)) {
+        throw new BadRequestException('Trạng thái liên hệ không hợp lệ.');
+      }
+      updatePayload.status = data.status;
     }
+    if (data.assignedTo !== undefined) {
+      if (data.assignedTo !== null && !isValidUuid(data.assignedTo)) {
+        throw new BadRequestException('ID người phụ trách không hợp lệ.');
+      }
+      updatePayload.assignedTo = data.assignedTo;
+    }
+    if (data.adminNote !== undefined) updatePayload.adminNote = data.adminNote;
     if (data.status === 'resolved') {
       updatePayload.resolvedAt = new Date();
     }
@@ -87,11 +103,34 @@ export class ContactsService {
   }
 
   async delete(id: string) {
-    const [deleted] = await this.db
-      .delete(schema.contacts)
-      .where(eq(schema.contacts.id, id))
-      .returning();
-    if (!deleted) throw new NotFoundException(`Contact with id ${id} not found`);
-    return { success: true, deleted };
+    if (!id || typeof id !== 'string' || !isValidUuid(id)) {
+      throw new BadRequestException('ID liên hệ không hợp lệ.');
+    }
+
+    // Fast-path check: contact with outbox records must not be deleted (durability & audit trail)
+    const outboxEntry = await this.db.query.contactOutbox.findFirst({
+      where: eq(schema.contactOutbox.contactId, id),
+    });
+    if (outboxEntry) {
+      throw new ConflictException('Không thể xóa yêu cầu liên hệ đã có lịch sử xử lý/thông báo.');
+    }
+
+    try {
+      const [deleted] = await this.db
+        .delete(schema.contacts)
+        .where(eq(schema.contacts.id, id))
+        .returning();
+      if (!deleted) throw new NotFoundException(`Contact with id ${id} not found`);
+      return { success: true, deleted };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      const pgCode =
+        (error as { code?: string })?.code ||
+        (error as { cause?: { code?: string } })?.cause?.code;
+      if (pgCode === '23503') {
+        throw new ConflictException('Không thể xóa yêu cầu liên hệ đã có lịch sử xử lý/thông báo.');
+      }
+      throw error;
+    }
   }
 }

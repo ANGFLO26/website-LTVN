@@ -1,9 +1,15 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, ConflictException } from '@nestjs/common';
 import { eq, desc } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
 
 import type { CreateUserDto, UpdateUserDto } from './dto/user-mutation.dto.js';
+
+function isUniqueConstraintError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false;
+  const candidate = err as { code?: unknown; cause?: { code?: unknown } };
+  return candidate.code === '23505' || candidate.cause?.code === '23505';
+}
 
 @Injectable()
 export class UsersService {
@@ -44,50 +50,65 @@ export class UsersService {
   }
 
   async create(data: CreateUserDto) {
-    const [created] = await this.db
-      .insert(schema.users)
-      .values({
-        email: data.email,
-        fullName: data.fullName,
-        role: data.role,
-        status: data.status,
-        // Retain the existing non-login placeholder; provisioning is outside QA-03.
-        passwordHash: '$2b$10$defaultPasswordHashPlaceholder',
-      })
-      .returning({
-        id: schema.users.id,
-        email: schema.users.email,
-        fullName: schema.users.fullName,
-        role: schema.users.role,
-        status: schema.users.status,
-        lastLoginAt: schema.users.lastLoginAt,
-        createdAt: schema.users.createdAt,
-        updatedAt: schema.users.updatedAt,
-      });
-    return created;
+    try {
+      const [created] = await this.db
+        .insert(schema.users)
+        .values({
+          email: data.email,
+          fullName: data.fullName,
+          role: data.role,
+          status: data.status,
+          // Retain the existing non-login placeholder; provisioning is outside QA-03.
+          passwordHash: '$2b$10$defaultPasswordHashPlaceholder',
+        })
+        .returning({
+          id: schema.users.id,
+          email: schema.users.email,
+          fullName: schema.users.fullName,
+          role: schema.users.role,
+          status: schema.users.status,
+          lastLoginAt: schema.users.lastLoginAt,
+          createdAt: schema.users.createdAt,
+          updatedAt: schema.users.updatedAt,
+        });
+      return created;
+    } catch (err: unknown) {
+      if (isUniqueConstraintError(err)) {
+        throw new ConflictException('Email đã tồn tại trong hệ thống.');
+      }
+      throw err;
+    }
   }
 
   async update(id: string, data: UpdateUserDto) {
-    const [updated] = await this.db
-      .update(schema.users)
-      .set({
-        email: data.email,
-        fullName: data.fullName,
-        role: data.role,
-        status: data.status,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.users.id, id))
-      .returning({
-        id: schema.users.id,
-        email: schema.users.email,
-        fullName: schema.users.fullName,
-        role: schema.users.role,
-        status: schema.users.status,
-        lastLoginAt: schema.users.lastLoginAt,
-        createdAt: schema.users.createdAt,
-        updatedAt: schema.users.updatedAt,
-      });
+    let updated;
+    try {
+      [updated] = await this.db
+        .update(schema.users)
+        .set({
+          email: data.email,
+          fullName: data.fullName,
+          role: data.role,
+          status: data.status,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.users.id, id))
+        .returning({
+          id: schema.users.id,
+          email: schema.users.email,
+          fullName: schema.users.fullName,
+          role: schema.users.role,
+          status: schema.users.status,
+          lastLoginAt: schema.users.lastLoginAt,
+          createdAt: schema.users.createdAt,
+          updatedAt: schema.users.updatedAt,
+        });
+    } catch (err: unknown) {
+      if (isUniqueConstraintError(err)) {
+        throw new ConflictException('Email đã tồn tại trong hệ thống.');
+      }
+      throw err;
+    }
     if (!updated) throw new NotFoundException(`User with id ${id} not found`);
     return updated;
   }

@@ -1,10 +1,13 @@
 import { CheckCircle2, ClipboardList, Mail, MapPin, Phone } from 'lucide-react'
 import { useState, useRef, type FormEvent } from 'react'
+import { useSearchParams } from 'react-router'
 import { OfficeNetwork } from '../components/OfficeNetwork'
 import { PageIntro } from '../components/PageElements'
+import { useSiteData } from '../context/DataContext'
 import { offices } from '../data'
-import { usePageTitle } from '../hooks'
+import { useSeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
+import { TurnstileWidget } from '../components/TurnstileWidget'
 
 const requestTypes = [
   ['quotation', 'contactRequestQuotation'],
@@ -16,12 +19,26 @@ const requestTypes = [
 ] as const
 
 export function ContactPage() {
-  const { content, t } = useLanguage()
+  const { content, t, language } = useLanguage()
+  const { getProductBySlug } = useSiteData()
+  const [searchParams] = useSearchParams()
+  const productParam = searchParams.get('san-pham')?.trim() ?? ''
+  const topicParam = searchParams.get('chu-de')?.trim() ?? ''
+  const selectedProduct = productParam ? getProductBySlug(productParam) : undefined
+  const defaultRequestType = productParam || topicParam ? 'product_consultation' : ''
   const [submitted, setSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
   const isSubmittingRef = useRef(false)
-  usePageTitle(t('contact'))
+  useSeoHead({
+    title: t('contact'),
+    description: language === 'vi'
+      ? 'Liên hệ LT Việt Nam để nhận tư vấn kỹ thuật, báo giá thiết bị phân tích PAC và van công nghiệp.'
+      : 'Contact LT Vietnam for technical consultation, quotations on PAC analyzers and industrial valves.',
+    canonicalPath: '/lien-he',
+    type: 'website',
+  })
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -64,14 +81,26 @@ export function ContactPage() {
     setSubmitError('')
     setSubmitted(false)
     try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (captchaToken) {
+        headers['X-Captcha-Token'] = captchaToken
+      }
+
       const response = await fetch('/api/contacts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(payload),
       })
       if (response.ok) {
         setSubmitted(true)
         setSubmitError('')
+      } else if (response.status === 429) {
+        setSubmitted(false)
+        setSubmitError(
+          language === 'vi'
+            ? 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.'
+            : 'Too many requests. Please try again in a few minutes.'
+        )
       } else if (response.status === 400) {
         setSubmitted(false)
         setSubmitError(t('contactValidationError'))
@@ -137,6 +166,28 @@ export function ContactPage() {
               <span className="eyebrow">{t('contactFormEyebrow')}</span>
               <h2>{t('contactFormTitle')}</h2>
               <p>{t('contactFormDesc')}</p>
+              {(selectedProduct || productParam || topicParam) && (
+                <div
+                  style={{
+                    marginTop: '0.75rem',
+                    marginBottom: '0.5rem',
+                    padding: '0.65rem 0.9rem',
+                    background: 'rgba(14, 116, 144, 0.08)',
+                    borderLeft: '3px solid #0e7490',
+                    borderRadius: '0.375rem',
+                    fontSize: '0.9rem',
+                  }}
+                >
+                  <strong>
+                    {language === 'vi' ? 'Nội dung đang quan tâm: ' : 'Inquiry context: '}
+                  </strong>
+                  <span>
+                    {selectedProduct
+                      ? `${content(selectedProduct.name)}${selectedProduct.model ? ` (${selectedProduct.model})` : ''}`
+                      : productParam || topicParam}
+                  </span>
+                </div>
+              )}
               <small>{t('requiredFieldsNote')}</small>
             </div>
             <div className="form-grid contact-form-grid">
@@ -158,7 +209,7 @@ export function ContactPage() {
               </label>
               <label className="form-wide">
                 <span>{t('contactRequestType')} *</span>
-                <select name="requestType" required defaultValue="">
+                <select key={defaultRequestType} name="requestType" required defaultValue={defaultRequestType}>
                   <option value="" disabled>{t('contactSelectRequestType')}</option>
                   {requestTypes.map(([value, label]) => <option key={value} value={value}>{t(label)}</option>)}
                 </select>
@@ -168,6 +219,7 @@ export function ContactPage() {
                 <textarea name="message" rows={5} required maxLength={5000} />
               </label>
             </div>
+            <TurnstileWidget action="contact" onVerify={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
             <button
               type="submit"
               className="button button-primary"

@@ -98,4 +98,48 @@ export function validatePasswordStrength(password: unknown): PasswordValidationR
   return { valid: true };
 }
 
+export function getPasswordResetTokenTtlMinutes(config?: { get: (key: string) => unknown }): number {
+  const raw = config?.get('AUTH_PASSWORD_RESET_TOKEN_TTL_MINUTES') ?? process.env.AUTH_PASSWORD_RESET_TOKEN_TTL_MINUTES;
+  if (raw !== undefined && raw !== null) {
+    const str = typeof raw === 'string' ? raw.trim() : typeof raw === 'number' ? String(raw) : '';
+    if (str !== '') {
+      const parsed = Number(str);
+      if (!Number.isInteger(parsed) || parsed <= 0) {
+        throw new Error('AUTH_PASSWORD_RESET_TOKEN_TTL_MINUTES must be an integer greater than 0.');
+      }
+      return parsed;
+    }
+  }
+  return 30;
+}
 
+export function getAdminPublicUrl(config?: { get: (key: string) => unknown }): string {
+  const raw = (config?.get('ADMIN_PUBLIC_URL') ?? process.env.ADMIN_PUBLIC_URL) as string | undefined;
+  const isProd = (config?.get('NODE_ENV') ?? process.env.NODE_ENV) === 'production';
+
+  if (!raw || typeof raw !== 'string' || !raw.trim()) {
+    if (isProd) {
+      throw new Error('ADMIN_PUBLIC_URL environment variable is required in production.');
+    }
+    return 'http://localhost:5174';
+  }
+
+  try {
+    const url = new URL(raw.trim());
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      throw new Error('ADMIN_PUBLIC_URL must use http or https protocol.');
+    }
+    if (url.username || url.password) {
+      throw new Error('ADMIN_PUBLIC_URL must not contain authentication credentials.');
+    }
+    if (url.search || url.hash) {
+      throw new Error('ADMIN_PUBLIC_URL must not contain query parameters or fragments.');
+    }
+    return url.origin + url.pathname.replace(/\/+$/, '');
+  } catch (err) {
+    if (err instanceof Error && err.message.startsWith('ADMIN_PUBLIC_URL')) {
+      throw err;
+    }
+    throw new Error('ADMIN_PUBLIC_URL must be a valid URL.');
+  }
+}

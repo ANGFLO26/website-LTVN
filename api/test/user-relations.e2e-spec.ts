@@ -20,8 +20,11 @@ const user: schema.User = {
   fullName: 'Relation Test User',
   email: `${randomUUID()}@example.invalid`,
   passwordHash: `private-test-hash-${randomBytes(24).toString('hex')}`,
+  tokenVersion: 0,
   role: 'admin',
   status: 'active',
+  failedLoginAttempts: 0,
+  lockedUntil: null,
   lastLoginAt: new Date(),
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -92,7 +95,7 @@ describe('QA-02: safe user relations (real controllers/services/guard, isolated 
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: user.id });
+    token = await module.get(JwtService).signAsync({ sub: user.id, tokenVersion: user.tokenVersion });
   });
 
   beforeEach(() => {

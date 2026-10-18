@@ -64,16 +64,21 @@ export const MachinesPage: React.FC<Props> = ({
 
   const handleSave = async () => {
     if (!editingMachine || !editingMachine.name.trim() || isSaving) return;
-    if (!editingMachine.slug) {
-      editingMachine.slug = editingMachine.name
+    let machineToSave = editingMachine;
+    if (!machineToSave.slug) {
+      const generatedSlug = machineToSave.name
         .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[đĐ]/g, 'd')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
+      machineToSave = { ...machineToSave, slug: generatedSlug };
     }
     setSaveError(null);
     setIsSaving(true);
     try {
-      await onSave(editingMachine);
+      await onSave(machineToSave);
       setIsModalOpen(false);
       setEditingMachine(null);
     } catch (err: unknown) {

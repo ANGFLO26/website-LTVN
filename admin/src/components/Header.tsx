@@ -9,9 +9,18 @@ interface Props {
   backendConnected: boolean;
   sidebarOpen: boolean;
   onToggleSidebar: () => void;
+  newContactsCount?: number;
+  onNavigate?: (view: AdminView) => void;
 }
 
-export const Header: React.FC<Props> = ({ currentView, backendConnected, sidebarOpen, onToggleSidebar }) => {
+export const Header: React.FC<Props> = ({
+  currentView,
+  backendConnected,
+  sidebarOpen,
+  onToggleSidebar,
+  newContactsCount = 0,
+  onNavigate,
+}) => {
   const publicSiteUrl = getPublicSiteUrl();
   const titles: Record<AdminView, string> = {
     dashboard: 'Bảng Điều Khiển Tổng Quan',
@@ -21,6 +30,7 @@ export const Header: React.FC<Props> = ({ currentView, backendConnected, sidebar
     'news-events': 'Quản Lý Tin Tức & Sự Kiện',
     contacts: 'Quản Lý Yêu Cầu Liên Hệ & Leads',
     users: 'Quản Lý Tài Khoản Quản Trị',
+    redirects: 'Quản Lý Chuyển Hướng 301',
     settings: 'Cấu Hình Hệ Thống & Kết Nối API',
   };
 
@@ -42,13 +52,13 @@ export const Header: React.FC<Props> = ({ currentView, backendConnected, sidebar
           title={
             backendConnected
               ? `Đang kết nối tới NestJS API (${buildApiUrl('/api')})`
-              : 'Backend offline, đang sử dụng Local Storage cache'
+              : 'Không kết nối được tới NestJS API; dữ liệu cần được tải lại từ máy chủ'
           }
         >
           <Server size={14} />
           <span className="status-dot" />
           <span>
-            {backendConnected ? 'API Live' : 'Local Storage Mode'}
+            {backendConnected ? 'API Live' : 'API Không Kết Nối'}
           </span>
         </div>
 
@@ -72,8 +82,45 @@ export const Header: React.FC<Props> = ({ currentView, backendConnected, sidebar
           <ExternalLink size={14} />
         </ConfiguredExternalLink>
 
-        <button className="btn-icon" title="Thông báo hệ thống">
+        <button
+          type="button"
+          className="btn-icon"
+          style={{ position: 'relative' }}
+          title={
+            newContactsCount > 0
+              ? `Có ${newContactsCount} thông báo khách hàng mới cần xử lý`
+              : 'Thông báo hệ thống'
+          }
+          aria-label={
+            newContactsCount > 0
+              ? `Thông báo: ${newContactsCount} khách hàng mới`
+              : 'Thông báo hệ thống'
+          }
+          onClick={() => onNavigate?.('contacts')}
+        >
           <Bell size={18} />
+          {newContactsCount > 0 && (
+            <span
+              style={{
+                position: 'absolute',
+                top: -2,
+                right: -2,
+                minWidth: 16,
+                height: 16,
+                padding: '0 4px',
+                borderRadius: 999,
+                background: '#ef4444',
+                color: '#fff',
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {newContactsCount}
+            </span>
+          )}
         </button>
       </div>
     </header>

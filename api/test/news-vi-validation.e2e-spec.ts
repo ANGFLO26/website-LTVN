@@ -24,7 +24,7 @@ describe('FINAL-01 B2: required VI fields on authenticated updates (isolated per
   let translations: Row[];
   let transactionCount: number;
   const writes: Array<{ table: string; data: Row; sql: string; params: unknown[] }> = [];
-  const admin = { id: randomUUID(), fullName: 'VI validation Admin', email: 'audit@example.invalid', role: 'admin', status: 'active', deletedAt: null };
+  const admin = { id: randomUUID(), fullName: 'VI validation Admin', email: 'audit@example.invalid', role: 'admin', status: 'active', deletedAt: null, tokenVersion: 0 };
   const persistence = {
     update: (table: PgTable) => ({ set: (data: Row) => ({ where: (condition: SQL) => {
       const compiled = compiler.update(table).set(data).where(condition).returning().toSQL();
@@ -57,7 +57,7 @@ describe('FINAL-01 B2: required VI fields on authenticated updates (isolated per
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: admin.id });
+    token = await module.get(JwtService).signAsync({ sub: admin.id, tokenVersion: admin.tokenVersion });
   });
   beforeEach(() => {
     parent = { id: articleId, type: 'news', status: 'published', title: 'Authored VI title', slug: 'authored-vi-slug' };

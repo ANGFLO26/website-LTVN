@@ -8,6 +8,7 @@ import {
   Inbox,
   Users,
   Settings,
+  ArrowRightLeft,
   LogOut,
   X,
 } from 'lucide-react';
@@ -133,6 +134,13 @@ export const Sidebar: React.FC<Props> = ({
         >
           <Users size={18} />
           <span>Tài Khoản Quản Trị</span>
+        </button>
+        <button
+          className={`menu-item ${currentView === 'redirects' ? 'active' : ''}`}
+          onClick={() => onNavigate('redirects')}
+        >
+          <ArrowRightLeft size={18} />
+          <span>Điều Hướng 301</span>
         </button>
         <button
           className={`menu-item ${currentView === 'settings' ? 'active' : ''}`}

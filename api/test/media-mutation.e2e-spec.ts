@@ -98,7 +98,7 @@ describe('QA-03 Media: create payload and database-owned identity/timestamps', (
   const compiler = drizzle.mock({ schema });
   const actor = {
     id: randomUUID(), email: 'media-admin@example.invalid', fullName: 'Media Admin',
-    role: 'admin', status: 'active', deletedAt: null,
+    role: 'admin', status: 'active', deletedAt: null, tokenVersion: 0,
   };
   const adminFetch = vi.fn(async (url: string, options?: RequestInit): Promise<Response> => {
     const response = await request(app.getHttpServer()).post(url)
@@ -133,7 +133,7 @@ describe('QA-03 Media: create payload and database-owned identity/timestamps', (
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: actor.id });
+    token = await module.get(JwtService).signAsync({ sub: actor.id, tokenVersion: actor.tokenVersion });
   });
 
   beforeEach(() => { writes.length = 0; adminFetch.mockClear(); });

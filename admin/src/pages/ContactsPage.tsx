@@ -1,26 +1,34 @@
 import React, { useState } from 'react';
-import { Search, Eye, Trash2, CheckCircle2, AlertCircle, Phone, Mail, Building2 } from 'lucide-react';
+import { Search, Eye, Trash2, Phone, Mail, Building2 } from 'lucide-react';
 import { StatusBadge } from '../components/StatusBadge';
 import { Modal } from '../components/Modal';
-import type { Contact } from '../types';
+import type { Contact, User } from '../types';
 
 interface Props {
   contacts: Contact[];
-  onUpdateStatus: (id: string, status: Contact['status'], note?: string) => Promise<void> | void;
+  users?: User[];
+  onUpdateStatus: (
+    id: string,
+    status: Contact['status'],
+    note?: string,
+    assignedTo?: string | null,
+  ) => Promise<void> | void;
   onDelete: (id: string) => Promise<void> | void;
 }
 
-export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDelete }) => {
+export const ContactsPage: React.FC<Props> = ({ contacts, users = [], onUpdateStatus, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'new' | 'processing' | 'resolved' | 'spam'>('all');
   const [viewingContact, setViewingContact] = useState<Contact | null>(null);
   const [adminNoteInput, setAdminNoteInput] = useState('');
+  const [assignedToInput, setAssignedToInput] = useState<string>('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const handleOpenDetail = (contact: Contact) => {
     setViewingContact(contact);
     setAdminNoteInput(contact.adminNote || '');
+    setAssignedToInput(contact.assignedTo || '');
     setSaveError(null);
   };
 
@@ -29,7 +37,14 @@ export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDele
     setSaveError(null);
     setIsSaving(true);
     try {
-      await onUpdateStatus(viewingContact.id, viewingContact.status, adminNoteInput);
+      const nextAssignedTo = assignedToInput ? assignedToInput : null;
+      const assignedChanged = nextAssignedTo !== (viewingContact.assignedTo || null);
+      await onUpdateStatus(
+        viewingContact.id,
+        viewingContact.status,
+        adminNoteInput,
+        assignedChanged ? nextAssignedTo : undefined,
+      );
       setViewingContact(null);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Cập nhật trạng thái liên hệ thất bại. Vui lòng thử lại.';
@@ -96,6 +111,12 @@ export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDele
               >
                 Đã giải quyết ({contacts.filter((c) => c.status === 'resolved').length})
               </button>
+              <button
+                className={`tab-pill ${statusFilter === 'spam' ? 'active' : ''}`}
+                onClick={() => setStatusFilter('spam')}
+              >
+                Spam ({contacts.filter((c) => c.status === 'spam').length})
+              </button>
             </div>
           </div>
         </div>
@@ -113,6 +134,13 @@ export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDele
               </tr>
             </thead>
             <tbody>
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: 'center', padding: '2rem' }}>
+                    {contacts.length === 0 ? 'Chưa có yêu cầu liên hệ nào.' : 'Không có yêu cầu liên hệ phù hợp.'}
+                  </td>
+                </tr>
+              )}
               {filtered.map((c) => (
                 <tr key={c.id}>
                   <td>
@@ -288,11 +316,24 @@ export const ContactsPage: React.FC<Props> = ({ contacts, onUpdateStatus, onDele
               </div>
 
               <div className="form-group">
-                <label>Thời Điểm Nhận</label>
-                <div style={{ padding: '10px 0', fontSize: '0.85rem', color: '#94a3b8' }}>
-                  {new Date(viewingContact.createdAt).toLocaleString('vi-VN')}
-                </div>
+                <label>Người Phụ Trách Xử Lý</label>
+                <select
+                  className="form-control"
+                  value={assignedToInput}
+                  onChange={(e) => setAssignedToInput(e.target.value)}
+                >
+                  <option value="">-- Chưa phân công --</option>
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.fullName} ({u.email})
+                    </option>
+                  ))}
+                </select>
               </div>
+            </div>
+
+            <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+              Thời điểm nhận: <strong>{new Date(viewingContact.createdAt).toLocaleString('vi-VN')}</strong>
             </div>
 
             {/* Internal Admin Note */}

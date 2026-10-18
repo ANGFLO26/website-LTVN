@@ -2,9 +2,10 @@ import { RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useDeferredValue, useMemo, useState } from 'react'
 import { EmptyState, PageIntro } from '../components/PageElements'
 import { ProductCard } from '../components/ProductCard'
+import { DataLoadError } from '../components/DataLoadError'
 import { type LocalizedText, type ProductFamily } from '../data'
 import { useSiteData } from '../context/DataContext'
-import { usePageTitle } from '../hooks'
+import { useSeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
 
 const ALL_FILTER = 'all'
@@ -12,8 +13,8 @@ const ALL_FILTER = 'all'
 const searchableText = (value: LocalizedText) => `${value.vi} ${value.en}`
 
 export function CatalogPage({ family }: { family: ProductFamily }) {
-  const { content, t } = useLanguage()
-  const { products } = useSiteData()
+  const { content, t, language } = useLanguage()
+  const { products, productsStatus, refreshData } = useSiteData()
   const [query, setQuery] = useState('')
   const [brand, setBrand] = useState(ALL_FILTER)
   const [category, setCategory] = useState(ALL_FILTER)
@@ -26,7 +27,14 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
   const isPac = family === 'pac'
 
   const title = isPac ? 'PAC' : 'Baker Hughes'
-  usePageTitle(title)
+  useSeoHead({
+    title,
+    description: language === 'vi'
+      ? 'Danh mục thiết bị phân tích PAC chính hãng: chưng cất, điểm đông đặc, điểm chớp cháy và trị số cetane.'
+      : 'Official PAC analytical instruments catalog: distillation, cold flow, flash point and cetane number analyzers.',
+    canonicalPath: isPac ? '/pac' : undefined,
+    type: 'website',
+  })
 
   const filteredProducts = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLocaleLowerCase('vi')
@@ -170,7 +178,11 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
             </div>
           </div>
 
-          {filteredProducts.length ? (
+          {productsStatus === 'loading' ? (
+            <p role="status">{language === 'vi' ? 'Đang tải sản phẩm...' : 'Loading products...'}</p>
+          ) : productsStatus === 'error' ? (
+            <DataLoadError onRetry={refreshData} />
+          ) : filteredProducts.length ? (
             <div className="product-grid">
               {filteredProducts.map((product) => <ProductCard key={product.slug} product={product} />)}
             </div>

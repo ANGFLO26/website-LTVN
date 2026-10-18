@@ -11,6 +11,7 @@ import {
   index,
   unique,
   primaryKey,
+  boolean,
 } from 'drizzle-orm/pg-core';
 import { relations, sql, type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
 
@@ -47,6 +48,7 @@ export const users = pgTable(
     id: uuid('id').defaultRandom().primaryKey(),
     email: varchar('email', { length: 255 }).notNull().unique(),
     passwordHash: text('password_hash').notNull(),
+    tokenVersion: integer('token_version').default(0).notNull(),
     fullName: varchar('full_name', { length: 255 }).notNull(),
     role: varchar('role', { length: 30 }).notNull(), // admin / editor
     status: varchar('status', { length: 30 }).default('active').notNull(), // active / inactive
@@ -549,3 +551,118 @@ export type NewContact = InferInsertModel<typeof contacts>;
 
 export type ContactOutbox = InferSelectModel<typeof contactOutbox>;
 export type NewContactOutbox = InferInsertModel<typeof contactOutbox>;
+
+// ============================================================================
+// 13. system_settings — Key-value system settings with optional encryption
+// ============================================================================
+export const systemSettings = pgTable(
+  'system_settings',
+  {
+    key: varchar('key', { length: 100 }).primaryKey(),
+    value: text('value').notNull(),
+    isEncrypted: boolean('is_encrypted').default(false).notNull(),
+    description: varchar('description', { length: 255 }),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  }
+);
+
+export type SystemSetting = InferSelectModel<typeof systemSettings>;
+export type NewSystemSetting = InferInsertModel<typeof systemSettings>;
+
+// ============================================================================
+// 14. password_reset_tokens — One-way hashed recovery tokens for password reset
+// ============================================================================
+export const passwordResetTokens = pgTable(
+  'password_reset_tokens',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    tokenHash: varchar('token_hash', { length: 64 }).notNull().unique(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('password_reset_tokens_user_id_idx').on(table.userId),
+    index('password_reset_tokens_token_hash_idx').on(table.tokenHash),
+    index('password_reset_tokens_expires_at_idx').on(table.expiresAt),
+  ]
+);
+
+export const passwordResetTokensRelations = relations(passwordResetTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [passwordResetTokens.userId],
+    references: [users.id],
+  }),
+}));
+
+export type PasswordResetToken = InferSelectModel<typeof passwordResetTokens>;
+export type NewPasswordResetToken = InferInsertModel<typeof passwordResetTokens>;
+
+// ============================================================================
+// 15. rate_limit_buckets — Distributed rate limiting state across PM2 instances
+// ============================================================================
+export const rateLimitBuckets = pgTable(
+  'rate_limit_buckets',
+  {
+    key: varchar('key', { length: 160 }).primaryKey(),
+    scope: varchar('scope', { length: 50 }).notNull(),
+    subjectHash: varchar('subject_hash', { length: 64 }).notNull(),
+    requestCount: integer('request_count').default(1).notNull(),
+    windowStart: timestamp('window_start', { withTimezone: true }).notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('rate_limit_buckets_expires_at_idx').on(table.expiresAt),
+    index('rate_limit_buckets_scope_idx').on(table.scope),
+  ]
+);
+
+export type RateLimitBucket = InferSelectModel<typeof rateLimitBuckets>;
+export type NewRateLimitBucket = InferInsertModel<typeof rateLimitBuckets>;
+
+// ============================================================================
+// 16. redirects — Quản lý chuyển hướng URL 301 tập trung (PR-12A & PR-12B)
+// ============================================================================
+export const redirects = pgTable(
+  'redirects',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    sourcePath: varchar('source_path', { length: 500 }).notNull().unique(),
+    destinationPath: varchar('destination_path', { length: 500 }).notNull(),
+    statusCode: integer('status_code').default(301).notNull(),
+    isActive: boolean('is_active').default(true).notNull(),
+    notes: text('notes'),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    check('redirects_status_code_check', sql`${table.statusCode} = 301`),
+    check('redirects_source_path_check', sql`${table.sourcePath} like '/%'`),
+    check('redirects_destination_path_check', sql`${table.destinationPath} like '/%'`),
+    index('redirects_source_path_idx').on(table.sourcePath),
+    index('redirects_is_active_idx').on(table.isActive),
+  ]
+);
+
+export type Redirect = InferSelectModel<typeof redirects>;
+export type NewRedirect = InferInsertModel<typeof redirects>;

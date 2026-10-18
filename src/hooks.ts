@@ -1,8 +1,6 @@
-import { useEffect } from 'react'
+import { useSeoHead } from './components/SeoHead'
 
 export function usePageTitle(title: string) {
-  useEffect(() => {
-    document.title = `${title} | LT Việt Nam`
-  }, [title])
+  useSeoHead({ title })
 }
 

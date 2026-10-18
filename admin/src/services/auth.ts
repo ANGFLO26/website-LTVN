@@ -62,7 +62,7 @@ export async function adminFetch(endpoint: string, options?: RequestInit): Promi
   headers.set('Authorization', `Bearer ${current.accessToken}`);
   const response = await fetch(apiUrl(endpoint), { ...options, headers });
   // A late response from a previous session must not log out a newer login.
-  if ((response.status === 401 || response.status === 403) && session?.accessToken === current.accessToken) {
+  if (response.status === 401 && session?.accessToken === current.accessToken) {
     expireSession();
   }
   return response;
@@ -73,15 +73,35 @@ export const auth = {
   logout: clearSession,
   expire: expireSession,
 
-  async login(email: string, password: string): Promise<AdminIdentity> {
+  async login(email: string, password: string, captchaToken?: string): Promise<AdminIdentity> {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (captchaToken) {
+      headers['X-Captcha-Token'] = captchaToken;
+    }
     const response = await fetch(apiUrl('/api/auth/login'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ email, password }),
       signal: AbortSignal.timeout(10000),
     });
+    if (response.status === 429) {
+      throw new Error('Bạn đã thử đăng nhập quá nhiều lần. Vui lòng thử lại sau ít phút.');
+    }
+    if (response.status === 400) {
+      const data = await response.json().catch(() => ({}));
+      const msg = typeof data?.message === 'string'
+        ? data.message
+        : Array.isArray(data?.message)
+          ? data.message.join(', ')
+          : 'Yêu cầu đăng nhập không hợp lệ hoặc thiếu mã bảo vệ.';
+      throw new Error(msg);
+    }
     if (response.status === 401 || response.status === 403) {
-      throw new Error('Email hoặc mật khẩu không đúng, hoặc tài khoản không có quyền Admin đang hoạt động.');
+      const data = await response.json().catch(() => ({}));
+      const msg = typeof data?.message === 'string'
+        ? data.message
+        : 'Email hoặc mật khẩu không đúng, hoặc tài khoản không có quyền Admin đang hoạt động.';
+      throw new Error(msg);
     }
     if (!response.ok) throw new Error('Không thể đăng nhập lúc này. Vui lòng thử lại.');
     const data = await response.json() as LoginResponse;
@@ -119,5 +139,60 @@ export const auth = {
     }
     return response.json() as Promise<{ message: string }>;
   },
-};
 
+  async forgotPassword(email: string, captchaToken?: string): Promise<{ message: string }> {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (captchaToken) {
+      headers['X-Captcha-Token'] = captchaToken;
+    }
+    const response = await fetch(apiUrl('/api/auth/forgot-password'), {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ email }),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (response.status === 429) {
+      throw new Error('Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.');
+    }
+    if (response.status === 400) {
+      const data = await response.json().catch(() => ({}));
+      const msg = typeof data?.message === 'string'
+        ? data.message
+        : Array.isArray(data?.message)
+          ? data.message.join(', ')
+          : 'Yêu cầu không hợp lệ hoặc thiếu mã bảo vệ.';
+      throw new Error(msg);
+    }
+    if (!response.ok) {
+      throw new Error('Không thể gửi yêu cầu đặt lại mật khẩu lúc này. Vui lòng thử lại.');
+    }
+    const data = await response.json().catch(() => ({}));
+    return {
+      message: typeof data?.message === 'string'
+        ? data.message
+        : 'Nếu tài khoản phù hợp tồn tại, hướng dẫn đặt lại mật khẩu sẽ được gửi tới địa chỉ đã đăng ký.',
+    };
+  },
+
+  async resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
+    const response = await fetch(apiUrl('/api/auth/reset-password'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, newPassword }),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (response.status === 429) {
+      throw new Error('Bạn đã thử đặt lại mật khẩu quá nhiều lần. Vui lòng thử lại sau ít phút.');
+    }
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      const msg = typeof data?.message === 'string'
+        ? data.message
+        : Array.isArray(data?.message)
+          ? data.message.join(', ')
+          : 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.';
+      throw new Error(msg);
+    }
+    return response.json() as Promise<{ message: string }>;
+  },
+};

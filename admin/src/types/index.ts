@@ -191,6 +191,17 @@ export interface Contact {
   updatedAt: string;
 }
 
+export interface Redirect {
+  id: string;
+  sourcePath: string;
+  destinationPath: string;
+  statusCode: number;
+  isActive: boolean;
+  notes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type AdminView =
   | 'dashboard'
   | 'machines'
@@ -199,4 +210,32 @@ export type AdminView =
   | 'news-events'
   | 'contacts'
   | 'users'
+  | 'redirects'
   | 'settings';
+
+export interface EmailSettings {
+  notificationRecipient: string;
+  smtpFrom: string;
+  smtpHost: string;
+  smtpPort: number;
+  smtpSecure: boolean;
+  smtpUsername: string;
+  smtpPasswordConfigured: boolean;
+}
+
+export interface UpdateEmailSettingsPayload {
+  notificationRecipient: string;
+  smtpFrom: string;
+  smtpHost: string;
+  smtpPort: number;
+  smtpSecure?: boolean;
+  smtpUsername?: string;
+  smtpPassword?: string;
+}
+
+export interface SendTestEmailResponse {
+  success: boolean;
+  message: string;
+  recipient: string;
+  details?: Record<string, unknown>;
+}

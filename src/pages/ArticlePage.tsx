@@ -2,17 +2,17 @@ import { useEffect } from 'react'
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useSiteData } from '../context/DataContext'
+import { DataLoadError } from '../components/DataLoadError'
 import { newsTypeLabels, type NewsBlock } from '../data'
-import { usePageTitle } from '../hooks'
+import { SeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
 
 export function ArticlePage() {
   const { slug } = useParams()
-  const { getNewsBySlug, getProductBySlug, loading } = useSiteData()
+  const { getNewsBySlug, getProductBySlug, newsStatus, refreshData } = useSiteData()
   const item = getNewsBySlug(slug)
   const { content, language, setLanguage, t } = useLanguage()
   const navigate = useNavigate()
-  usePageTitle(item ? content(item.title) : t('news'))
 
   // Synchronize route slug when language changes on bilingual articles
   useEffect(() => {
@@ -23,22 +23,41 @@ export function ArticlePage() {
       navigate(`/tin-tuc/${item.slug}`, { replace: true })
     }
   }, [language, item, slug, navigate])
-
-  if (loading) {
+  if (newsStatus === 'loading') {
     return (
-      <section className="container not-found" style={{ minHeight: '50vh', justifyContent: 'center' }}>
-        <p>{language === 'vi' ? 'Đang tải nội dung...' : 'Loading content...'}</p>
-      </section>
+      <>
+        <SeoHead
+          title={language === 'vi' ? 'Đang tải nội dung...' : 'Loading content...'}
+          robots="noindex,nofollow"
+        />
+        <section className="container not-found" style={{ minHeight: '50vh', justifyContent: 'center' }}>
+          <p>{language === 'vi' ? 'Đang tải nội dung...' : 'Loading content...'}</p>
+        </section>
+      </>
     )
+  }
+
+  if (newsStatus === 'error') {
+    return <>
+      <SeoHead title={t('articleNotFound')} robots="noindex,nofollow" />
+      <section className="container" style={{ paddingBlock: '4rem' }}><DataLoadError onRetry={refreshData} /></section>
+    </>
   }
 
   // True 404: slug does not match any known article in any language
   if (!item) {
     return (
-      <section className="not-found container">
-        <span className="eyebrow">404</span><h1>{t('articleNotFound')}</h1>
-        <Link to="/tin-tuc-su-kien" className="button button-primary">{t('news')}</Link>
-      </section>
+      <>
+        <SeoHead
+          title={t('articleNotFound')}
+          canonicalPath={`/tin-tuc/${slug}`}
+          robots="noindex,nofollow"
+        />
+        <section className="not-found container">
+          <span className="eyebrow">404</span><h1>{t('articleNotFound')}</h1>
+          <Link to="/tin-tuc-su-kien" className="button button-primary">{t('news')}</Link>
+        </section>
+      </>
     )
   }
 
@@ -46,23 +65,31 @@ export function ArticlePage() {
   // display explicit unavailable state (NOT generic 404).
   if (language === 'en' && !item.hasEnglish) {
     return (
-      <section className="container article-unavailable not-found" style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: '1rem', padding: '3rem 1rem' }}>
-        <span className="eyebrow">LT VIETNAM</span>
-        <h1>This article is currently available in Vietnamese only.</h1>
-        <p style={{ color: 'var(--text-secondary, #666)', maxWidth: '500px' }}>
-          Nội dung bài viết này hiện chỉ có phiên bản Tiếng Việt.
-        </p>
-        <button
-          type="button"
-          className="button button-primary"
-          onClick={() => {
-            setLanguage('vi')
-            navigate(`/tin-tuc/${item.slug}`)
-          }}
-        >
-          Xem bản Tiếng Việt
-        </button>
-      </section>
+      <>
+        <SeoHead
+          title={content(item.title)}
+          description="This article is currently available in Vietnamese only."
+          canonicalPath={`/tin-tuc/${item.slug}`}
+          robots="noindex,nofollow"
+        />
+        <section className="container article-unavailable not-found" style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: '1rem', padding: '3rem 1rem' }}>
+          <span className="eyebrow">LT VIETNAM</span>
+          <h1>This article is currently available in Vietnamese only.</h1>
+          <p style={{ color: 'var(--text-secondary, #666)', maxWidth: '500px' }}>
+            Nội dung bài viết này hiện chỉ có phiên bản Tiếng Việt.
+          </p>
+          <button
+            type="button"
+            className="button button-primary"
+            onClick={() => {
+              setLanguage('vi')
+              navigate(`/tin-tuc/${item.slug}`)
+            }}
+          >
+            Xem bản Tiếng Việt
+          </button>
+        </section>
+      </>
     )
   }
 
@@ -75,7 +102,16 @@ export function ArticlePage() {
     : item.paragraphs
 
   return (
-    <article className="article-page">
+    <>
+      <SeoHead
+        title={content(item.title)}
+        description={content(item.excerpt)}
+        canonicalPath={`/tin-tuc/${language === 'en' && item.hasEnglish && item.slugEn ? item.slugEn : item.slug}`}
+        robots="index,follow"
+        type="article"
+        image={item.image}
+      />
+      <article className="article-page">
       <div className="container article-header">
         <div className="breadcrumbs"><Link to="/">{t('home')}</Link><span>/</span><Link to="/tin-tuc-su-kien">{t('news')}</Link></div>
         <div className="article-meta">
@@ -175,5 +211,6 @@ export function ArticlePage() {
       )}
       <div className="container article-back"><Link to="/tin-tuc-su-kien" className="text-link"><ArrowLeft size={16} aria-hidden="true" /> {t('news')}</Link></div>
     </article>
+    </>
   )
 }

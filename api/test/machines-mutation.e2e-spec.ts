@@ -88,7 +88,7 @@ describe('QA-03 Machines: Admin payload through HTTP to Drizzle compilation', ()
   const compiler = drizzle.mock({ schema });
   const admin = {
     id: randomUUID(), email: 'qa03@example.invalid', fullName: 'QA-03 Admin',
-    role: 'admin', status: 'active', deletedAt: null,
+    role: 'admin', status: 'active', deletedAt: null, tokenVersion: 0,
   };
   const db = {
     insert: (table: PgTable) => ({
@@ -145,7 +145,7 @@ describe('QA-03 Machines: Admin payload through HTTP to Drizzle compilation', ()
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: admin.id });
+    token = await module.get(JwtService).signAsync({ sub: admin.id, tokenVersion: admin.tokenVersion });
   });
 
   beforeEach(() => { writes.length = 0; adminFetch.mockClear(); });

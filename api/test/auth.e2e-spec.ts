@@ -1,4 +1,4 @@
-import { randomBytes, randomUUID } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { Test } from '@nestjs/testing';
 import type { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -8,7 +8,7 @@ import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module.js';
 import { DRIZZLE } from '../src/database/database.module.js';
-import type { users } from '../src/database/schema.js';
+import { users, passwordResetTokens } from '../src/database/schema.js';
 import { UsersService } from '../src/modules/users/users.service.js';
 import { MachinesService } from '../src/modules/machines/machines.service.js';
 import { NewsEventsService } from '../src/modules/news-events/news-events.service.js';
@@ -20,17 +20,27 @@ const email = `${randomUUID()}@example.invalid`;
 const password = randomBytes(24).toString('base64url');
 const secret = randomBytes(48).toString('base64url');
 
+function containsSqlParameter(node: unknown, expected: string): boolean {
+  if (!node || typeof node !== 'object') return false;
+  const sqlNode = node as { value?: unknown; queryChunks?: unknown[] };
+  if (sqlNode.value === expected) return true;
+  return Array.isArray(sqlNode.queryChunks) && sqlNode.queryChunks.some((chunk) => containsSqlParameter(chunk, expected));
+}
+
 describe('QA-01: Admin authentication (real JWT/guard/bcrypt, isolated persistence)', () => {
   let app: INestApplication<App>;
   let jwt: JwtService;
   let account: Account;
   const findFirst = vi.fn<() => Promise<Account | undefined>>();
-  const updateWhere = vi.fn().mockResolvedValue([]);
+  let resetTokenHash: string | undefined;
+  let resetConsumed = false;
+  let failResetWrite = false;
   const updateSet = vi.fn().mockImplementation((updates: Record<string, unknown>) => {
     if (updates && typeof updates.passwordHash === 'string') {
       account.passwordHash = updates.passwordHash;
     }
-    return { where: updateWhere };
+    if ('tokenVersion' in updates) account.tokenVersion += 1;
+    return { where: () => Object.assign(Promise.resolve([{ id: accountId }]), { returning: () => Promise.resolve([{ id: accountId }]) }) };
   });
   const update = vi.fn().mockReturnValue({ set: updateSet });
   const machineCreate = vi.fn(() => ({ id: accountId }));
@@ -41,11 +51,55 @@ describe('QA-01: Admin authentication (real JWT/guard/bcrypt, isolated persisten
       id: accountId, email, fullName: 'QA Test Identity', passwordHash: await hash(password, 4),
       role: 'admin', status: 'active', deletedAt: null, lastLoginAt: null,
       failedLoginAttempts: 0, lockedUntil: null,
+      tokenVersion: 0,
       createdAt: new Date(), updatedAt: new Date(),
     };
     const module = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(ConfigService).useValue(new ConfigService({ JWT_SECRET: secret, JWT_TTL_SECONDS: '3600' }))
-      .overrideProvider(DRIZZLE).useValue({ query: { users: { findFirst } }, update })
+      .overrideProvider(DRIZZLE).useValue({
+        query: { users: { findFirst } },
+        update,
+        transaction: vi.fn(async (cb: (tx: any) => Promise<any>) => {
+          const previousHash = account.passwordHash;
+          const previousVersion = account.tokenVersion;
+          const previousConsumed = resetConsumed;
+          const tx = {
+            query: { users: { findFirst } },
+            update: (table: unknown) => ({
+              set: (updates: Record<string, unknown>) => ({
+                where: (condition: unknown) => {
+                  const result = Promise.resolve([]);
+                  return Object.assign(result, {
+                    returning: async () => {
+                      if (table === passwordResetTokens) {
+                        if (!resetTokenHash || resetConsumed || !containsSqlParameter(condition, resetTokenHash)) return [];
+                        resetConsumed = true;
+                        return [{ id: accountId, userId: accountId }];
+                      }
+                      if (table === users) {
+                        if (failResetWrite) throw new Error('simulated transaction write failure');
+                        if (typeof updates.passwordHash === 'string') account.passwordHash = updates.passwordHash;
+                        if ('tokenVersion' in updates) account.tokenVersion += 1;
+                        return [{ id: accountId }];
+                      }
+                      return [];
+                    },
+                  });
+                },
+              }),
+            }),
+            insert: () => ({ values: () => [] }),
+          };
+          try {
+            return await cb(tx);
+          } catch (error) {
+            account.passwordHash = previousHash;
+            account.tokenVersion = previousVersion;
+            resetConsumed = previousConsumed;
+            throw error;
+          }
+        }),
+      })
       .overrideProvider(UsersService).useValue({ findAll: () => [{ id: accountId }] })
       .overrideProvider(MachinesService).useValue({
         findAll: () => [], findPublished: () => [], findPublishedByIdOrSlug: () => ({ id: accountId }), create: machineCreate,
@@ -65,6 +119,9 @@ describe('QA-01: Admin authentication (real JWT/guard/bcrypt, isolated persisten
     findFirst.mockReset().mockResolvedValue(account);
     machineCreate.mockClear();
     contactCreate.mockClear();
+    resetTokenHash = undefined;
+    resetConsumed = false;
+    failResetWrite = false;
   });
 
   afterAll(async () => { await app.close(); });
@@ -124,8 +181,9 @@ describe('QA-01: Admin authentication (real JWT/guard/bcrypt, isolated persisten
   it('issues a configured token to an active Admin and excludes the password hash', async () => {
     const response = await request(app.getHttpServer()).post('/api/auth/login').send({ email, password }).expect(200);
     const body = response.body as { accessToken: string; tokenType: string; expiresAt: number; user: object };
-    const claims = jwt.verify<{ sub: string; iat: number; exp: number }>(body.accessToken);
+    const claims = jwt.verify<{ sub: string; iat: number; exp: number; tokenVersion: number }>(body.accessToken);
     expect(claims.sub).toBe(accountId);
+    expect(claims.tokenVersion).toBe(account.tokenVersion);
     expect(claims.exp - claims.iat).toBe(3600);
     expect(body.expiresAt).toBe(claims.exp * 1000);
     expect(body.tokenType).toBe('Bearer');
@@ -160,13 +218,13 @@ describe('QA-01: Admin authentication (real JWT/guard/bcrypt, isolated persisten
   });
 
   it.each([{ status: 'inactive' }, { role: 'editor' }, { deletedAt: new Date() }])('re-checks account eligibility for existing tokens: %j', async (fields) => {
-    const token = await jwt.signAsync({ sub: accountId });
+    const token = await jwt.signAsync({ sub: accountId, tokenVersion: account.tokenVersion });
     findFirst.mockResolvedValue({ ...account, ...fields });
     await request(app.getHttpServer()).get('/api/users').set('Authorization', `Bearer ${token}`).expect(401);
   });
 
   it('rejects a token whose account no longer exists', async () => {
-    const token = await jwt.signAsync({ sub: accountId });
+    const token = await jwt.signAsync({ sub: accountId, tokenVersion: account.tokenVersion });
     findFirst.mockResolvedValue(undefined);
     await request(app.getHttpServer()).get('/api/users').set('Authorization', `Bearer ${token}`).expect(401);
   });
@@ -191,6 +249,10 @@ describe('QA-01: Admin authentication (real JWT/guard/bcrypt, isolated persisten
       .set('Authorization', `Bearer ${token}`)
       .send({ currentPassword: 'WrongPassword#123', newPassword: 'NewValidPassword#2026' })
       .expect(400);
+    await request(app.getHttpServer())
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
 
     // 4. Valid change password -> 200
     const newPass = 'NewValidPassword#2026';
@@ -201,6 +263,12 @@ describe('QA-01: Admin authentication (real JWT/guard/bcrypt, isolated persisten
       .expect(200);
     expect(changeRes.body).toHaveProperty('message');
     expect(JSON.stringify(changeRes.body)).not.toContain('passwordHash');
+
+    // Password mutation revokes every previously issued JWT, including the one used above.
+    await request(app.getHttpServer())
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401);
 
     // 5. Old password login afterward -> 401
     await request(app.getHttpServer())
@@ -214,9 +282,78 @@ describe('QA-01: Admin authentication (real JWT/guard/bcrypt, isolated persisten
       .send({ email, password: newPass })
       .expect(200);
     expect(newLoginRes.body.user.id).toBe(accountId);
+    await request(app.getHttpServer())
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${newLoginRes.body.accessToken}`)
+      .expect(200);
 
     // Restore original password hash for subsequent tests
     account.passwordHash = await hash(password, 4);
+    account.tokenVersion = 0;
+  });
+
+  it('F05 revokes the old JWT after reset, preserves it on transaction failure, and accepts a new JWT', async () => {
+    const login = await request(app.getHttpServer()).post('/api/auth/login').send({ email, password }).expect(200);
+    const oldJwt = login.body.accessToken as string;
+    const rawToken = 'f05-reset-token-for-isolated-http-test';
+    resetTokenHash = createHash('sha256').update(rawToken).digest('hex');
+    const newPassword = 'ResetValidPassword#2026';
+
+    failResetWrite = true;
+    await request(app.getHttpServer()).post('/api/auth/reset-password')
+      .send({ token: rawToken, newPassword }).expect(500);
+    expect(resetConsumed).toBe(false);
+    await request(app.getHttpServer()).get('/api/auth/me')
+      .set('Authorization', `Bearer ${oldJwt}`).expect(200);
+
+    failResetWrite = false;
+    await request(app.getHttpServer()).post('/api/auth/reset-password')
+      .send({ token: rawToken, newPassword }).expect(200);
+    expect(resetConsumed).toBe(true);
+    await request(app.getHttpServer()).get('/api/auth/me')
+      .set('Authorization', `Bearer ${oldJwt}`).expect(401);
+    await request(app.getHttpServer()).post('/api/auth/reset-password')
+      .send({ token: rawToken, newPassword }).expect(400);
+
+    const newLogin = await request(app.getHttpServer()).post('/api/auth/login')
+      .send({ email, password: newPassword }).expect(200);
+    await request(app.getHttpServer()).get('/api/auth/me')
+      .set('Authorization', `Bearer ${newLogin.body.accessToken}`).expect(200);
+
+    account.passwordHash = await hash(password, 4);
+    account.tokenVersion = 0;
+  });
+
+  describe('PR-10B: Auth endpoint protection contracts', () => {
+    it('POST /api/auth/forgot-password is @Public() and returns 202 without auth header', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/auth/forgot-password')
+        .send({ email: 'any-user@example.com' })
+        .expect(202);
+      expect(res.body).toEqual({
+        message: 'Nếu tài khoản phù hợp tồn tại, hướng dẫn đặt lại mật khẩu sẽ được gửi tới địa chỉ đã đăng ký.',
+      });
+    });
+
+    it('POST /api/auth/reset-password is @Public() and processes request without auth header', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/auth/reset-password')
+        .send({ token: 'invalid_token_sample', newPassword: 'NewSecurePass#2026' })
+        .expect(400); // 400 Bad Request (token not found), NOT 401 Unauthorized
+      expect(res.body.message).toContain('Liên kết đặt lại mật khẩu không hợp lệ');
+    });
+
+    it('POST /api/auth/change-password remains JWT-protected (401 without auth header)', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/change-password')
+        .send({ currentPassword: 'SomePassword#1', newPassword: 'NewValidPassword#2026' })
+        .expect(401);
+    });
+
+    it('GET /api/auth/me remains JWT-protected (401 without auth header)', async () => {
+      await request(app.getHttpServer())
+        .get('/api/auth/me')
+        .expect(401);
+    });
   });
 });
-

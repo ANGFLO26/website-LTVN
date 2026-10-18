@@ -71,7 +71,7 @@ describe('QA-03 Users: mutation allowlist, UUID route and credential preservatio
   const compiler = drizzle.mock({ schema });
   const actor = {
     id: randomUUID(), email: 'acting-admin@example.invalid', fullName: 'Acting Admin',
-    role: 'admin', status: 'active', deletedAt: null,
+    role: 'admin', status: 'active', deletedAt: null, tokenVersion: 0,
   };
 
   function defined(data: Row) {
@@ -97,6 +97,8 @@ describe('QA-03 Users: mutation allowlist, UUID route and credential preservatio
     original = {
       id: userId, email: 'existing-admin@example.invalid', fullName: 'Existing Admin',
       passwordHash: await hash(password, 4), role: 'admin', status: 'active',
+      tokenVersion: 0,
+      failedLoginAttempts: 0, lockedUntil: null,
       createdAt: new Date('2021-01-01T00:00:00Z'), updatedAt: new Date('2021-02-01T00:00:00Z'),
       lastLoginAt: new Date('2021-03-01T00:00:00Z'), deletedAt: null,
     };
@@ -150,7 +152,7 @@ describe('QA-03 Users: mutation allowlist, UUID route and credential preservatio
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: actor.id });
+    token = await module.get(JwtService).signAsync({ sub: actor.id, tokenVersion: actor.tokenVersion });
   });
 
   beforeEach(() => { stored = structuredClone(original); writes.length = 0; adminFetch.mockClear(); });

@@ -78,7 +78,7 @@ describe('QA-03 News: writable payload, Date conversion and UUID boundary', () =
   const compiler = drizzle.mock({ schema });
   const admin = {
     id: randomUUID(), email: 'qa03-news@example.invalid', fullName: 'QA-03 News Admin',
-    role: 'admin', status: 'active', deletedAt: null, passwordHash: 'private-test-only-hash',
+    role: 'admin', status: 'active', deletedAt: null, passwordHash: 'private-test-only-hash', tokenVersion: 0,
   };
 
   function initialRecord(): Row {
@@ -156,7 +156,7 @@ describe('QA-03 News: writable payload, Date conversion and UUID boundary', () =
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: admin.id });
+    token = await module.get(JwtService).signAsync({ sub: admin.id, tokenVersion: admin.tokenVersion });
   });
 
   beforeEach(() => {

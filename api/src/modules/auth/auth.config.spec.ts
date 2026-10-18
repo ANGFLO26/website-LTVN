@@ -1,6 +1,12 @@
 import { randomBytes } from 'node:crypto';
 import { ConfigService } from '@nestjs/config';
-import { authJwtOptions, getLockoutPolicy, validatePasswordStrength } from './auth.config.js';
+import {
+  authJwtOptions,
+  getAdminPublicUrl,
+  getLockoutPolicy,
+  getPasswordResetTokenTtlMinutes,
+  validatePasswordStrength,
+} from './auth.config.js';
 
 function config(values: Record<string, string | undefined>) {
   const service = new ConfigService();
@@ -94,4 +100,64 @@ describe('PR-10A Password Policy Validation', () => {
   });
 });
 
+describe('PR-10B Password Reset Configuration', () => {
+  it('uses default 30 minutes TTL when env is unset', () => {
+    expect(getPasswordResetTokenTtlMinutes(config({}))).toBe(30);
+  });
 
+  it('uses valid custom TTL', () => {
+    expect(getPasswordResetTokenTtlMinutes(config({ AUTH_PASSWORD_RESET_TOKEN_TTL_MINUTES: '60' }))).toBe(60);
+  });
+
+  it.each(['0', '-5', 'abc', '1.5'])('rejects invalid TTL values (%s)', (val) => {
+    expect(() => getPasswordResetTokenTtlMinutes(config({ AUTH_PASSWORD_RESET_TOKEN_TTL_MINUTES: val }))).toThrow(
+      'AUTH_PASSWORD_RESET_TOKEN_TTL_MINUTES',
+    );
+  });
+
+  it('falls back to correct Admin dev origin (http://localhost:5174) in development when missing', () => {
+    expect(getAdminPublicUrl(config({ NODE_ENV: 'development' }))).toBe('http://localhost:5174');
+    expect(getAdminPublicUrl(config({}))).toBe('http://localhost:5174');
+  });
+
+  it('fails closed in production if ADMIN_PUBLIC_URL is missing', () => {
+    expect(() => getAdminPublicUrl(config({ NODE_ENV: 'production' }))).toThrow(
+      'ADMIN_PUBLIC_URL environment variable is required in production.',
+    );
+  });
+
+  it('accepts valid https origin and normalized subpath without trailing slash', () => {
+    expect(getAdminPublicUrl(config({ ADMIN_PUBLIC_URL: 'https://admin.example.com' }))).toBe('https://admin.example.com');
+    expect(getAdminPublicUrl(config({ ADMIN_PUBLIC_URL: 'https://admin.example.com/' }))).toBe('https://admin.example.com');
+    expect(getAdminPublicUrl(config({ ADMIN_PUBLIC_URL: 'https://example.com/admin/' }))).toBe('https://example.com/admin');
+    expect(getAdminPublicUrl(config({ ADMIN_PUBLIC_URL: 'http://localhost:5174' }))).toBe('http://localhost:5174');
+  });
+
+  it('rejects credentials in ADMIN_PUBLIC_URL', () => {
+    expect(() => getAdminPublicUrl(config({ ADMIN_PUBLIC_URL: 'https://user:pass@admin.example.com' }))).toThrow(
+      'ADMIN_PUBLIC_URL must not contain authentication credentials.',
+    );
+  });
+
+  it('rejects query parameters in ADMIN_PUBLIC_URL', () => {
+    expect(() => getAdminPublicUrl(config({ ADMIN_PUBLIC_URL: 'https://admin.example.com?query=1' }))).toThrow(
+      'ADMIN_PUBLIC_URL must not contain query parameters or fragments.',
+    );
+  });
+
+  it('rejects hash / fragments in ADMIN_PUBLIC_URL', () => {
+    expect(() => getAdminPublicUrl(config({ ADMIN_PUBLIC_URL: 'https://admin.example.com#section' }))).toThrow(
+      'ADMIN_PUBLIC_URL must not contain query parameters or fragments.',
+    );
+  });
+
+  it.each([
+    'ftp://admin.example.com',
+    'javascript:alert(1)',
+    'data:text/html,test',
+    'file:///etc/passwd',
+    'not-a-valid-url',
+  ])('rejects invalid protocol or malformed URL (%s)', (url) => {
+    expect(() => getAdminPublicUrl(config({ ADMIN_PUBLIC_URL: url }))).toThrow('ADMIN_PUBLIC_URL');
+  });
+});

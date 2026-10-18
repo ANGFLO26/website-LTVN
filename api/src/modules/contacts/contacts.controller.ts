@@ -9,12 +9,17 @@ import {
   ValidationPipe,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ContactsService } from './contacts.service.js';
 import { Public } from '../auth/public.decorator.js';
 import { PublicContactDto } from './dto/public-contact.dto.js';
-import type * as schema from '../../database/schema.js';
+import { AdminUpdateContactDto } from './dto/admin-update-contact.dto.js';
+import { RateLimitGuard } from '../security/rate-limit.guard.js';
+import { RateLimit } from '../security/rate-limit.decorator.js';
+import { CaptchaGuard } from '../security/captcha.guard.js';
+import { VerifyCaptcha } from '../security/captcha.decorator.js';
 
 @ApiTags('Contacts')
 @Controller('contacts')
@@ -37,6 +42,9 @@ export class ContactsController {
   @Post()
   @Public()
   @HttpCode(HttpStatus.ACCEPTED)
+  @UseGuards(RateLimitGuard, CaptchaGuard)
+  @RateLimit({ scope: 'contacts:submit' })
+  @VerifyCaptcha({ action: 'contact' })
   @ApiOperation({ summary: 'Submit a new contact request' })
   @ApiResponse({ status: 202, description: 'Yêu cầu liên hệ đã được tiếp nhận và đưa vào hàng đợi xử lý' })
   @ApiResponse({ status: 400, description: 'Invalid visitor data or a non-whitelisted property' })
@@ -53,13 +61,27 @@ export class ContactsController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update contact status and admin note' })
-  update(@Param('id') id: string, @Body() data: Partial<schema.NewContact>) {
+  update(@Param('id') id: string, @Body(new ValidationPipe({
+    expectedType: AdminUpdateContactDto,
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    forbidUnknownValues: true,
+    transformOptions: { enableImplicitConversion: false },
+  })) data: AdminUpdateContactDto) {
     return this.contactsService.update(id, data);
   }
 
   @Patch(':id/status')
   @ApiOperation({ summary: 'Update contact status specifically' })
-  updateStatus(@Param('id') id: string, @Body() data: Partial<schema.NewContact>) {
+  updateStatus(@Param('id') id: string, @Body(new ValidationPipe({
+    expectedType: AdminUpdateContactDto,
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    forbidUnknownValues: true,
+    transformOptions: { enableImplicitConversion: false },
+  })) data: AdminUpdateContactDto) {
     return this.contactsService.update(id, data);
   }
 

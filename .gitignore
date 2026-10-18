@@ -72,6 +72,13 @@ tmp/
 *.sw?
 *.bak
 
+# Local QA artifacts, database exports, and snapshots
+artifacts/
+*.dump
+*.backup
+*.sql
+!api/drizzle/**/*.sql
+
 # OS generated files
 .DS_Store
 .DS_Store?

@@ -1,10 +1,395 @@
 import React, { useState } from 'react';
-import { Plus, Search, Edit2, Trash2, Calendar, MapPin, ExternalLink } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Calendar, MapPin, ExternalLink, ArrowUp, ArrowDown, Code, LayoutList } from 'lucide-react';
 import { StatusBadge } from '../components/StatusBadge';
 import { Modal } from '../components/Modal';
-import type { NewsEvent, MediaAsset, ContentJsonb, NewsEventTranslation } from '../types';
+import type { NewsEvent, MediaAsset, ContentBlock, ContentJsonb, NewsEventTranslation } from '../types';
 import { buildPublicUrl } from '../config/urls';
 import { ConfiguredExternalLink } from '../components/ConfiguredExternalLink';
+
+interface ContentBlocksEditorProps {
+  value: string;
+  onChange: (newRaw: string) => void;
+  media: MediaAsset[];
+  locale: 'vi' | 'en';
+}
+
+const ContentBlocksEditor: React.FC<ContentBlocksEditorProps> = ({ value, onChange, media, locale }) => {
+  const [mode, setMode] = useState<'visual' | 'json'>('visual');
+
+  let parsedBlocks: ContentBlock[] | null = null;
+  if (!value.trim()) {
+    parsedBlocks = [];
+  } else {
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed && typeof parsed === 'object' && Array.isArray(parsed.blocks)) {
+        parsedBlocks = parsed.blocks as ContentBlock[];
+      }
+    } catch {
+      parsedBlocks = null;
+    }
+  }
+
+  const updateBlocks = (nextBlocks: ContentBlock[]) => {
+    if (nextBlocks.length === 0 && !value.trim()) {
+      onChange('');
+      return;
+    }
+    onChange(JSON.stringify({ version: 1, blocks: nextBlocks }, null, 2));
+  };
+
+  const handleAddBlock = (type: ContentBlock['type']) => {
+    const current = parsedBlocks || [];
+    let newBlock: ContentBlock;
+    switch (type) {
+      case 'heading':
+        newBlock = { type: 'heading', data: { level: 2, text: '' } };
+        break;
+      case 'paragraph':
+        newBlock = { type: 'paragraph', data: { text: '' } };
+        break;
+      case 'bullet_list':
+        newBlock = { type: 'bullet_list', data: { items: [''] } };
+        break;
+      case 'numbered_list':
+        newBlock = { type: 'numbered_list', data: { items: [''] } };
+        break;
+      case 'image':
+        newBlock = { type: 'image', data: { url: media[0]?.publicUrl || '', alt: '', caption: '' } };
+        break;
+      case 'quote':
+        newBlock = { type: 'quote', data: { text: '', author: '' } };
+        break;
+      default:
+        newBlock = { type: 'paragraph', data: { text: '' } };
+    }
+    updateBlocks([...current, newBlock]);
+  };
+
+  const handleMoveBlock = (index: number, direction: -1 | 1) => {
+    if (!parsedBlocks) return;
+    const target = index + direction;
+    if (target < 0 || target >= parsedBlocks.length) return;
+    const next = [...parsedBlocks];
+    const [moved] = next.splice(index, 1);
+    next.splice(target, 0, moved);
+    updateBlocks(next);
+  };
+
+  const handleRemoveBlock = (index: number) => {
+    if (!parsedBlocks) return;
+    const next = parsedBlocks.filter((_, i) => i !== index);
+    updateBlocks(next);
+  };
+
+  const handleUpdateBlockData = (index: number, patch: Record<string, unknown>) => {
+    if (!parsedBlocks) return;
+    const next = parsedBlocks.map((b, i) =>
+      i === index ? { ...b, data: { ...b.data, ...patch } } : b
+    );
+    updateBlocks(next);
+  };
+
+  const handleChangeBlockType = (index: number, newType: ContentBlock['type']) => {
+    if (!parsedBlocks) return;
+    const oldData = parsedBlocks[index]?.data || {};
+    const textVal = typeof oldData.text === 'string' ? oldData.text : '';
+    let newData: Record<string, unknown> = {};
+    if (newType === 'heading') newData = { level: 2, text: textVal };
+    else if (newType === 'paragraph') newData = { text: textVal };
+    else if (newType === 'bullet_list' || newType === 'numbered_list') {
+      newData = { items: Array.isArray(oldData.items) ? oldData.items : textVal ? [textVal] : [''] };
+    } else if (newType === 'image') {
+      newData = { url: typeof oldData.url === 'string' ? oldData.url : '', alt: '', caption: '' };
+    } else if (newType === 'quote') {
+      newData = { text: textVal, author: '' };
+    }
+    const next = parsedBlocks.map((b, i) => (i === index ? { type: newType, data: newData } : b));
+    updateBlocks(next);
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <label style={{ marginBottom: 0 }}>
+          {locale === 'vi' ? 'Nội Dung Bài Viết (Tiếng Việt)' : 'Article Content Blocks (English)'}
+        </label>
+        <div style={{ display: 'inline-flex', background: '#f1f5f9', borderRadius: 6, padding: 2, gap: 2 }}>
+          <button
+            type="button"
+            onClick={() => setMode('visual')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              padding: '4px 10px',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              border: 'none',
+              borderRadius: 4,
+              cursor: 'pointer',
+              background: mode === 'visual' ? '#ffffff' : 'transparent',
+              color: mode === 'visual' ? '#0f172a' : '#64748b',
+              boxShadow: mode === 'visual' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+            }}
+          >
+            <LayoutList size={13} /> Trực quan ({parsedBlocks ? parsedBlocks.length : 0})
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('json')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              padding: '4px 10px',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              border: 'none',
+              borderRadius: 4,
+              cursor: 'pointer',
+              background: mode === 'json' ? '#ffffff' : 'transparent',
+              color: mode === 'json' ? '#0f172a' : '#64748b',
+              boxShadow: mode === 'json' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+            }}
+          >
+            <Code size={13} /> Mã JSON
+          </button>
+        </div>
+      </div>
+
+      {mode === 'json' || parsedBlocks === null ? (
+        <>
+          {parsedBlocks === null && mode === 'visual' && (
+            <div style={{ fontSize: '0.78rem', color: '#b91c1c', background: '#fef2f2', padding: '6px 10px', borderRadius: 6 }}>
+              Cú pháp JSON hiện tại chưa hợp lệ nên hiển thị ở chế độ Mã JSON để bạn sửa lỗi.
+            </div>
+          )}
+          <textarea
+            className="form-control"
+            rows={6}
+            style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}
+            value={value}
+            placeholder='{"version": 1, "blocks": [{"type": "paragraph", "data": {"text": "..."}}]}'
+            onChange={(e) => onChange(e.target.value)}
+          />
+          <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+            Cấu trúc chuẩn gồm blocks: heading, paragraph, image, bullet_list, numbered_list, quote.
+          </span>
+        </>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: 12 }}>
+          {parsedBlocks.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '14px 8px', color: '#64748b', fontSize: '0.82rem' }}>
+              {locale === 'vi'
+                ? 'Chưa có khối nội dung nào. Nhấn nút bên dưới để thêm tiêu đề, đoạn văn, danh sách hoặc hình ảnh.'
+                : 'No content blocks yet. Click a button below to add headings, paragraphs, lists, or images.'}
+            </div>
+          ) : (
+            parsedBlocks.map((block, idx) => {
+              const data = block.data || {};
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    background: '#ffffff',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: 6,
+                    padding: 10,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 8,
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#475569', background: '#e2e8f0', padding: '2px 6px', borderRadius: 4 }}>
+                        #{idx + 1}
+                      </span>
+                      <select
+                        className="form-control"
+                        style={{ padding: '3px 8px', fontSize: '0.78rem', height: 'auto', width: 'auto' }}
+                        value={block.type}
+                        onChange={(e) => handleChangeBlockType(idx, e.target.value as ContentBlock['type'])}
+                      >
+                        <option value="heading">Tiêu đề (Heading)</option>
+                        <option value="paragraph">Đoạn văn (Paragraph)</option>
+                        <option value="bullet_list">Danh sách chấm (Bullet List)</option>
+                        <option value="numbered_list">Danh sách số (Numbered List)</option>
+                        <option value="image">Hình ảnh (Image)</option>
+                        <option value="quote">Trích dẫn (Quote)</option>
+                      </select>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <button
+                        type="button"
+                        className="btn-icon"
+                        title="Di chuyển lên"
+                        disabled={idx === 0}
+                        onClick={() => handleMoveBlock(idx, -1)}
+                      >
+                        <ArrowUp size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-icon"
+                        title="Di chuyển xuống"
+                        disabled={idx === parsedBlocks.length - 1}
+                        onClick={() => handleMoveBlock(idx, 1)}
+                      >
+                        <ArrowDown size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-icon delete"
+                        title="Xóa khối này"
+                        onClick={() => handleRemoveBlock(idx)}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {block.type === 'heading' && (
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <select
+                        className="form-control"
+                        style={{ width: 90 }}
+                        value={typeof data.level === 'number' ? data.level : 2}
+                        onChange={(e) => handleUpdateBlockData(idx, { level: Number(e.target.value) })}
+                      >
+                        <option value={2}>H2</option>
+                        <option value={3}>H3</option>
+                        <option value={4}>H4</option>
+                      </select>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Nhập nội dung tiêu đề..."
+                        value={typeof data.text === 'string' ? data.text : ''}
+                        onChange={(e) => handleUpdateBlockData(idx, { text: e.target.value })}
+                      />
+                    </div>
+                  )}
+
+                  {block.type === 'paragraph' && (
+                    <textarea
+                      className="form-control"
+                      rows={3}
+                      placeholder="Nhập nội dung đoạn văn..."
+                      value={typeof data.text === 'string' ? data.text : ''}
+                      onChange={(e) => handleUpdateBlockData(idx, { text: e.target.value })}
+                    />
+                  )}
+
+                  {(block.type === 'bullet_list' || block.type === 'numbered_list') && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <textarea
+                        className="form-control"
+                        rows={3}
+                        placeholder="Mỗi dòng là một mục danh sách..."
+                        value={Array.isArray(data.items) ? (data.items as string[]).join('\n') : ''}
+                        onChange={(e) => handleUpdateBlockData(idx, { items: e.target.value.split('\n') })}
+                      />
+                      <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Mỗi dòng tương ứng với 1 ý trong danh sách.</span>
+                    </div>
+                  )}
+
+                  {block.type === 'image' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <select
+                          className="form-control"
+                          style={{ maxWidth: 220 }}
+                          value={media.find((m) => m.publicUrl === data.url)?.publicUrl || ''}
+                          onChange={(e) => {
+                            if (!e.target.value) return;
+                            const found = media.find((m) => m.publicUrl === e.target.value);
+                            handleUpdateBlockData(idx, {
+                              url: e.target.value,
+                              alt: (typeof data.alt === 'string' && data.alt) || found?.altText || '',
+                            });
+                          }}
+                        >
+                          <option value="">-- Chọn từ Media --</option>
+                          {media.map((m) => (
+                            <option key={m.id} value={m.publicUrl}>
+                              {m.fileName}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Đường dẫn ảnh URL (/images/... hoặc https://...)"
+                          value={typeof data.url === 'string' ? data.url : ''}
+                          onChange={(e) => handleUpdateBlockData(idx, { url: e.target.value })}
+                        />
+                      </div>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Mô tả ảnh (Alt text)"
+                          value={typeof data.alt === 'string' ? data.alt : ''}
+                          onChange={(e) => handleUpdateBlockData(idx, { alt: e.target.value })}
+                        />
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Chú thích dưới ảnh (Caption - tùy chọn)"
+                          value={typeof data.caption === 'string' ? data.caption : ''}
+                          onChange={(e) => handleUpdateBlockData(idx, { caption: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {block.type === 'quote' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <textarea
+                        className="form-control"
+                        rows={2}
+                        placeholder="Nội dung câu trích dẫn..."
+                        value={typeof data.text === 'string' ? data.text : ''}
+                        onChange={(e) => handleUpdateBlockData(idx, { text: e.target.value })}
+                      />
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Tác giả / Nguồn trích dẫn (tùy chọn)"
+                        value={typeof data.author === 'string' ? data.author : ''}
+                        onChange={(e) => handleUpdateBlockData(idx, { author: e.target.value })}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, paddingTop: 4 }}>
+            <button type="button" className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.76rem' }} onClick={() => handleAddBlock('heading')}>
+              <Plus size={13} /> Tiêu đề
+            </button>
+            <button type="button" className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.76rem' }} onClick={() => handleAddBlock('paragraph')}>
+              <Plus size={13} /> Đoạn văn
+            </button>
+            <button type="button" className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.76rem' }} onClick={() => handleAddBlock('bullet_list')}>
+              <Plus size={13} /> Danh sách
+            </button>
+            <button type="button" className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.76rem' }} onClick={() => handleAddBlock('image')}>
+              <Plus size={13} /> Hình ảnh
+            </button>
+            <button type="button" className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.76rem' }} onClick={() => handleAddBlock('quote')}>
+              <Plus size={13} /> Trích dẫn
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface Props {
   news: NewsEvent[];
@@ -720,17 +1105,12 @@ export const NewsEventsPage: React.FC<Props> = ({ news, media, onSave, onDelete 
                 </div>
 
                 <div className="form-group">
-                  <label>Nội Dung JSONB Blocks (Tiếng Việt)</label>
-                  <textarea
-                    className="form-control"
-                    rows={5}
-                    style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}
+                  <ContentBlocksEditor
+                    locale="vi"
+                    media={media}
                     value={viForm.contentRaw}
-                    onChange={(e) => setViForm({ ...viForm, contentRaw: e.target.value })}
+                    onChange={(contentRaw) => setViForm({ ...viForm, contentRaw })}
                   />
-                  <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                    Cấu trúc chuẩn gồm blocks: heading, paragraph, image, bullet_list, quote...
-                  </span>
                 </div>
 
                 <div className="form-row">
@@ -810,18 +1190,12 @@ export const NewsEventsPage: React.FC<Props> = ({ news, media, onSave, onDelete 
                 </div>
 
                 <div className="form-group">
-                  <label>Content JSONB Blocks (English)</label>
-                  <textarea
-                    className="form-control"
-                    rows={5}
-                    style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}
+                  <ContentBlocksEditor
+                    locale="en"
+                    media={media}
                     value={enForm.contentRaw}
-                    placeholder='{"version": 1, "blocks": [{"type": "paragraph", "data": {"text": "..."}}]}'
-                    onChange={(e) => setEnForm({ ...enForm, contentRaw: e.target.value })}
+                    onChange={(contentRaw) => setEnForm({ ...enForm, contentRaw })}
                   />
-                  <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                    JSON format version 1 with blocks: heading, paragraph, image, bullet_list, quote...
-                  </span>
                 </div>
 
                 <div className="form-row">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Trash2, Copy, Check, Image as ImageIcon } from 'lucide-react';
+import { Plus, Search, Trash2, Copy, Check } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import type { MediaAsset, MediaCreateInput } from '../types';
 

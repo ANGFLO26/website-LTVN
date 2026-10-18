@@ -29,6 +29,41 @@
       "when": 1791023000837,
       "tag": "0003_red_hellfire_club",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791025961348,
+      "tag": "0004_secret_spectrum",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791028300378,
+      "tag": "0005_modern_vampiro",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791391701515,
+      "tag": "0006_careless_enchantress",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791516456688,
+      "tag": "0007_true_falcon",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1791541047972,
+      "tag": "0008_motionless_randall",
+      "breakpoints": true
     }
   ]
 }

@@ -10,6 +10,10 @@ import { NewsEventsModule } from './modules/news-events/news-events.module.js';
 import { ContactsModule } from './modules/contacts/contacts.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
+import { SettingsModule } from './modules/settings/settings.module.js';
+import { SeoModule } from './modules/seo/seo.module.js';
+import { SecurityModule } from './modules/security/security.module.js';
+import { RedirectsModule } from './modules/redirects/redirects.module.js';
 
 @Module({
   imports: [
@@ -18,6 +22,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
       envFilePath: ['.env', 'api/.env'],
     }),
     DatabaseModule,
+    SecurityModule,
     AuthModule,
     StandardsModule,
     MediaModule,
@@ -25,6 +30,9 @@ import { AuthModule } from './modules/auth/auth.module.js';
     NewsEventsModule,
     ContactsModule,
     UsersModule,
+    SettingsModule,
+    SeoModule,
+    RedirectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

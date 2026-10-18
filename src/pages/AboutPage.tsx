@@ -12,13 +12,20 @@ import { PageIntro, SectionHeading } from '../components/PageElements'
 import { RegionalPresence } from '../components/RegionalPresence'
 import { useSiteData } from '../context/DataContext'
 import type { NewsBlock } from '../data'
-import { usePageTitle } from '../hooks'
+import { useSeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
 
 export function AboutPage() {
   const { content, language, t } = useLanguage()
   const { newsItems } = useSiteData()
-  usePageTitle(t('about'))
+  useSeoHead({
+    title: t('about'),
+    description: language === 'vi'
+      ? 'LT Việt Nam là đối tác phân phối và cung cấp dịch vụ kỹ thuật cho thiết bị phân tích PAC và các dòng van công nghiệp.'
+      : 'LT Vietnam distributes and supports PAC analytical instruments and industrial valves with engineering services.',
+    canonicalPath: '/gioi-thieu',
+    type: 'website',
+  })
 
   const lifecycle = [
     {

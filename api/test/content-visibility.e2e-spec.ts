@@ -20,7 +20,9 @@ const statuses = ['published', 'draft', 'archived'] as const;
 const admin: schema.User = {
   id: randomUUID(), email: `${randomUUID()}@example.invalid`, fullName: 'QA-07 Admin',
   passwordHash: `private-fixture-${randomBytes(24).toString('hex')}`,
+  tokenVersion: 0,
   role: 'admin', status: 'active', lastLoginAt: null, deletedAt: null,
+  failedLoginAttempts: 0, lockedUntil: null,
   createdAt: new Date(), updatedAt: new Date(),
 };
 const datasets: Record<Resource, ContentRecord[]> = {
@@ -101,7 +103,7 @@ describe('QA-07: published public reads and authenticated Admin reads', () => {
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
     await app.init();
-    token = await module.get(JwtService).signAsync({ sub: admin.id });
+    token = await module.get(JwtService).signAsync({ sub: admin.id, tokenVersion: admin.tokenVersion });
   });
 
   beforeEach(() => { queries.length = 0; });

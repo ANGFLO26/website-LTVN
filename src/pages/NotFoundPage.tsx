@@ -1,11 +1,16 @@
 import { ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router'
-import { usePageTitle } from '../hooks'
+import { useSeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
 
 export function NotFoundPage() {
   const { t } = useLanguage()
-  usePageTitle(t('pageNotFoundTitle'))
+  useSeoHead({
+    title: t('pageNotFoundTitle'),
+    description: t('pageNotFoundDescription'),
+    robots: 'noindex,nofollow',
+    type: 'website',
+  })
   return (
     <section className="not-found container">
       <span className="eyebrow">404</span>

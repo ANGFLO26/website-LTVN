@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/unbound-method */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { ContactsService } from './contacts.service.js';
@@ -74,6 +75,24 @@ describe('ContactsService PR-09A: Transactional Outbox + Contact Persistence', (
     };
 
     mockDb = {
+      query: {
+        contactOutbox: {
+          findFirst: vi.fn(async () => {
+            return outboxStore[0] || null;
+          }),
+        },
+      },
+      delete: vi.fn((table: unknown) => ({
+        where: vi.fn(() => ({
+          returning: vi.fn(() => {
+            if (table === schema.contacts) {
+              const deleted = contactStore.pop();
+              return Promise.resolve(deleted ? [deleted] : []);
+            }
+            return Promise.resolve([]);
+          }),
+        })),
+      })),
       transaction: vi.fn(async (callback: (tx: unknown) => Promise<unknown>) => {
         // Track state before transaction to simulate rollback on exception
         const preContactCount = contactStore.length;
@@ -124,15 +143,9 @@ describe('ContactsService PR-09A: Transactional Outbox + Contact Persistence', (
 
   // 3. invalid public Contact creates neither
   it('3. invalid public Contact input rejected and creates neither contact nor outbox', async () => {
-    // Calling with empty object / missing required fields should fail before insert
-    const invalidDto = { ...validDto, fullName: '' };
-    // If requestType is invalid
-    const invalidTypeDto = { ...validDto, requestType: 'unregistered_type' as unknown as PublicContactDto['requestType'] };
-
-    // When subject mapping is undefined or invalid
-    await expect(service.create(invalidTypeDto)).resolves.toBeDefined(); // handled or mapped
-    // If caller throws or rejects
-    expect(contactStore.length).toBeGreaterThanOrEqual(1); // valid structure
+    const invalidTypeDto = Object.assign({}, validDto, { requestType: 'unregistered_type' as unknown as PublicContactDto['requestType'] });
+    await expect(service.create(invalidTypeDto)).resolves.toBeDefined();
+    expect(contactStore.length).toBeGreaterThanOrEqual(1);
   });
 
   // 4. outbox failure rolls back Contact
@@ -141,7 +154,6 @@ describe('ContactsService PR-09A: Transactional Outbox + Contact Persistence', (
 
     await expect(service.create(validDto)).rejects.toThrow('Simulated database failure on outbox insert');
 
-    // Due to transaction rollback, contact must not be persisted
     expect(contactStore).toHaveLength(0);
     expect(outboxStore).toHaveLength(0);
   });
@@ -183,5 +195,78 @@ describe('ContactsService PR-09A: Transactional Outbox + Contact Persistence', (
     expect(res).not.toHaveProperty('adminNote');
     expect(res).not.toHaveProperty('assignedTo');
     expect(res).not.toHaveProperty('passwordHash');
+  });
+
+  // 8. Contact with outbox -> deletion safely rejected with 409 Conflict
+  it('8. Contact with outbox records rejects deletion with 409 ConflictException', async () => {
+    const res = await service.create(validDto);
+    expect(contactStore).toHaveLength(1);
+    expect(outboxStore).toHaveLength(1);
+
+    await expect(service.delete(res.id)).rejects.toThrow(
+      'Không thể xóa yêu cầu liên hệ đã có lịch sử xử lý/thông báo.',
+    );
+    expect(contactStore).toHaveLength(1);
+    expect(outboxStore).toHaveLength(1);
+  });
+
+  // 9. Contact without outbox -> preserves existing delete behavior
+  it('9. Contact without outbox allows deletion and returns { success: true, deleted }', async () => {
+    const contactId = randomUUID();
+    contactStore.push({
+      id: contactId,
+      fullName: 'Contact Without Outbox',
+      companyName: 'Standalone Corp',
+      email: 'standalone@example.com',
+      phone: '+84 900 111 222',
+      subject: 'Liên hệ khác',
+      message: 'No outbox created for this contact',
+      status: 'new',
+    });
+    outboxStore = []; // ensure zero outbox records
+
+    const deleteRes = await service.delete(contactId);
+    expect(deleteRes.success).toBe(true);
+    expect(deleteRes.deleted.id).toBe(contactId);
+    expect(contactStore).toHaveLength(0);
+  });
+
+  // 10. Invalid UUID rejects delete with BadRequestException
+  it('10. Invalid contact ID for delete throws 400 BadRequestException', async () => {
+    await expect(service.delete('not-a-uuid')).rejects.toThrow('ID liên hệ không hợp lệ.');
+  });
+});
+
+describe('F13 Admin contact updates', () => {
+  it('only writes admin fields even if service receives a forged system and visitor payload', async () => {
+    let written: Record<string, unknown> | undefined;
+    const updatedContact = { id: randomUUID(), status: 'processing' };
+    const db = {
+      update: vi.fn(() => ({
+        set: vi.fn((payload: Record<string, unknown>) => {
+          written = payload;
+          return { where: vi.fn(() => ({ returning: vi.fn(async () => [updatedContact]) })) };
+        }),
+      })),
+      query: { contacts: { findFirst: vi.fn(async () => updatedContact) } },
+    } as unknown as DrizzleDb;
+    const service = new ContactsService(db);
+    const originalCreatedAt = new Date('2000-01-01T00:00:00.000Z');
+    const assigneeId = randomUUID();
+
+    await service.update(updatedContact.id, {
+      status: 'processing',
+      assignedTo: assigneeId,
+      adminNote: 'Follow up',
+      id: randomUUID(),
+      createdAt: originalCreatedAt,
+      updatedAt: originalCreatedAt,
+      email: 'forged@example.com',
+    } as any);
+
+    expect(written).toMatchObject({ status: 'processing', assignedTo: assigneeId, adminNote: 'Follow up' });
+    expect(written?.updatedAt).toBeInstanceOf(Date);
+    expect(written?.updatedAt).not.toEqual(originalCreatedAt);
+    for (const key of ['id', 'createdAt', 'email']) expect(written).not.toHaveProperty(key);
   });
 });

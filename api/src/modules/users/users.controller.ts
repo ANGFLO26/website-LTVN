@@ -26,7 +26,7 @@ export class UsersController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get single user by ID' })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.usersService.findOne(id);
   }
 
@@ -44,7 +44,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user account' })
-  delete(@Param('id') id: string) {
+  delete(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.usersService.delete(id);
   }
 }

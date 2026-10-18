@@ -1,10 +1,6 @@
 // oxlint-disable react/only-export-components, react/set-state-in-effect -- Provider and its hook share private context; async data hydration
-import { createContext, useContext, useEffect, useState, useCallback, useMemo, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useMemo, useRef, type ReactNode } from 'react'
 import {
-  products as defaultProducts,
-  newsItems as defaultNewsItems,
-  getProductBySlug as getStaticProductBySlug,
-  getNewsBySlug as getStaticNewsBySlug,
   localized,
   type Product,
   type NewsItem,
@@ -102,9 +98,13 @@ export interface ApiNewsEvent {
   }
 }
 
+export type DataStatus = 'loading' | 'success' | 'error'
+
 interface DataContextType {
   products: Product[]
   newsItems: NewsItem[]
+  productsStatus: DataStatus
+  newsStatus: DataStatus
   loading: boolean
   isLive: boolean
   getProductBySlug: (slug?: string) => Product | undefined
@@ -113,12 +113,14 @@ interface DataContextType {
 }
 
 export const DataContext = createContext<DataContextType>({
-  products: defaultProducts,
-  newsItems: defaultNewsItems,
-  loading: false,
+  products: [],
+  newsItems: [],
+  productsStatus: 'loading',
+  newsStatus: 'loading',
+  loading: true,
   isLive: false,
-  getProductBySlug: getStaticProductBySlug,
-  getNewsBySlug: getStaticNewsBySlug,
+  getProductBySlug: () => undefined,
+  getNewsBySlug: () => undefined,
   refreshData: async () => {},
 })
 
@@ -417,47 +419,72 @@ function adaptNewsToItem(n: ApiNewsEvent): NewsItem {
 }
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(defaultProducts)
-  const [newsItems, setNewsItems] = useState<NewsItem[]>(defaultNewsItems)
+  const [products, setProducts] = useState<Product[]>([])
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([])
+  const [productsStatus, setProductsStatus] = useState<DataStatus>('loading')
+  const [newsStatus, setNewsStatus] = useState<DataStatus>('loading')
   const [loading, setLoading] = useState(true)
   const [isLive, setIsLive] = useState(false)
+  const requestSequence = useRef(0)
+  const hasLoadedRef = useRef(false)
 
   const fetchData = useCallback(async () => {
-    try {
-      const [machinesRes, newsRes] = await Promise.all([
-        fetch('/api/machines', { signal: AbortSignal.timeout(4000) }).catch(() => null),
-        fetch('/api/news-events', { signal: AbortSignal.timeout(4000) }).catch(() => null),
-      ])
-
-      let hasLiveData = false
-
-      if (machinesRes && machinesRes.ok) {
-        const machinesData = (await machinesRes.json()) as ApiMachine[]
-        if (Array.isArray(machinesData)) {
-          const published = machinesData.filter((m) => m.status === 'published')
-          const adaptedProducts = published.map(adaptMachineToProduct)
-          setProducts(adaptedProducts)
-          hasLiveData = true
-        }
-      }
-
-      if (newsRes && newsRes.ok) {
-        const newsData = (await newsRes.json()) as ApiNewsEvent[]
-        if (Array.isArray(newsData)) {
-          const published = newsData.filter((n) => n.status === 'published')
-          const adaptedNews = published.map(adaptNewsToItem)
-          setNewsItems(adaptedNews)
-          hasLiveData = true
-        }
-      }
-
-      setIsLive(hasLiveData)
-    } catch (err) {
-      console.warn('[SiteData] Backend offline or slow:', err)
+    const sequence = ++requestSequence.current
+    if (!hasLoadedRef.current) {
+      setProducts([])
+      setNewsItems([])
+      setProductsStatus('loading')
+      setNewsStatus('loading')
+      setLoading(true)
       setIsLive(false)
-    } finally {
-      setLoading(false)
     }
+
+    const readList = async <T,>(url: string): Promise<T[]> => {
+      const response = await fetch(url, { signal: AbortSignal.timeout(4000) })
+      if (!response.ok) throw new Error(`CMS HTTP ${response.status}`)
+      const data: unknown = await response.json()
+      if (!Array.isArray(data)) throw new Error('Invalid CMS list response')
+      return data as T[]
+    }
+
+    const [machines, news] = await Promise.allSettled([
+      readList<ApiMachine>('/api/machines'),
+      readList<ApiNewsEvent>('/api/news-events'),
+    ])
+    if (sequence !== requestSequence.current) return
+    hasLoadedRef.current = true
+
+    let productsValid = false
+    let newsValid = false
+    if (machines.status === 'fulfilled') {
+      try {
+        setProducts(machines.value.filter(machine => machine.status === 'published').map(adaptMachineToProduct))
+        setProductsStatus('success')
+        productsValid = true
+      } catch {
+        // A refresh may follow an unpublish action. Hide prior records if the CMS response is invalid.
+        setProducts([])
+        setProductsStatus('error')
+      }
+    } else {
+      setProducts([])
+      setProductsStatus('error')
+    }
+    if (news.status === 'fulfilled') {
+      try {
+        setNewsItems(news.value.filter(item => item.status === 'published').map(adaptNewsToItem))
+        setNewsStatus('success')
+        newsValid = true
+      } catch {
+        setNewsItems([])
+        setNewsStatus('error')
+      }
+    } else {
+      setNewsItems([])
+      setNewsStatus('error')
+    }
+    setIsLive(productsValid && newsValid)
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -485,7 +512,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const getProductBySlug = useCallback(
     (slug?: string) => {
       if (!slug) return undefined
-      return products.find((p) => p.slug === slug) || getStaticProductBySlug(slug)
+      return products.find((p) => p.slug === slug)
     },
     [products],
   )
@@ -500,7 +527,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
             n.slugEn === slug ||
             n.slugs?.vi === slug ||
             n.slugs?.en === slug,
-        ) || getStaticNewsBySlug(slug)
+        )
       )
     },
     [newsItems],
@@ -510,13 +537,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
     () => ({
       products,
       newsItems,
+      productsStatus,
+      newsStatus,
       loading,
       isLive,
       getProductBySlug,
       getNewsBySlug,
       refreshData: fetchData,
     }),
-    [products, newsItems, loading, isLive, getProductBySlug, getNewsBySlug, fetchData],
+    [products, newsItems, productsStatus, newsStatus, loading, isLive, getProductBySlug, getNewsBySlug, fetchData],
   )
 
   return <DataContext.Provider value={contextValue}>{children}</DataContext.Provider>
