@@ -1,10 +1,25 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+  HttpException,
+} from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
 
 import { isValidUuid } from '../../common/uuid.util.js';
 import type { CreateMachineDto, UpdateMachineDto } from './dto/machine-mutation.dto.js';
+
+function getPgCode(err: unknown): string | undefined {
+  if (!err || typeof err !== 'object') return undefined;
+  const candidate = err as { code?: unknown; cause?: { code?: unknown } };
+  if (typeof candidate.code === 'string') return candidate.code;
+  if (typeof candidate.cause?.code === 'string') return candidate.cause.code;
+  return undefined;
+}
 
 @Injectable()
 export class MachinesService {
@@ -59,9 +74,15 @@ export class MachinesService {
       ),
       with: {
         mainImage: true,
-        specs: true,
-        applications: true,
-        highlights: true,
+        specs: {
+          orderBy: (specs, { asc }) => [asc(specs.sortOrder)],
+        },
+        applications: {
+          orderBy: (apps, { asc }) => [asc(apps.sortOrder)],
+        },
+        highlights: {
+          orderBy: (hls, { asc }) => [asc(hls.sortOrder)],
+        },
         standards: {
           with: {
             standard: true,
@@ -98,101 +119,48 @@ export class MachinesService {
     };
   }
 
+  private deduplicateStandards(
+    standards?: Array<{ standardId: string; note?: string | null; sortOrder?: number }>,
+  ) {
+    const seen = new Set<string>();
+    const result: Array<{ standardId: string; note?: string | null; sortOrder?: number }> = [];
+    for (const st of standards || []) {
+      if (isValidUuid(st.standardId) && !seen.has(st.standardId)) {
+        seen.add(st.standardId);
+        result.push(st);
+      }
+    }
+    return result;
+  }
+
   async create(data: CreateMachineDto) {
     const { specs, applications, highlights, standards } = data;
     const machineFields = this.writableFields(data);
 
-    const machineId = await this.db.transaction(async (tx) => {
-      const [machine] = await tx
-        .insert(schema.machines)
-        .values({
-          ...machineFields,
-          name: data.name,
-          slug:
-            machineFields.slug ||
-            data.name
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .replace(/[đĐ]/g, 'd')
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/^-|-$/g, ''),
-        })
-        .returning();
+    let machineId: string;
+    try {
+      machineId = await this.db.transaction(async (tx) => {
+        const [machine] = await tx
+          .insert(schema.machines)
+          .values({
+            ...machineFields,
+            name: data.name,
+            slug:
+              machineFields.slug ||
+              data.name
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[đĐ]/g, 'd')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, ''),
+          })
+          .returning();
 
-      if (specs && specs.length > 0) {
-        await tx.insert(schema.machineSpecs).values(
-          specs.map((s, idx) => ({
-            machineId: machine.id,
-            groupName: s.groupName,
-            specName: s.specName,
-            specValue: s.specValue,
-            unit: s.unit || null,
-            sortOrder: s.sortOrder ?? idx + 1,
-          }))
-        );
-      }
-
-      if (applications && applications.length > 0) {
-        await tx.insert(schema.machineApplications).values(
-          applications.map((a, idx) => ({
-            machineId: machine.id,
-            title: a.title,
-            description: a.description || null,
-            sortOrder: a.sortOrder ?? idx + 1,
-          }))
-        );
-      }
-
-      if (highlights && highlights.length > 0) {
-        await tx.insert(schema.machineHighlights).values(
-          highlights.map((h, idx) => ({
-            machineId: machine.id,
-            title: h.title,
-            description: h.description || null,
-            icon: h.icon || 'Zap',
-            sortOrder: h.sortOrder ?? idx + 1,
-          }))
-        );
-      }
-
-      const validStandards = (standards || []).filter((st) => isValidUuid(st.standardId));
-      if (validStandards.length > 0) {
-        await tx.insert(schema.machineStandards).values(
-          validStandards.map((st, idx) => ({
-            machineId: machine.id,
-            standardId: st.standardId,
-            note: st.note || null,
-            sortOrder: st.sortOrder ?? idx + 1,
-          }))
-        );
-      }
-
-      return machine.id;
-    });
-
-    return this.findOne(machineId);
-  }
-
-  async update(id: string, data: UpdateMachineDto) {
-    const { specs, applications, highlights, standards } = data;
-    const machineFields = this.writableFields(data);
-
-    await this.db.transaction(async (tx) => {
-      const [updated] = await tx
-        .update(schema.machines)
-        .set({ ...machineFields, updatedAt: new Date() })
-        .where(eq(schema.machines.id, id))
-        .returning();
-
-      if (!updated) throw new NotFoundException(`Machine with id ${id} not found`);
-
-      if (specs !== undefined) {
-        await tx.delete(schema.machineSpecs).where(eq(schema.machineSpecs.machineId, id));
-        if (specs.length > 0) {
+        if (specs && specs.length > 0) {
           await tx.insert(schema.machineSpecs).values(
             specs.map((s, idx) => ({
-              machineId: id,
+              machineId: machine.id,
               groupName: s.groupName,
               specName: s.specName,
               specValue: s.specValue,
@@ -201,32 +169,22 @@ export class MachinesService {
             }))
           );
         }
-      }
 
-      if (applications !== undefined) {
-        await tx
-          .delete(schema.machineApplications)
-          .where(eq(schema.machineApplications.machineId, id));
-        if (applications.length > 0) {
+        if (applications && applications.length > 0) {
           await tx.insert(schema.machineApplications).values(
             applications.map((a, idx) => ({
-              machineId: id,
+              machineId: machine.id,
               title: a.title,
               description: a.description || null,
               sortOrder: a.sortOrder ?? idx + 1,
             }))
           );
         }
-      }
 
-      if (highlights !== undefined) {
-        await tx
-          .delete(schema.machineHighlights)
-          .where(eq(schema.machineHighlights.machineId, id));
-        if (highlights.length > 0) {
+        if (highlights && highlights.length > 0) {
           await tx.insert(schema.machineHighlights).values(
             highlights.map((h, idx) => ({
-              machineId: id,
+              machineId: machine.id,
               title: h.title,
               description: h.description || null,
               icon: h.icon || 'Zap',
@@ -234,30 +192,133 @@ export class MachinesService {
             }))
           );
         }
-      }
 
-      if (standards !== undefined) {
-        await tx
-          .delete(schema.machineStandards)
-          .where(eq(schema.machineStandards.machineId, id));
-        const validStandards = standards.filter((st) => isValidUuid(st.standardId));
+        const validStandards = this.deduplicateStandards(standards);
         if (validStandards.length > 0) {
           await tx.insert(schema.machineStandards).values(
             validStandards.map((st, idx) => ({
-              machineId: id,
+              machineId: machine.id,
               standardId: st.standardId,
               note: st.note || null,
               sortOrder: st.sortOrder ?? idx + 1,
             }))
           );
         }
+
+        return machine.id;
+      });
+    } catch (err: unknown) {
+      if (err instanceof HttpException) throw err;
+      const pgCode = getPgCode(err);
+      if (pgCode === '23505') {
+        throw new ConflictException('Đường dẫn (slug) của thiết bị đã tồn tại trong hệ thống.');
       }
-    });
+      if (pgCode === '23503') {
+        throw new BadRequestException('Hình ảnh đại diện hoặc tiêu chuẩn liên kết không tồn tại.');
+      }
+      throw err;
+    }
+
+    return this.findOne(machineId);
+  }
+
+  async update(id: string, data: UpdateMachineDto) {
+    const { specs, applications, highlights, standards } = data;
+    const machineFields = this.writableFields(data);
+
+    try {
+      await this.db.transaction(async (tx) => {
+        const [updated] = await tx
+          .update(schema.machines)
+          .set({ ...machineFields, updatedAt: new Date() })
+          .where(eq(schema.machines.id, id))
+          .returning();
+
+        if (!updated) throw new NotFoundException(`Machine with id ${id} not found`);
+
+        if (specs !== undefined) {
+          await tx.delete(schema.machineSpecs).where(eq(schema.machineSpecs.machineId, id));
+          if (specs.length > 0) {
+            await tx.insert(schema.machineSpecs).values(
+              specs.map((s, idx) => ({
+                machineId: id,
+                groupName: s.groupName,
+                specName: s.specName,
+                specValue: s.specValue,
+                unit: s.unit || null,
+                sortOrder: s.sortOrder ?? idx + 1,
+              }))
+            );
+          }
+        }
+
+        if (applications !== undefined) {
+          await tx
+            .delete(schema.machineApplications)
+            .where(eq(schema.machineApplications.machineId, id));
+          if (applications.length > 0) {
+            await tx.insert(schema.machineApplications).values(
+              applications.map((a, idx) => ({
+                machineId: id,
+                title: a.title,
+                description: a.description || null,
+                sortOrder: a.sortOrder ?? idx + 1,
+              }))
+            );
+          }
+        }
+
+        if (highlights !== undefined) {
+          await tx
+            .delete(schema.machineHighlights)
+            .where(eq(schema.machineHighlights.machineId, id));
+          if (highlights.length > 0) {
+            await tx.insert(schema.machineHighlights).values(
+              highlights.map((h, idx) => ({
+                machineId: id,
+                title: h.title,
+                description: h.description || null,
+                icon: h.icon || 'Zap',
+                sortOrder: h.sortOrder ?? idx + 1,
+              }))
+            );
+          }
+        }
+
+        if (standards !== undefined) {
+          await tx
+            .delete(schema.machineStandards)
+            .where(eq(schema.machineStandards.machineId, id));
+          const validStandards = this.deduplicateStandards(standards);
+          if (validStandards.length > 0) {
+            await tx.insert(schema.machineStandards).values(
+              validStandards.map((st, idx) => ({
+                machineId: id,
+                standardId: st.standardId,
+                note: st.note || null,
+                sortOrder: st.sortOrder ?? idx + 1,
+              }))
+            );
+          }
+        }
+      });
+    } catch (err: unknown) {
+      if (err instanceof HttpException) throw err;
+      const pgCode = getPgCode(err);
+      if (pgCode === '23505') {
+        throw new ConflictException('Đường dẫn (slug) của thiết bị đã tồn tại trong hệ thống.');
+      }
+      if (pgCode === '23503') {
+        throw new BadRequestException('Hình ảnh đại diện hoặc tiêu chuẩn liên kết không tồn tại.');
+      }
+      throw err;
+    }
 
     return this.findOne(id);
   }
 
   async delete(id: string) {
+    if (!isValidUuid(id)) throw new BadRequestException('ID thiết bị không hợp lệ.');
     const [deleted] = await this.db
       .delete(schema.machines)
       .where(eq(schema.machines.id, id))

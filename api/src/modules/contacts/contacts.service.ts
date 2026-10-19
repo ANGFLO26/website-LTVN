@@ -28,6 +28,7 @@ export class ContactsService {
   }
 
   async findOne(id: string) {
+    if (!isValidUuid(id)) throw new BadRequestException('ID liên hệ không hợp lệ.');
     const contact = await this.db.query.contacts.findFirst({
       where: eq(schema.contacts.id, id),
       with: {
@@ -81,6 +82,7 @@ export class ContactsService {
         throw new BadRequestException('Trạng thái liên hệ không hợp lệ.');
       }
       updatePayload.status = data.status;
+      updatePayload.resolvedAt = data.status === 'resolved' ? new Date() : null;
     }
     if (data.assignedTo !== undefined) {
       if (data.assignedTo !== null && !isValidUuid(data.assignedTo)) {
@@ -89,15 +91,24 @@ export class ContactsService {
       updatePayload.assignedTo = data.assignedTo;
     }
     if (data.adminNote !== undefined) updatePayload.adminNote = data.adminNote;
-    if (data.status === 'resolved') {
-      updatePayload.resolvedAt = new Date();
-    }
 
-    const [updated] = await this.db
-      .update(schema.contacts)
-      .set(updatePayload)
-      .where(eq(schema.contacts.id, id))
-      .returning();
+    let updated;
+    try {
+      [updated] = await this.db
+        .update(schema.contacts)
+        .set(updatePayload)
+        .where(eq(schema.contacts.id, id))
+        .returning();
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      const pgCode =
+        (error as { code?: string })?.code ||
+        (error as { cause?: { code?: string } })?.cause?.code;
+      if (pgCode === '23503') {
+        throw new BadRequestException('Người phụ trách được chọn không tồn tại trong hệ thống.');
+      }
+      throw error;
+    }
     if (!updated) throw new NotFoundException(`Contact with id ${id} not found`);
     return this.findOne(id);
   }

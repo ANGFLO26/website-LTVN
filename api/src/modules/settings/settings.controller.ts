@@ -19,10 +19,7 @@ import {
   type EmailSettingsResponseDto,
 } from './dto/email-settings.dto.js';
 import type { SendTestEmailResponseDto } from './dto/test-email.dto.js';
-
-interface AuthenticatedRequest {
-  user?: { id: string; email: string; role: string };
-}
+import type { AdminRequest } from '../auth/auth.types.js';
 
 @ApiTags('Settings')
 @ApiBearerAuth()
@@ -59,9 +56,9 @@ export class SettingsController {
       }),
     )
     dto: UpdateEmailSettingsDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AdminRequest,
   ): Promise<EmailSettingsResponseDto> {
-    return this.settingsService.updateEmailSettings(dto, req.user?.id);
+    return this.settingsService.updateEmailSettings(dto, req.admin?.id);
   }
 
   @Post('email/test')
@@ -78,8 +75,8 @@ export class SettingsController {
   })
   @ApiResponse({ status: 401, description: 'Chưa xác thực JWT' })
   sendTestEmail(
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AdminRequest,
   ): Promise<SendTestEmailResponseDto> {
-    return this.settingsService.sendTestEmail(req.user?.email);
+    return this.settingsService.sendTestEmail(req.admin?.email);
   }
 }

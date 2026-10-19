@@ -1,27 +1,237 @@
-# HƯỚNG DẪN TRIỂN KHAI VÀ VẬN HÀNH PRODUCTION (PRODUCTION RUNBOOK & DEPLOYMENT GUIDE)
+<div align="center">
 
-> **Hệ Thống Số Hóa Doanh Nghiệp — LT VIỆT NAM TECHNOLOGY CO., LTD**  
-> Bao gồm: **Website Khách Hàng (Client Portal)**, **Cổng Quản Trị (Admin Portal)**, **Backend REST API (NestJS)** và **Cơ Sở Dữ Liệu PostgreSQL (Drizzle ORM & Neon Cloud)**.
+<img src="public/images/brand/ltv-logo.png" alt="LT Việt Nam Logo" width="88" />
+
+# LT VIỆT NAM TECHNOLOGY CO., LTD
+### Hệ Thống Số Hóa Doanh Nghiệp — Thiết Bị Phân Tích Dầu Khí & Van Công Nghiệp
+
+[![React](https://img.shields.io/badge/React-19.2-087EA4?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.2-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev/)
+[![NestJS](https://img.shields.io/badge/NestJS-12.0-E0234E?style=flat-square&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Drizzle ORM](https://img.shields.io/badge/Drizzle_ORM-0.45-C5F74F?style=flat-square&logo=drizzle&logoColor=black)](https://orm.drizzle.team/)
+[![Security](https://img.shields.io/badge/Security-Turnstile_%2B_RBAC-0F766E?style=flat-square&logo=cloudflare&logoColor=white)](#10-quy-chuẩn-an-ninh--tăng-cường-bảo-mật-security-hardening)
+
+<p align="center">
+  <strong>Website Khách Hàng Song Ngữ (VI/EN)</strong> •
+  <strong>Cổng Quản Trị Nội Dung (Admin CMS)</strong> •
+  <strong>Backend REST API & Dynamic SEO Shell</strong>
+</p>
+
+<p align="center">
+  <a href="#1-tổng-quan-hệ-thống--các-phân-hệ">Tổng Quan</a> •
+  <a href="#2-kiến-trúc-công-nghệ--cấu-trúc-dự-án">Kiến Trúc</a> •
+  <a href="#3-hướng-dẫn-cài-đặt--phát-triển-local-quickstart">Cài Đặt Local</a> •
+  <a href="#4-kiểm-thử--đảm-bảo-chất-lượng-qa--testing">Kiểm Thử</a> •
+  <a href="#5-kiến-trúc-mạng--hạ-tầng-production">Triển Khai Production</a> •
+  <a href="#9-vận-hành-cơ-sở-dữ-liệu--migrations-với-drizzle-orm">Vận Hành Database</a>
+</p>
+
+</div>
 
 ---
 
-## 📑 Mục Lục Vận Hành Production
+## 📑 Mục Lục
 
-- [1. Kiến Trúc Mạng & Hạ Tầng Production](#1-kiến-trúc-mạng--hạ-tầng-production)
-- [2. Yêu Cầu Cấu Hình Máy Chủ (Server Specifications)](#2-yêu-cầu-cấu-hình-máy-chủ-server-specifications)
-- [3. Đặc Tả Biến Môi Trường (Environment Variables)](#3-đặc-tả-biến-môi-trường-environment-variables)
-- [4. Quy Trình Triển Khai Production Từng Bước (Step-by-Step Deployment)](#4-quy-trình-triển-khai-production-từng-bước-step-by-step-deployment)
-- [5. Cấu Hình Reverse Proxy NGINX & Chứng Chỉ SSL](#5-cấu-hình-reverse-proxy-nginx--chứng-chỉ-ssl)
-- [6. Quản Lý Tiến Trình Ứng Dụng Với PM2 Cluster](#6-quản-lý-tiến-trình-ứng-dụng-với-pm2-cluster)
-- [7. Vận Hành Cơ Sở Dữ Liệu & Migrations Với Drizzle ORM](#7-vận-hành-cơ-sở-dữ-liệu--migrations-với-drizzle-orm)
-- [8. Quy Chuẩn An Ninh & Tăng Cường Bảo Mật (Security Hardening)](#8-quy-chuẩn-an-ninh--tăng-cường-bảo-mật-security-hardening)
-- [9. Giám Sát, Nhật Ký (Logging) & Kiểm Tra Sức Khỏe (Health Check)](#9-giám-sát-nhật-ký-logging--kiểm-tra-sức-khỏe-health-check)
-- [10. Kế Hoạch Ứng Phó Sự Cố & Hoàn Nguyên (Rollback Runbook)](#10-kế-hoạch-ứng-phó-sự-cố--hoàn-nguyên-rollback-runbook)
-- [11. Bảng Tra Cứu Lệnh Nhanh Cho Kỹ Sư DevOps](#11-bảng-tra-cứu-lệnh-nhanh-cho-kỹ-sư-devops)
+1. [Tổng Quan Hệ Thống & Các Phân Hệ](#1-tổng-quan-hệ-thống--các-phân-hệ)
+2. [Kiến Trúc Công Nghệ & Cấu Trúc Dự Án](#2-kiến-trúc-công-nghệ--cấu-trúc-dự-án)
+3. [Hướng Dẫn Cài Đặt & Phát Triển Local (Quickstart)](#3-hướng-dẫn-cài-đặt--phát-triển-local-quickstart)
+4. [Kiểm Thử & Đảm Bảo Chất Lượng (QA & Testing)](#4-kiểm-thử--đảm-bảo-chất-lượng-qa--testing)
+5. [Kiến Trúc Mạng & Hạ Tầng Production](#5-kiến-trúc-mạng--hạ-tầng-production)
+6. [Yêu Cầu Cấu Hình Máy Chủ (Server Specifications)](#6-yêu-cầu-cấu-hình-máy-chủ-server-specifications)
+7. [Đặc Tả Biến Môi Trường (Environment Variables)](#7-đặc-tả-biến-môi-trường-environment-variables)
+8. [Quy Trình Triển Khai Production Từng Bước](#8-quy-trình-triển-khai-production-từng-bước)
+9. [Cấu Hình Reverse Proxy NGINX & Chứng Chỉ SSL](#9-cấu-hình-reverse-proxy-nginx--chứng-chỉ-ssl)
+10. [Quản Lý Tiến Trình Ứng Dụng Với PM2 Cluster](#10-quản-lý-tiến-trình-ứng-dụng-với-pm2-cluster)
+11. [Vận Hành Cơ Sở Dữ Liệu & Migrations Với Drizzle ORM](#11-vận-hành-cơ-sở-dữ-liệu--migrations-với-drizzle-orm)
+12. [Quy Chuẩn An Ninh & Tăng Cường Bảo Mật (Security Hardening)](#12-quy-chuẩn-an-ninh--tăng-cường-bảo-mật-security-hardening)
+13. [Giám Sát, Nhật Ký (Logging) & Kiểm Tra Sức Khỏe (Health Check)](#13-giám-sát-nhật-ký-logging--kiểm-tra-sức-khỏe-health-check)
+14. [Kế Hoạch Ứng Phó Sự Cố & Hoàn Nguyên (Rollback Runbook)](#14-kế-hoạch-ứng-phó-sự-cố--hoàn-nguyên-rollback-runbook)
+15. [Bảng Tra Cứu Lệnh Nhanh Cho Kỹ Sư DevOps](#15-bảng-tra-cứu-lệnh-nhanh-cho-kỹ-sư-devops)
 
 ---
 
-## 1. Kiến Trúc Mạng & Hạ Tầng Production
+## 1. Tổng Quan Hệ Thống & Các Phân Hệ
+
+Dự án là nền tảng số hóa toàn diện của **Công ty TNHH Kỹ Thuật LT Việt Nam (LT Vietnam Technology Co., Ltd)** — đại diện phân phối và dịch vụ kỹ thuật chuyên sâu cho các giải pháp phân tích hóa dầu phòng thí nghiệm (**PAC L.P.**: Herzog, ISL, Analytical Controls, Phase Technology, Cambridge Viscosity...) và thiết bị van công nghiệp/điều khiển quá trình (**Baker Hughes**: Masoneilan, Consolidated).
+
+Hệ thống được xây dựng theo kiến trúc **3 phân hệ độc lập** trên cùng một kho mã nguồn:
+
+### 1.1. Website Khách Hàng (`src/` — Public Portal)
+- **Song ngữ Việt – Anh toàn diện (`i18n`)**: Hỗ trợ chuyển đổi tức thì giữa Tiếng Việt và Tiếng Anh với 196 khóa giao diện và 12 nhóm nội dung song ngữ được kiểm tra tính toàn vẹn tự động khi build (`npm run check:i18n`), tự động đồng bộ đường dẫn bài viết song ngữ (`slug` ↔ `slugEn`).
+- **Danh mục Thiết bị & Tra cứu Tiêu chuẩn Kỹ thuật**: Tìm kiếm, lọc thiết bị theo danh mục kỹ thuật, hãng sản xuất và tiêu chuẩn quốc tế (`ASTM`, `ISO`, `IP`, `EN`, `TCVN`). Trang chi tiết thiết bị hiển thị bảng thông số kỹ thuật, ứng dụng, ưu điểm nổi bật và tài liệu datasheet.
+- **Tin tức & Sự kiện Kỹ thuật**: Hiển thị bài viết chuyên sâu, hội thảo kỹ thuật với cấu trúc nội dung phân đoạn (`contentBlocks`), thông tin sự kiện và hành động tiếp theo (`nextAction`).
+- **Tiếp nhận Yêu cầu Tư vấn & Báo giá thông minh**: Tự động nhận diện ngữ cảnh thiết bị hoặc chủ đề từ URL (`?product=...&topic=...`), tích hợp xác thực chống bot **Cloudflare Turnstile** và cơ chế fallback dữ liệu an toàn khi mất kết nối mạng.
+
+### 1.2. Cổng Quản Trị Nội Dung (`admin/` — Admin CMS Portal)
+- **Dashboard Điều Hành**: Thống kê trực quan số lượng máy phân tích, tiêu chuẩn quốc tế, bài viết, kho ảnh và danh sách yêu cầu tư vấn mới kèm chuông thông báo thời gian thực trên Header.
+- **Quản trị Thiết bị (`Machines`) & Tiêu chuẩn (`Standards`)**: Quản lý đầy đủ thông tin thiết bị, bộ sưu tập ảnh (`Gallery`), thông số kỹ thuật (`Specs`), ứng dụng (`Applications`), điểm nổi bật (`Highlights`) và liên kết tiêu chuẩn (`Machine Standards`).
+- **Trình biên tập Tin tức & Sự kiện (`News & Events`)**: Tích hợp **Visual Block Editor** trực quan (cho phép thêm, xóa, sắp xếp thứ tự các đoạn văn `paragraph`, tiêu đề phụ `subheading`, danh sách `list`, trích dẫn `quote`) song song với chế độ chỉnh sửa JSON nâng cao và bản dịch Tiếng Anh.
+- **Quản lý Yêu cầu Liên hệ (`Contacts`)**: Theo dõi trạng thái xử lý (`new`, `in_progress`, `resolved`, `spam`), phân công nhân sự phụ trách (`assignedTo`), ghi chú nội bộ (`adminNote`) và bộ lọc danh sách theo trạng thái.
+- **Quản lý Điều hướng 301 (`Redirects`)**: Tạo, bật/tắt, chỉnh sửa các quy tắc chuyển hướng URL 301 phục vụ SEO với bộ kiểm tra chống vòng lặp và chuỗi chuyển hướng.
+- **Quản trị Nhân sự (`Users`) & Cấu hình Hệ thống (`Settings`)**: Phân quyền theo vai trò (`admin` / `editor`), bảo vệ chống tự khóa hoặc tự hạ quyền tài khoản đang đăng nhập, và quản lý cấu hình SMTP gửi mail (mật khẩu SMTP được mã hóa `AES-256-GCM` trong cơ sở dữ liệu).
+
+### 1.3. Backend REST API & SEO Engine (`api/` — NestJS Server)
+- **Kiến trúc Module hóa chuẩn NestJS 12**: Bao gồm 10 module nghiệp vụ (`AuthModule`, `UsersModule`, `MachinesModule`, `StandardsModule`, `MediaModule`, `NewsEventsModule`, `ContactsModule`, `RedirectsModule`, `SettingsModule`, `SeoModule`) và `SecurityModule` toàn cục.
+- **Dynamic SSR SEO Metadata Shell (`SeoHtmlService`)**: Tự động bơm thẻ `<title>`, `<meta description>`, OpenGraph, Twitter Card, Canonical URL và cấu trúc dữ liệu `JSON-LD` (`Product`, `Article`, `Organization`) trực tiếp vào HTML shell cho bot tìm kiếm và mạng xã hội trước khi nạp React SPA.
+- **Transactional Contact Outbox Worker**: Ghi nhận liên hệ và sự kiện gửi mail trong cùng một giao dịch cơ sở dữ liệu; tiến trình nền (`ContactOutboxWorker`) quét hàng đợi bằng khóa `FOR UPDATE SKIP LOCKED`, tự động thử lại theo cấp số nhân (Exponential Backoff) khi máy chủ SMTP tạm thời gián đoạn.
+- **Bảo mật Đa lớp**: Xác thực JWT kèm `tokenVersion` (vô hiệu hóa toàn bộ token cũ ngay khi đổi/reset mật khẩu), khóa tài khoản tạm thời khi đăng nhập sai nhiều lần, và **Distributed Rate Limiting** lưu trữ trên PostgreSQL với IP được băm ẩn danh bằng `HMAC-SHA256`.
+
+---
+
+## 2. Kiến Trúc Công Nghệ & Cấu Trúc Dự Án
+
+### 2.1. Ngăn xếp công nghệ (Tech Stack)
+
+| Phân hệ | Công nghệ sử dụng |
+| :--- | :--- |
+| **Website Khách Hàng (`src/`)** | React 19.2, TypeScript 6.0, React Router 8.3, Lucide Icons, Vite 8.2, Custom CSS Design System (`site-v7.css`) |
+| **Cổng Quản Trị (`admin/`)** | React 19.2, TypeScript 6.0, Lucide Icons, Vite 8.2, Accessible Modal & Drawer Architecture |
+| **Backend API (`api/`)** | NestJS 12.0, TypeScript 6.0, Drizzle ORM 0.45, PostgreSQL (`postgres` driver), JWT, BcryptJS, Nodemailer, Swagger OpenAPI |
+| **Bảo mật & Chống Bot** | Cloudflare Turnstile CAPTCHA, PostgreSQL Distributed Rate Limiter (`HMAC-SHA256`), AES-256-GCM Secret Encryption |
+| **Kiểm thử & Chất lượng Code** | Vitest 4.1 (Unit & E2E Tests), Supertest, Oxlint (Type-aware linting), i18n Integrity Validator |
+
+### 2.2. Cấu trúc thư mục dự án
+
+```text
+website-LTVN/
+├── public/                     # Tài nguyên tĩnh (Logo thương hiệu, ảnh thiết bị PAC/Baker Hughes, khách hàng, font chữ)
+│   └── images/brand/           # Logo chính thức LT Việt Nam (ltv-logo.png)
+├── src/                        # Mã nguồn Website Khách Hàng (Public Portal - React 19)
+│   ├── components/             # Layout, SeoHead, TurnstileWidget, ProductCard, NewsCard, OfficeNetwork...
+│   ├── context/                # DataContext quản lý trạng thái dữ liệu & đồng bộ API/Fallback
+│   ├── pages/                  # HomePage, AboutPage, CatalogPage, ProductPage, NewsPage, ArticlePage, ContactPage
+│   ├── services/               # Dịch vụ kết nối API & chuyển ngữ dữ liệu
+│   ├── data.ts                 # Dữ liệu chuẩn phục vụ fallback & khởi tạo
+│   └── i18n.tsx                # Từ điển song ngữ Việt - Anh (VI/EN)
+├── admin/                      # Mã nguồn Cổng Quản Trị (Admin CMS - React 19)
+│   └── src/
+│       ├── components/         # Sidebar, Header (kèm chuông thông báo), Modal, MediaPickerModal
+│       ├── pages/              # Dashboard, Machines, Standards, Media, NewsEvents, Contacts, Redirects, Users, Settings
+│       └── services/           # API Client & Quản lý phiên đăng nhập JWT
+├── api/                        # Mã nguồn Backend REST API (NestJS 12 + Drizzle ORM)
+│   ├── drizzle/                # Lịch sử SQL Migrations chính thức (0000 -> 0009) & _journal.json
+│   ├── src/
+│   │   ├── common/             # Bộ lọc và chuẩn hóa UUID, tiện ích dùng chung
+│   │   ├── database/           # Định nghĩa Schema 12 bảng (schema.ts), DatabaseModule & Seed Script (seed.ts)
+│   │   └── modules/            # 10 Module nghiệp vụ: auth, users, machines, standards, media, news-events,
+│   │                           # contacts, redirects, settings, seo, email, security
+│   └── test/                   # Bộ kiểm thử tích hợp E2E (Vitest + Supertest)
+├── scripts/                    # Công cụ vận hành CLI
+│   ├── bootstrap-admin.mjs     # Khởi tạo tài khoản Admin đầu tiên an toàn (Interactive CLI + Advisory Lock)
+│   ├── backup-db.mjs           # Công cụ sao lưu dữ liệu và kiểm tra kết nối DB
+│   ├── BACKUP-RUNBOOK.md       # Hướng dẫn chi tiết quy trình sao lưu & phục hồi
+│   └── validate-i18n.mjs       # Kiểm tra tính toàn vẹn từ điển song ngữ VI/EN
+├── ecosystem.config.cjs        # Cấu hình quản lý cụm tiến trình PM2 Cluster trên Production
+└── package.json                # Tập lệnh điều phối tập trung cho toàn bộ Monorepo
+```
+
+---
+
+## 3. Hướng Dẫn Cài Đặt & Phát Triển Local (Quickstart)
+
+### 3.1. Yêu cầu môi trường phát triển
+- **Node.js**: Phiên bản `v22.x` LTS trở lên.
+- **PostgreSQL**: Phiên bản `15` hoặc `16` trở lên (chạy cục bộ qua Docker hoặc cài đặt trực tiếp).
+
+### 3.2. Cài đặt Dependencies cho cả 3 phân hệ
+
+```bash
+# 1. Cài đặt dependencies cho Website Khách Hàng (Root)
+npm install
+
+# 2. Cài đặt dependencies cho Cổng Quản Trị (Admin CMS)
+npm --prefix admin install
+
+# 3. Cài đặt dependencies cho Backend API (NestJS)
+npm --prefix api install
+```
+
+### 3.3. Thiết lập biến môi trường & Cơ sở dữ liệu Local
+
+```bash
+# Sao chép tệp mẫu cấu hình môi trường cho Backend API
+cp api/.env.example api/.env
+```
+
+Cập nhật các thông số cơ bản trong `api/.env` cho môi trường `development`:
+- `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ltvn_db`
+- `JWT_SECRET`: Chuỗi bí mật ngẫu nhiên (tối thiểu 32 ký tự).
+- `TURNSTILE_ENABLED=false` (hoặc sử dụng test secret key của Cloudflare `1x0000000000000000000000000000000AA`).
+
+Sau đó áp dụng migration và nạp dữ liệu mẫu (13 dòng máy thực tế, 15 tiêu chuẩn quốc tế, bài viết, kho ảnh và tài khoản mẫu):
+
+```bash
+# Áp dụng toàn bộ migrations vào PostgreSQL
+npm run db:migrate
+
+# Biên dịch và nạp dữ liệu mẫu phục vụ phát triển (Chỉ chạy khi NODE_ENV != production)
+npm run db:seed
+```
+
+### 3.4. Khởi chạy môi trường phát triển (Development Servers)
+
+Mở 3 cửa sổ terminal tại thư mục gốc dự án để chạy đồng thời:
+
+```bash
+# Terminal 1: Khởi chạy Backend NestJS API (http://localhost:3000/api & Swagger tại http://localhost:3000/api/docs)
+npm run dev:api
+
+# Terminal 2: Khởi chạy Website Khách Hàng (http://localhost:5173)
+npm run dev
+
+# Terminal 3: Khởi chạy Cổng Quản Trị Admin CMS (http://localhost:5174)
+npm run dev:admin
+```
+
+### 3.5. Bảng tổng hợp các lệnh `npm scripts` tại thư mục gốc
+
+| Câu lệnh | Mô tả chức năng |
+| :--- | :--- |
+| `npm run dev` | Chạy máy chủ phát triển Website Khách Hàng (`Vite`). |
+| `npm run dev:admin` | Chạy máy chủ phát triển Cổng Quản Trị Admin CMS. |
+| `npm run dev:api` | Chạy máy chủ Backend NestJS ở chế độ `watch`. |
+| `npm run build` | Kiểm tra song ngữ (`check:i18n`), kiểm tra kiểu TypeScript và build Website Khách Hàng ra `dist/`. |
+| `npm run build:admin` | Kiểm tra kiểu TypeScript và build Admin CMS ra `admin/dist/`. |
+| `npm run build:api` | Biên dịch Backend NestJS ra `api/dist/`. |
+| `npm run check:i18n` | Xác thực tính đồng bộ khóa từ điển và nội dung song ngữ Việt – Anh. |
+| `npm run lint` | Chạy `oxlint` kiểm tra mã nguồn Frontend (`src/`), Admin (`admin/src/`) và `scripts/`. |
+| `npm run lint:api` | Chạy `oxlint --type-aware` kiểm tra mã nguồn và kiểu dữ liệu Backend (`api/`). |
+| `npm run test:api` | Chạy toàn bộ bộ Unit Tests của Backend với `Vitest`. |
+| `npm run test:e2e` | Chạy bộ kiểm thử tích hợp End-to-End (`E2E`) của Backend. |
+| `npm run db:generate` | Sinh tệp SQL migration mới từ thay đổi trong `api/src/database/schema.ts`. |
+| `npm run db:migrate` | Áp dụng các tệp SQL migration chính thức vào cơ sở dữ liệu PostgreSQL. |
+| `npm run db:seed` | Nạp bộ dữ liệu mẫu cho môi trường Development / Staging (bị khóa trên Production). |
+| `npm run bootstrap:admin` | Công cụ tương tác bảo mật khởi tạo tài khoản Admin đầu tiên trên Production. |
+
+---
+
+## 4. Kiểm Thử & Đảm Bảo Chất Lượng (QA & Testing)
+
+Trước mỗi lần phát hành (Release) hoặc tạo Pull Request, chạy chuỗi lệnh kiểm tra chất lượng toàn diện sau:
+
+```bash
+# 1. Xác thực từ điển song ngữ VI/EN
+npm run check:i18n
+
+# 2. Kiểm tra Linter cho Frontend, Admin và Backend API
+npm run lint
+npm run lint:api
+
+# 3. Chạy Unit Tests (17 test suites / 282 tests) và E2E Tests cho Backend
+npm run test:api
+npm run test:e2e
+
+# 4. Kiểm tra biên dịch Production cho cả 3 phân hệ
+npm run build
+npm run build:admin
+npm run build:api
+```
+
+---
+
+## 5. Kiến Trúc Mạng & Hạ Tầng Production
 
 Hệ thống được thiết kế theo mô hình phân tách tầng bảo vệ nhiều lớp (Multi-layer Defense in Depth), kết hợp giữa CDN/Edge, NGINX Reverse Proxy, Node.js Cluster, và Cơ sở dữ liệu Cloud:
 
@@ -55,7 +265,7 @@ Hệ thống được thiết kế theo mô hình phân tách tầng bảo vệ 
                                                        ┌────────────────────────┐
                                                        │ NEON SERVERLESS PG     │
                                                        │ AWS Singapore (Cloud)  │
-                                                       │ 11 Relational Tables   │
+                                                       │ 12 Relational Tables   │
                                                        └────────────────────────┘
 ```
 
@@ -67,9 +277,9 @@ Hệ thống được thiết kế theo mô hình phân tách tầng bảo vệ 
 
 ---
 
-## 2. Yêu Cầu Cấu Hình Máy Chủ (Server Specifications)
+## 6. Yêu Cầu Cấu Hình Máy Chủ (Server Specifications)
 
-### 2.1. Cấu hình phần cứng máy chủ (VPS / Cloud Server):
+### 6.1. Cấu hình phần cứng máy chủ (VPS / Cloud Server):
 | Thông Số | Cấu Hình Tối Thiểu (Minimum) | Cấu Hình Khuyến Nghị (Production) |
 | :--- | :--- | :--- |
 | **CPU** | 2 vCPU Core | 4 vCPU Core (AMD EPYC hoặc Intel Xeon) |
@@ -78,18 +288,18 @@ Hệ thống được thiết kế theo mô hình phân tách tầng bảo vệ 
 | **Hệ Điều Hành** | Ubuntu 22.04 LTS / 24.04 LTS | Ubuntu 24.04 LTS Server |
 | **Băng Thông** | 1 Gbps Shared Port | 1 Gbps Dedicated Port |
 
-### 2.2. Phần mềm & Runtime bắt buộc:
+### 6.2. Phần mềm & Runtime bắt buộc:
 - **Node.js**: Phiên bản LTS `v22.x` hoặc `v24.x`.
 - **NPM**: Đi kèm Node.js.
 - **PM2**: Bộ quản lý tiến trình ứng dụng Node.js (`npm install -g pm2`).
-- **NGINX**: Phiên bản ổn định mới nhất (`nginx -v` $\ge$ 1.18).
+- **NGINX**: Phiên bản ổn định mới nhất (`nginx -v` >= 1.18).
 - **Certbot**: Tự động gia hạn chứng chỉ Let's Encrypt SSL.
 
 ---
 
-## 3. Đặc Tả Biến Môi Trường (Environment Variables)
+## 7. Đặc Tả Biến Môi Trường (Environment Variables)
 
-### 3.1. Cấu hình Backend (`api/.env` trên Server)
+### 7.1. Cấu hình Backend (`api/.env` trên Server)
 Tệp này chứa thông tin kết nối cơ sở dữ liệu và **tuyệt đối không commit lên Git** (đã được cấu hình trong `.gitignore`):
 
 ```env
@@ -102,15 +312,15 @@ HOST=127.0.0.1
 JWT_SECRET=<production-random-secret>
 JWT_TTL_SECONDS=3600
 
+# URL công khai phục vụ tạo Sitemap, Robots.txt và liên kết khôi phục mật khẩu Admin
+PUBLIC_SITE_URL=https://ltvietnam.com.vn
+ADMIN_PUBLIC_URL=https://admin.ltvietnam.com.vn
+
 # Chuỗi kết nối PostgreSQL (Bắt buộc dùng sslmode=require & connection pooler)
 DATABASE_URL=<production-postgresql-url>
 
 # Cấu hình CORS whitelisting an toàn
 CORS_ALLOWED_ORIGINS=https://ltvietnam.com.vn,https://www.ltvietnam.com.vn,https://admin.ltvietnam.com.vn
-
-# Cấu hình bộ nhớ đệm và timeout
-DB_POOL_MAX=20
-DB_TIMEOUT_MS=10000
 
 # ==============================================================================
 # BẢO MẬT PHÂN TÁN & CHỐNG BOT (PR-04B)
@@ -135,18 +345,28 @@ RATE_LIMIT_CONTACT_WINDOW_SECONDS=600
 TURNSTILE_ENABLED=true
 TURNSTILE_SECRET_KEY=<production-turnstile-secret-key>
 TURNSTILE_ALLOWED_HOSTNAMES=ltvietnam.com.vn,admin.ltvietnam.com.vn
+
+# ==============================================================================
+# CẤU HÌNH EMAIL SMTP & MÃ HÓA SECRET (PR-09B / PR-09C)
+# ==============================================================================
+SETTINGS_ENCRYPTION_KEY=<production-64-hex-chars-aes-256-key>
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USERNAME=<smtp-username>
+SMTP_PASSWORD=<smtp-password>
+SMTP_FROM=no-reply@ltvietnam.com.vn
+CONTACT_NOTIFICATION_TO=contact@ltvietnam.com.vn
 ```
 
 > **Lưu ý triển khai Production**:
 > - Các hệ thống upstream như NGINX hay Cloudflare WAF có thể bổ sung các tầng lọc DDoS và WAF ở mức mạng/gateway. Tuy nhiên, tầng Distributed Rate Limiting (PostgreSQL-backed) và xác thực Server-side Turnstile CAPTCHA được triển khai ở backend là tầng kiểm soát nghiệp vụ có thẩm quyền (authoritative) độc lập của ứng dụng.
 > - Mặc định backend dùng `TRUST_PROXY=false`: kết nối trực tiếp lấy IP của socket và bỏ qua `X-Forwarded-For`. Cấu hình phát hành trong `ecosystem.config.cjs` chỉ dành cho NGINX cùng máy: `HOST=127.0.0.1`, `TRUST_PROXY=loopback`; NGINX phải bổ sung hoặc ghi đè `X-Forwarded-For` theo cấu hình đã kiểm tra.
-> - Nếu client truy cập NestJS trực tiếp, dùng `TRUST_PROXY=false` và kiểm soát cổng ở tầng mạng. Với CDN → NGINX → NestJS hoặc NGINX ở mạng container, xác minh chuỗi proxy rồi cấu hình IP/CIDR proxy tin cậy cụ thể; không dùng `true` hay số hop khi chưa kiểm chứng topology. Các topology này chưa được xác minh trong bản vá local.
-> - JWT cũ thiếu `tokenVersion` bị từ chối sau migration `0008`. Đổi hoặc reset mật khẩu tăng `users.token_version`, khiến JWT cấp trước đó hết hiệu lực trên server. Logout thông thường chỉ xóa token ở client; JWT bị sao chép vẫn có thể dùng đến khi hết hạn (`JWT_TTL_SECONDS`, mặc định 3600 giây) nếu không đổi/reset mật khẩu.
-
+> - JWT cũ thiếu `tokenVersion` bị từ chối sau migration `0008`. Đổi hoặc reset mật khẩu tăng `users.token_version`, khiến JWT cấp trước đó hết hiệu lực trên server.
 
 ---
 
-## 4. Quy Trình Triển Khai Production Từng Bước (Step-by-Step Deployment)
+## 8. Quy Trình Triển Khai Production Từng Bước
 
 ### Bước 1: Chuẩn bị máy chủ Ubuntu mới
 Đăng nhập SSH vào VPS với quyền `sudo`:
@@ -181,7 +401,7 @@ cd /var/www/ltvn
 ```bash
 cd /var/www/ltvn
 
-# Cài đặt root dependencies (Website Chính & Test Scripts)
+# Cài đặt root dependencies (Website Chính & Scripts)
 npm ci
 
 # Cài đặt dependencies cho Admin Portal
@@ -195,7 +415,7 @@ npm --prefix api ci
 ```bash
 # Tạo tệp .env cho Backend
 nano /var/www/ltvn/api/.env
-# Cấu hình DATABASE_URL=<production-postgresql-url> và các biến bắt buộc (Ctrl+O, Enter, Ctrl+X)
+# Cấu hình DATABASE_URL=<production-postgresql-url> và các biến bắt buộc
 ```
 
 ### Bước 5: Biên dịch toàn bộ các phân hệ (Production Build)
@@ -218,33 +438,27 @@ npm run build:api
 ### Bước 6: Áp dụng Migration Cơ Sở Dữ Liệu Production
 Trước khi khởi động ứng dụng lần đầu hoặc khi có bản cập nhật schema, chạy migration có kiểm soát:
 ```bash
-cd <application-release-directory>
+cd /var/www/ltvn
 
 # YÊU CẦU BẮT BUỘC: Đã tạo backup/snapshot database trước khi migrate
-# Áp dụng toàn bộ versioned migrations đã review và commit (0000, 0001, 0002, 0003, ...)
+# Áp dụng toàn bộ versioned migrations đã review và commit
 npm run db:migrate
 ```
-*Quy chuẩn an toàn: TUYỆT ĐỐI KHÔNG sử dụng `npm run db:push` trên Production (xem chi tiết tại Mục 7).*
+*Quy chuẩn an toàn: TUYỆT ĐỐI KHÔNG sử dụng `npm run db:push` trên Production (xem chi tiết tại [Mục 11](#11-vận-hành-cơ-sở-dữ-liệu--migrations-với-drizzle-orm)).*
 
-### Bước 7: Khởi tạo tài khoản Quản trị viên đầu tiên (Initial Admin Bootstrap - PR-05)
+### Bước 7: Khởi tạo tài khoản Quản trị viên đầu tiên (Initial Admin Bootstrap)
 Trường hợp cơ sở dữ liệu mới khởi tạo chưa có tài khoản Quản trị viên, thực thi lệnh khởi tạo bảo mật một lần:
 ```bash
 npm run bootstrap:admin -- --dry-run   # Kiểm tra điều kiện tiên quyết (0 database writes)
 npm run bootstrap:admin                # Chạy khởi tạo tương tác an toàn (hidden password input)
 ```
-*Chi tiết các bước thực hiện và quy tắc an toàn xem tại [Mục 7.8](#78-hướng-dẫn-vận-hành-khởi-tạo-admin-ban-đầu-safe-initial-admin-bootstrap-runbook---pr-05).*
+*Chi tiết các bước thực hiện và quy tắc an toàn xem tại [Mục 11.8](#118-hướng-dẫn-vận-hành-khởi-tạo-admin-ban-đầu-safe-initial-admin-bootstrap-runbook).*
 
-### Bước 8: Kiểm tra tính toàn vẹn cơ sở dữ liệu trước khi Go-Live
-Chạy kịch bản tự động xác thực Drizzle ORM kết nối với PostgreSQL DB:
-```bash
-npm run test:admin-drizzle
-```
-*Kết quả phải đạt `Exit Code 0` xác nhận ghi/đọc/xóa cascade 100% thành công.*
 ---
 
-## 5. Cấu Hình Reverse Proxy NGINX & Chứng Chỉ SSL
+## 9. Cấu Hình Reverse Proxy NGINX & Chứng Chỉ SSL
 
-### 5.1. Tạo cấu hình Virtual Host NGINX
+### 9.1. Tạo cấu hình Virtual Host NGINX
 Tạo tệp cấu hình mới:
 ```bash
 sudo nano /etc/nginx/sites-available/ltvietnam.conf
@@ -407,7 +621,7 @@ server {
 }
 ```
 
-### 5.2. Kích hoạt Virtual Host & Thiết lập Chứng Chỉ SSL Let's Encrypt
+### 9.2. Kích hoạt Virtual Host & Thiết lập Chứng Chỉ SSL Let's Encrypt
 ```bash
 # Kích hoạt site trong NGINX
 sudo ln -s /etc/nginx/sites-available/ltvietnam.conf /etc/nginx/sites-enabled/
@@ -424,12 +638,12 @@ sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d ltvietnam.com.vn -d www.ltvietnam.com.vn -d admin.ltvietnam.com.vn
 ```
 
-### 5.3. Luồng Định Tuyến NGINX & Điều Hướng 301 Thống Nhất (Unified 301 Redirect Flow - PR-12A/B)
+### 9.3. Luồng Định Tuyến NGINX & Điều Hướng 301 Thống Nhất (Unified 301 Redirect Flow)
 
-Hệ thống định tuyến tại tầng NGINX và Backend NestJS tuân thủ nguyên tắc **Nguồn Chân Lý Duy Nhất (Single Source of Truth - PostgreSQL `redirects` table)**:
+Hệ thống định tuyến tại tầng NGINX và Backend NestJS tuân thủ nguyên tắc **Nguồn Chân Lý Duy Nhất (Single Source of Truth — bảng `redirects` trong PostgreSQL)**:
 1. **Không sử dụng static map trong NGINX**: Tránh tình trạng Admin cập nhật cơ sở dữ liệu nhưng NGINX vẫn giữ bản ánh xạ cũ gây lệch pha dữ liệu giữa các tầng.
 2. **Nhất quán giữa các tiến trình PM2 (Multi-instance Consistency)**: Khi Admin thêm/sửa/tắt/xóa redirect qua Admin Portal (`/api/redirects`), toàn bộ các worker PM2 đọc trực tiếp bản ghi từ PostgreSQL và phản hồi `HTTP 301` tức thì mà không cần reload NGINX hay restart PM2.
-3. **Bảo tồn toàn vẹn SEO Routing (PR-08A/B)**:
+3. **Bảo tồn toàn vẹn SEO Routing**:
 
 ```text
 HTTP Request tới ltvietnam.com.vn
@@ -438,11 +652,11 @@ HTTP Request tới ltvietnam.com.vn
 [NGINX Reverse Proxy]
        ├─► /assets/*, /images/* ───────► Phục vụ trực tiếp file tĩnh (Cache 1y / 30d)
        ├─► /api/* ─────────────────────► Proxy tới NestJS API (/api/...)
-       ├─► /robots.txt, /sitemap.xml ──► Proxy tới NestJS SEO Controller (PR-08A)
+       ├─► /robots.txt, /sitemap.xml ──► Proxy tới NestJS SEO Controller
        └─► try_files $uri @backend_html
                    │
                    ▼
-       [NestJS Redirect Middleware (PR-12A)]
+       [NestJS Redirect Middleware]
                    │
                    ├─► Tìm thấy `source_path` đang hoạt động (isActive = true) trong PostgreSQL?
                    │        │
@@ -452,27 +666,20 @@ HTTP Request tới ltvietnam.com.vn
                    │        └─► KHÔNG: Tiếp tục next()
                    │
                    ▼
-       [NestJS SEO HTML Shell Service (PR-08B)]
+       [NestJS SEO HTML Shell Service]
                    │
                    ├─► Route Sản Phẩm (/san-pham/:slug) ──► Dynamic SSR Metadata + Client Bundle
                    ├─► Route Tin Tức (/tin-tuc/:slug) ─────► Dynamic SSR Metadata + Client Bundle
                    └─► Route Khác / Fallback ──────────────► React SPA HTML Shell (index.html)
 ```
 
-**Chính sách chuẩn hóa đường dẫn (Normalization & Security):**
-- **Chuẩn hóa tự động**: Khoảng trắng được loại bỏ, dấu gạch chéo kép (`//`) được thu gọn thành `/`, chữ hoa được đưa về chữ thường (`lowercase`), dấu gạch chéo cuối (`trailing slash`) được loại bỏ trước khi so khớp (ví dụ: `/Old-Path/` so khớp với `/old-path`).
-- **Bảo lưu Query String**: Mọi tham số truy vấn hợp lệ từ request cũ (ví dụ: `?ref=google&campaign=summer`) được bảo lưu và gắn kèm vào URL mới tại header `Location`.
-- **Ngăn chặn Open Redirect**: Nghiêm cấm các URL đích có tiền tố giao thức bên ngoài (`http:`, `https:`), protocol-relative (`//evil.com`), mã hóa URL độc hại hoặc URI scheme nguy hiểm (`javascript:`, `data:`).
-- **Ngăn chặn Vòng lặp & Chuỗi (Loop & Chain Prevention)**: Hệ thống từ chối tự chuyển hướng (Self-redirect `A -> A`), vòng lặp đa điểm (`A -> B -> A`, `A -> B -> C -> A`), và chuỗi chuyển hướng (`A -> B` khi đã có `B -> C`).
-- **Bảo vệ Reserved Routes**: Không cho phép tạo redirect chiếm các route hệ thống: `/`, `/api`, `/api/*`, `/admin`, `/admin/*`, `/robots.txt`, `/sitemap.xml`, `/assets/*`, `/index.html`, `/favicon.ico`.
-
 ---
 
-## 6. Quản Lý Tiến Trình Ứng Dụng Với PM2 Cluster
+## 10. Quản Lý Tiến Trình Ứng Dụng Với PM2 Cluster
 
 Hệ thống đã chuẩn bị sẵn tệp [`ecosystem.config.cjs`](ecosystem.config.cjs) hỗ trợ chế độ Cluster Mode, tự động tận dụng tối đa số nhân CPU và tự khởi động lại khi có sự cố.
 
-### 6.1. Khởi chạy Backend với PM2
+### 10.1. Khởi chạy Backend với PM2
 ```bash
 cd /var/www/ltvn
 
@@ -484,10 +691,9 @@ pm2 save
 
 # Cấu hình tự khởi động cùng hệ điều hành khi máy chủ reboot
 pm2 startup systemd
-# Chạy lệnh sudo env PATH... được sinh ra bởi PM2
 ```
 
-### 6.2. Các lệnh quản lý PM2 thường dùng:
+### 10.2. Các lệnh quản lý PM2 thường dùng:
 ```bash
 pm2 status                  # Xem trạng thái CPU / RAM của các tiến trình
 pm2 logs ltvn-api           # Xem nhật ký thực thi thời gian thực
@@ -497,23 +703,22 @@ pm2 restart ltvn-api        # Khởi động lại cưỡng bức
 
 ---
 
-## 7. Vận Hành Cơ Sở Dữ Liệu & Migrations Với Drizzle ORM
+## 11. Vận Hành Cơ Sở Dữ Liệu & Migrations Với Drizzle ORM
 
-Dự án sử dụng kiến trúc Type-safe ORM của [Drizzle ORM](https://orm.drizzle.team/). Toàn bộ schema cơ sở dữ liệu được định nghĩa và quản trị tập trung tại `api/src/database/schema.ts`. Mọi thay đổi cấu trúc bảng trên môi trường production bắt buộc phải thông qua lịch sử migration chính thức và quy trình kiểm soát chặt chẽ.
+Dự án sử dụng kiến trúc Type-safe ORM của [Drizzle ORM](https://orm.drizzle.team/). Toàn bộ schema cơ sở dữ liệu được định nghĩa và quản trị tập trung tại [`api/src/database/schema.ts`](api/src/database/schema.ts).
 
-### 7.1. Lịch Sử Migration Chính Thức (Official Migration History)
+### 11.1. Lịch Sử Migration Chính Thức (Official Migration History)
 Lịch sử migration của hệ thống được theo dõi và quản lý phiên bản trong Git tại:
-- `api/drizzle/*.sql`: Các tệp SQL định nghĩa thay đổi schema theo chuỗi số thứ tự tăng dần (ví dụ: `0000_known_stryfe.sql`, `0001_add_news_event_translations.sql`, `0002_ancient_vapor.sql`, `0003_red_hellfire_club.sql`, ...).
+- `api/drizzle/*.sql`: Các tệp SQL định nghĩa thay đổi schema theo chuỗi số thứ tự tăng dần (`0000` → `0009`).
 - `api/drizzle/meta/_journal.json`: Nhật ký metadata ghi nhận danh mục, phiên bản và thứ tự thực thi chính thức của các tệp migration.
 
 **Quy tắc bảo toàn lịch sử migration (Immutability Rules):**
 1. `api/drizzle/*.sql` và `api/drizzle/meta/_journal.json` là nguồn chân lý duy nhất (single source of truth) cho cấu trúc cơ sở dữ liệu.
 2. **KHÔNG** chỉnh sửa nội dung các tệp migration cũ đã được apply vào database production hoặc staging.
-3. **KHÔNG** đổi tên các tệp migration đã phát hành (ví dụ: `0000`, `0001`, `0002`, `0003`).
-4. **KHÔNG** xóa hoặc regenerate lại lịch sử migration chỉ để làm đẹp mã nguồn. Khi cần thay đổi schema, lập trình viên bắt buộc phải tạo migration mới kế tiếp (`0004`, `0005`, ...) qua quy trình phát triển.
+3. **KHÔNG** đổi tên hoặc xóa các tệp migration đã phát hành. Khi cần thay đổi schema, lập trình viên bắt buộc phải tạo migration mới kế tiếp qua quy trình phát triển.
 
-### 7.2. Hợp Đồng Vòng Đời Migration (Migration Lifecycle Contract)
-Mọi thay đổi cấu trúc dữ liệu từ phát triển đến vận hành production phải tuân thủ nghiêm ngặt quy trình 7 bước sau:
+### 11.2. Hợp Đồng Vòng Đời Migration (Migration Lifecycle Contract)
+Mọi thay đổi cấu trúc dữ liệu từ phát triển đến vận hành production phải tuân thủ nghiêm ngặt quy trình 7 bước:
 ```text
 1. Generate migration during development (chạy npm run db:generate trên local)
 → 2. Review SQL (kỹ sư rà soát kỹ file SQL và tác động dữ liệu)
@@ -524,7 +729,7 @@ Mọi thay đổi cấu trúc dữ liệu từ phát triển đến vận hành 
 → 7. Start/deploy application (khởi động hoặc reload tiến trình NestJS API)
 ```
 
-### 7.3. CẢNH BÁO QUAN TRỌNG: TUYỆT ĐỐI KHÔNG DÙNG `db:push` TRÊN PRODUCTION
+### 11.3. CẢNH BÁO QUAN TRỌNG: TUYỆT ĐỐI KHÔNG DÙNG `db:push` TRÊN PRODUCTION
 ```text
 ====================================================================
 [CẢNH BÁO AN TOÀN VẬN HÀNH DATABASE]
@@ -532,86 +737,43 @@ DO NOT use db:push against production/shared databases.
 TUYỆT ĐỐI KHÔNG sử dụng "db:push" đối với cơ sở dữ liệu Production hoặc Staging/Shared.
 ====================================================================
 ```
-**Lý do nghiêm cấm:**
 - **Bypass Migration History**: Lệnh `db:push` đồng bộ trực tiếp schema TypeScript vào DB mà **không** ghi nhận vào bảng quản lý `__drizzle_migrations` và tệp nhật ký `_journal.json`.
-- **Tạo Schema Drift**: Phá vỡ tính đồng nhất giữa mã nguồn Git và trạng thái thực tế của DB, khiến các lần chạy `db:migrate` sau này bị lỗi xung đột hoặc thất bại hoàn toàn.
-- **Không Thể Audit và Rollback An Toàn**: Không có dấu vết lịch sử phiên bản để đối soát (audit trail), gây bất khả thi cho việc hoàn nguyên hoặc ứng cứu sự cố.
-- **Nguy Cơ Mất Dữ Liệu Hoặc Đột Biến Không Kiểm Soát**: `db:push` có thể tự ý áp dụng các thao tác phá hủy (như DROP column, thay đổi kiểu dữ liệu) mà không có sự kiểm duyệt trước của kỹ sư.
+- **Tạo Schema Drift & Nguy Cơ Mất Dữ Liệu**: Phá vỡ tính đồng nhất giữa mã nguồn Git và trạng thái thực tế của DB, có thể tự ý áp dụng các thao tác phá hủy (`DROP COLUMN`, đổi kiểu dữ liệu).
+- *Phạm vi cho phép:* Lệnh `npm run db:push` **CHỈ** được sử dụng trong môi trường phát triển cá nhân (local development prototyping).
 
-*Phạm vi cho phép:* Lệnh `npm run db:push` **CHỈ** được sử dụng trong môi trường phát triển cá nhân (local development prototyping) trên database tạm thời của lập trình viên.
-
-### 7.4. Quy Trình Chạy Migration Trên Production (Production Migration Runbook)
-
-Trước khi khởi động hoặc reload ứng dụng trên Production, kỹ sư DevOps/vận hành phải thực thi quy trình migration có kiểm soát theo 3 giai đoạn:
+### 11.4. Quy Trình Chạy Migration Trên Production (Production Migration Runbook)
 
 #### Giai đoạn 1: Tiền kiểm tra (Preflight Checklist)
-1. **Xác nhận môi trường**: Đảm bảo đang đứng đúng máy chủ và biến môi trường `NODE_ENV=production`.
-2. **Xác nhận biến kết nối**: Biến `DATABASE_URL` đã được cấu hình trong `api/.env` (được bảo mật, không log hoặc in giá trị ra console):
-   ```text
-   DATABASE_URL=<production-postgresql-url>
-   ```
-3. **Yêu cầu bắt buộc sao lưu (BACKUP / SNAPSHOT REQUIRED)**:
-   - **Ưu tiên 1 (Khuyến nghị hàng đầu):** Managed Provider Snapshot / Point-in-time Restore (PITR) trực tiếp từ bảng điều khiển của dịch vụ Cloud Database (ví dụ: Neon Cloud Console, AWS RDS snapshot).
-   - **Ưu tiên 2 (Sao lưu logic an toàn với `pg_dump`):**
-     Tuyệt đối **không** dán chuỗi kết nối chứa mật khẩu trực tiếp vào câu lệnh CLI (tránh lưu vết mật khẩu trong shell history hoặc danh sách tiến trình `ps`).
-     Sử dụng cơ chế xác thực an toàn của PostgreSQL (`~/.pgpass`, biến môi trường phiên làm việc bảo mật `PGPASSWORD`, hoặc để tiện ích tự nhắc nhập mật khẩu):
+1. **Xác nhận môi trường**: Đảm bảo `NODE_ENV=production` và `DATABASE_URL` đã được cấu hình trong `api/.env`.
+2. **Yêu cầu bắt buộc sao lưu (BACKUP / SNAPSHOT REQUIRED)**:
+   - **Ưu tiên 1:** Managed Provider Snapshot / Point-in-time Restore (PITR) trực tiếp từ Cloud Database Console (ví dụ: Neon Cloud, AWS RDS).
+   - **Ưu tiên 2:** Sao lưu logic bằng `pg_dump` hoặc công cụ `npm run db:backup` (xem chi tiết tại [`scripts/BACKUP-RUNBOOK.md`](scripts/BACKUP-RUNBOOK.md)):
      ```bash
-     # Sao lưu logic an toàn (prompt nhập mật khẩu bảo mật hoặc đọc từ ~/.pgpass)
      pg_dump -h <db-host> -p <db-port> -U <db-user> -d <db-name> \
        --format=custom \
        --file=/var/backups/ltvn_db_pre_migration_$(date +%Y%m%d_%H%M%S).dump
-
-     # Hoặc nếu sử dụng biến môi trường DATABASE_URL đã nạp sẵn trong phiên làm việc bảo mật:
-     # pg_dump "$DATABASE_URL" --format=custom --file=/var/backups/ltvn_db_pre_migration_$(date +%Y%m%d_%H%M%S).dump
      ```
-4. **Rà soát pending SQL**: Đọc trước nội dung các file SQL mới chưa được áp dụng trong `api/drizzle/` để nắm rõ các lệnh DDL (ALTER TABLE, CREATE TABLE, ADD COLUMN,...).
-5. **Xác nhận trạng thái migration hiện tại**: Kiểm tra phiên bản migration gần nhất đã apply để đảm bảo chuỗi tuần tự không bị ngắt quãng.
+3. **Rà soát pending SQL**: Đọc trước nội dung các file SQL mới trong `api/drizzle/`.
 
 #### Giai đoạn 2: Áp dụng Migration (Apply Migration)
-Thực thi lệnh migration chính thức của dự án từ thư mục gốc dự án (hoặc từ thư mục `api/`):
 ```bash
-cd <application-release-directory>
-
-# Áp dụng toàn bộ versioned migrations đã review vào Production DB
+cd /var/www/ltvn
 npm run db:migrate
-# (Lệnh tương đương nếu đứng trong api: npm --prefix api run db:migrate)
 ```
 
 #### Giai đoạn 3: Xác thực sau Migration (Verify Migration)
-1. **Kiểm tra mã thoát (Exit Code)**: Lệnh `npm run db:migrate` phải hoàn tất với exit code `0`, không có exception hay thông báo lỗi SQL.
-2. **Xác nhận schema**: Các bảng, cột hoặc ràng buộc mới mong đợi đã hiện diện trên database (bảng `__drizzle_migrations` ghi nhận bản ghi tương ứng).
-3. **Khởi động / Reload ứng dụng**: Tiến hành khởi động hoặc reload tiến trình Backend NestJS bằng bộ quản lý tiến trình của hạ tầng triển khai (ví dụ: `pm2 reload ltvn-api` nếu sử dụng PM2 cluster theo file cấu hình mẫu `ecosystem.config.cjs`, hoặc lệnh tương đương của container/systemd).
-4. **Kiểm tra Health Check Endpoint**:
-   Đường dẫn kiểm tra sức khỏe chính thức đã được xác thực trong mã nguồn (`AppController`, `@Public()`, global prefix `api`) là route: `GET /api` (trả về HTTP `200 OK` cùng chuỗi greeting).
-   ```bash
-   # Kiểm tra trên máy chủ cục bộ (loopback):
-   curl -I http://localhost:3000/api
+1. Lệnh `npm run db:migrate` hoàn tất với exit code `0`.
+2. Khởi động hoặc reload tiến trình Backend NestJS (`pm2 reload ltvn-api`).
+3. Kiểm tra Health Check Endpoint (`GET /api` trả về `HTTP 200 OK`).
 
-   # Kiểm tra qua origin API production thực tế:
-   curl -I https://<production-api-origin>/api
-   ```
-   *Kết quả mong đợi: `HTTP/1.1 200 OK`.*
-5. **Kiểm tra Smoke Test nghiệp vụ trọng yếu**: Xác nhận trang quản trị và website tải dữ liệu bình thường, không gặp lỗi 500 phát sinh do sai lệch cấu trúc dữ liệu.
+### 11.5. Nguyên Tắc An Toàn Dữ Liệu Mẫu (Seed Safety)
+- Lệnh `npm run db:seed` **CHỈ DÙNG CHO MÔI TRƯỜNG DEVELOPMENT / TEST**.
+- Script [`api/src/database/seed.ts`](api/src/database/seed.ts) đã tích hợp cơ chế khóa an toàn: khi phát hiện `NODE_ENV === 'production'`, script lập tức từ chối kết nối và hủy tiến trình.
 
-### 7.5. Nguyên Tắc An Toàn Dữ Liệu Mẫu (Seed Safety)
-- Lệnh nạp dữ liệu mẫu của dự án:
-  ```bash
-  npm run db:seed
-  ```
-  **CHỈ DÙNG CHO MÔI TRƯỜNG DEVELOPMENT / TEST.**
-- **CẢNH BÁO BẮT BUỘC:**
-  ```text
-  Never seed production.
-  TUYỆT ĐỐI KHÔNG CHẠY LỆNH SEED TRÊN PRODUCTION.
-  ```
-- **Cơ chế bảo vệ (Production Guard):** Script `api/src/database/seed.ts` đã được tích hợp cơ chế bảo vệ (PR-06). Khi phát hiện `NODE_ENV === 'production'`, script sẽ lập tức từ chối kết nối và hủy tiến trình với mã lỗi `1`. Dù có cơ chế bảo vệ này, tài liệu vận hành và script triển khai production **tuyệt đối không** được phép triệu gọi lệnh seed.
-
-### 7.6. Hướng Dẫn Dành Cho Developer: Tạo Migration Mới (Local Development)
-Khi lập trình viên thực hiện thay đổi mô hình dữ liệu trong `api/src/database/schema.ts`, quy trình sinh file migration diễn ra cục bộ:
+### 11.6. Hướng Dẫn Tạo Migration Mới (Local Development)
 ```bash
 # 1. Sinh file SQL migration mới dựa trên diff giữa schema.ts và api/drizzle/
 npm run db:generate
-# (Hoặc trong thư mục api: npm --prefix api run db:generate)
 
 # 2. Rà soát cẩn thận file SQL vừa được sinh ra trong api/drizzle/
 # 3. Chạy thử nghiệm migration trên DB local:
@@ -619,77 +781,26 @@ npm run db:migrate
 
 # 4. Commit schema.ts cùng toàn bộ api/drizzle/*.sql và api/drizzle/meta/_journal.json lên Git
 ```
-*Ghi chú quan trọng:* `npm run db:generate` là bước **của lập trình viên trong giai đoạn phát triển**, hoàn toàn **không** chạy lệnh này trên server production trong quy trình deployment.
 
-### 7.7. Cơ Chế Hoàn Nguyên & Xử Lý Sự Cố (Rollback & Recovery Policy)
-Drizzle Kit thực thi migration theo mô hình forward-only và **không** tự động sinh mã down-migration:
-1. **Phân biệt Rollback giao dịch và Rollback Schema:**
-   - **Transaction rollback during failed migration:** Khi một file migration đang chạy gặp lỗi cú pháp hoặc vi phạm ràng buộc dữ liệu, Drizzle Kit sẽ tự động abort transaction của file đó. Trạng thái cơ sở dữ liệu sẽ được rollback về thời điểm ngay trước khi thực thi file migration bị lỗi.
-   - **Schema rollback to previous release:** Nếu migration đã thực thi thành công (transaction đã commit vào DB), hệ thống **không** hỗ trợ lệnh tự động hoàn nguyên schema (không tồn tại lệnh kiểu `db:rollback`).
-2. **Quy trình xử lý sự cố khi cần hoàn nguyên:**
-   - **Phương án 1 (Khôi phục từ Snapshot/Backup - Snapshot/Backup Restore):** Sử dụng tính năng khôi phục Point-in-time Restore (PITR) / snapshot của nhà cung cấp Cloud Database (Neon) hoặc restore từ file dump logic đã sao lưu trước khi migrate.
-   - **Phương án 2 (Forward-fix Migration):** Tạo một file migration mới (`000X_...sql`) trên môi trường dev để đảo ngược thay đổi (ví dụ DROP cột mới thêm hoặc chỉnh lại cấu trúc), review kỹ lưỡng, commit và thực thi `npm run db:migrate` để đưa schema về trạng thái an toàn.
+### 11.7. Cơ Chế Hoàn Nguyên & Xử Lý Sự Cố (Rollback & Recovery Policy)
+- **Transaction rollback during failed migration:** Khi một file migration đang chạy gặp lỗi, Drizzle Kit tự động abort transaction của file đó.
+- **Schema rollback to previous release:** Nếu migration đã commit, khôi phục từ Snapshot/Backup (`PITR` / `pg_restore`) hoặc tạo một **Forward-fix Migration** mới (`000X_...sql`) để đảo ngược thay đổi một cách có kiểm soát.
 
-### 7.8. Hướng Dẫn Vận Hành Khởi Tạo Admin Ban Đầu (Safe Initial Admin Bootstrap Runbook - PR-05)
+### 11.8. Hướng Dẫn Vận Hành Khởi Tạo Admin Ban Đầu (Safe Initial Admin Bootstrap Runbook)
 
-Sau khi cơ sở dữ liệu production đã hoàn tất áp dụng các migration chính thức (`npm run db:migrate`), người vận hành cần khởi tạo tài khoản Quản Trị Viên (Admin) đầu tiên thông qua công cụ dòng lệnh bảo mật:
+Sau khi cơ sở dữ liệu production đã hoàn tất áp dụng các migration chính thức (`npm run db:migrate`), khởi tạo tài khoản Quản Trị Viên (Admin) đầu tiên qua CLI bảo mật:
+
 ```bash
+# 1. Chạy kiểm tra thử nghiệm (0 database writes)
+npm run bootstrap:admin -- --dry-run
+
+# 2. Chạy khởi tạo tương tác an toàn (nhập mật khẩu ẩn, khóa chống race condition pg_advisory_xact_lock)
 npm run bootstrap:admin
-# hoặc chạy trực tiếp: node scripts/bootstrap-admin.mjs
 ```
 
-#### Quy Trình 9 Bước Chuẩn Hóa:
-1. **Cấu hình môi trường Production (Configure production environment):**
-   - Đảm bảo biến `NODE_ENV=production` và `DATABASE_URL` đã được thiết lập bảo mật trong `api/.env`.
-2. **Xác minh kết nối cơ sở dữ liệu (Verify database connection):**
-   - Xác nhận có thể kết nối tới PostgreSQL mà không gặp lỗi mạng hoặc thông tin xác thực.
-3. **Sao lưu cơ sở dữ liệu phục hồi được (Take verified restorable database backup):**
-   - Tạo bản sao lưu khôi phục đầy đủ (full restorable snapshot / `pg_dump`) trước khi thực hiện thay đổi.
-   - *Lưu ý quan trọng:* Các bản export hoặc sanitized QA snapshot (chứa dữ liệu đã ẩn mật khẩu/hash) không được coi là bản sao lưu khôi phục toàn vẹn (full restorable backup).
-4. **Thực thi Migration chính thức (Run official migrations):**
-   - Chạy `npm run db:migrate` để đảm bảo bảng `users` và các bảng liên quan đã sẵn sàng.
-5. **Chạy kiểm tra thử nghiệm (Run bootstrap dry-run):**
-   - Chạy lệnh kiểm tra tính tương thích và kiểm tra xem database đã có Admin hay chưa mà **hoàn toàn không ghi dữ liệu**:
-     ```bash
-     npm run bootstrap:admin -- --dry-run
-     ```
-   - Kết quả hiển thị:
-     ```text
-     DATABASE CONNECTION:     VERIFIED
-     SCHEMA COMPATIBILITY:    VERIFIED
-     EXISTING ADMIN CHECK:    VERIFIED (0 admins)
-     ELIGIBLE FOR BOOTSTRAP:  YES
-     DATABASE WRITES:         0
-     ```
-6. **Thực thi tạo Admin tương tác an toàn (Run interactive bootstrap):**
-   - Chạy lệnh khởi tạo chính thức:
-     ```bash
-     npm run bootstrap:admin
-     ```
-   - **Nhập dữ liệu bảo mật:**
-     - Nhập Email quản trị viên hợp lệ (ví dụ: `admin@ltvietnam.com.vn`).
-     - Nhập Họ và tên quản trị viên.
-     - Nhập Mật khẩu mới bằng cơ chế ẩn (hidden input, không echo ra màn hình terminal, không lưu shell history).
-     - Xác nhận lại Mật khẩu. Mật khẩu phải tuân thủ nghiêm ngặt chính sách PR-10A (tối thiểu 12 ký tự, chữ hoa, chữ thường, chữ số, ký tự đặc biệt).
-     - Xác nhận tạo tài khoản (`yes`).
-7. **Xác minh đăng nhập Admin (Verify Admin login):**
-   - Đăng nhập vào Cổng Quản Trị (Admin Portal) bằng tài khoản và mật khẩu vừa tạo.
-   - Xác nhận nhận được JWT Bearer token và truy cập thành công Dashboard quản trị.
-8. **Xác nhận từ chối chạy lại lần hai (Confirm second bootstrap attempt is refused):**
-   - Chạy thử lại lệnh `npm run bootstrap:admin`.
-   - Hệ thống lập tức từ chối và thông báo: `DATABASE_ALREADY_HAS_ADMIN: Database already contains 1 active administrator account(s). Bootstrap refused.`
-9. **Khởi động / Tiếp tục vận hành bình thường (Start/continue normal Admin operations):**
-   - Khởi động cụm PM2 (`pm2 start ecosystem.config.cjs --env production`) hoặc reload ứng dụng để phục vụ người dùng.
-
-#### Các Quy Tắc An Ninh Bắt Buộc (Security Guardrails):
-- **Không dùng mật khẩu mặc định:** Nghiêm cấm mọi hình thức hardcode mật khẩu mặc định.
-- **Không truyền mật khẩu qua CLI:** Nghiêm cấm truyền mật khẩu qua tham số dòng lệnh (`--password=...`). Lệnh CLI sẽ lập tức hủy bỏ với exit code `1` nếu phát hiện cờ chứa thông tin mật khẩu.
-- **Không nâng quyền tài khoản hiện có:** Nếu email cung cấp đã thuộc về một tài khoản người dùng khác (ví dụ tài khoản có role `editor`), bootstrap script từ chối thực hiện (`EXISTING_USER_DETECTED`), không tự ý nâng role hay ghi đè mật khẩu.
-- **Chống Race Condition (Atomic Concurrency):** Sử dụng khóa giao dịch `pg_advisory_xact_lock` của PostgreSQL để bảo đảm nếu hai kỹ sư cùng chạy script tại một thời điểm, chỉ đúng một tiến trình được phép tạo tài khoản, tiến trình còn lại bị từ chối an toàn.
-- **Che giấu thông tin kết nối (Masked Display):** Chuỗi kết nối cơ sở dữ liệu luôn được che giấu tài khoản/mật khẩu khi hiển thị trên màn hình (`postgresql://***:***@host/db`).
 ---
 
-## 8. Quy Chuẩn An Ninh & Tăng Cường Bảo Mật (Security Hardening)
+## 12. Quy Chuẩn An Ninh & Tăng Cường Bảo Mật (Security Hardening)
 
 1. **Bật Tường Lửa UFW**:
    ```bash
@@ -702,7 +813,7 @@ npm run bootstrap:admin
    ```
 2. **Loại Trừ Secrets Tuyệt Đối**:
    - Tệp `api/.env` nằm trong danh mục `.gitignore`.
-   - Không lưu trữ mật mã tĩnh trong client-side bundles.
+   - Mật khẩu SMTP lưu trong bảng `system_settings` được mã hóa bằng thuật toán `AES-256-GCM` với khóa `SETTINGS_ENCRYPTION_KEY`.
 3. **Chuẩn Hóa Dữ Liệu Đầu Vào (UUID Sanitization)**:
    - Toàn bộ tham số khóa chính và khóa ngoại đi qua bộ lọc [`api/src/common/uuid.util.ts`](api/src/common/uuid.util.ts), ngăn chặn lỗi injection hoặc lỗi cú pháp PostgreSQL UUID.
 4. **Cài Đặt Tự Động Xoay Vòng Nhật Ký (Logrotate)**:
@@ -714,85 +825,57 @@ npm run bootstrap:admin
 
 ---
 
-## 9. Giám Sát, Nhật Ký (Logging) & Kiểm Tra Sức Khỏe (Health Check)
+## 13. Giám Sát, Nhật Ký (Logging) & Kiểm Tra Sức Khỏe (Health Check)
 
-### 9.1. Health Check Endpoint
-Hệ thống cung cấp endpoint kiểm tra trạng thái hoạt động đã xác thực trong mã nguồn (`GET /api`):
+### 13.1. Health Check Endpoint
 ```bash
 # Kiểm tra nội bộ (loopback):
 curl -I http://localhost:3000/api
 
 # Hoặc qua origin API production thực tế:
-curl -I https://<production-api-origin>/api
+curl -I https://ltvietnam.com.vn/api
 ```
 - Phản hồi mong đợi: `HTTP/1.1 200 OK`
 
-### 9.2. Kiểm tra Logs
+### 13.2. Kiểm tra Logs
 ```bash
-# Xem log NGINX lỗi
-sudo tail -f /var/log/nginx/error.log
-
-# Xem log truy cập Website
-sudo tail -f /var/log/nginx/access.log
-
-# Xem log Backend API
-pm2 logs ltvn-api --lines 100
+sudo tail -f /var/log/nginx/error.log     # Xem log NGINX lỗi
+sudo tail -f /var/log/nginx/access.log    # Xem log truy cập Website
+pm2 logs ltvn-api --lines 100             # Xem log Backend API
 ```
 
 ---
 
-## 10. Kế Hoạch Ứng Phó Sự Cố & Hoàn Nguyên (Rollback Runbook)
+## 14. Kế Hoạch Ứng Phó Sự Cố & Hoàn Nguyên (Rollback Runbook)
 
-Khi phát hiện bản cập nhật mới có lỗi phát sinh trên Production, đội ngũ kỹ thuật thực hiện hoàn nguyên theo phân loại sự cố:
-
-### 10.1. Hoàn nguyên ứng dụng thuần túy (Không có thay đổi Schema Database)
-Nếu lỗi chỉ nằm ở mã nguồn logic frontend hoặc backend (schema DB không thay đổi hoặc thay đổi tương thích ngược hoàn toàn):
-
-#### Bước 1: Hoàn nguyên mã nguồn Git về Commit ổn định trước đó
+### 14.1. Hoàn nguyên ứng dụng thuần túy (Không có thay đổi Schema Database)
 ```bash
 cd /var/www/ltvn
 
-# Kiểm tra lịch sử commit
+# Kiểm tra lịch sử commit và lùi về commit ổn định gần nhất
 git log --oneline -n 5
+git checkout <stable-commit-hash>
 
-# Trả về commit ổn định gần nhất (ví dụ: ffe47f9)
-git checkout ffe47f9
-```
-
-#### Bước 2: Re-build và Reload dịch vụ với Zero-Downtime
-```bash
-# Rebuild các phân hệ
+# Rebuild các phân hệ và reload Zero-Downtime
 npm run build
 npm run build:admin
 npm run build:api
-
-# Reload cụm tiến trình Backend
 pm2 reload ltvn-api
-
-# Xóa cache NGINX nếu cần
 sudo systemctl reload nginx
 ```
 
-### 10.2. Hoàn nguyên khi có Migration Cơ Sở Dữ Liệu (Database Schema Rollback)
-**Lưu ý kỹ thuật quan trọng:** Drizzle Kit **không** hỗ trợ lệnh rollback schema tự động (dự án **không có** và **không sử dụng** lệnh giả định kiểu `db:rollback`). Tuyệt đối **không** dùng `db:push` hoặc sửa thủ công file journal để rollback.
-
-Khi bản phát hành có migration gây lỗi, chọn một trong hai phương án phục hồi chuẩn:
-1. **Phương án A: Khôi phục từ Snapshot / Backup trước migration (Khuyến nghị)**:
-   - Khôi phục database về thời điểm ngay trước khi thực thi migration bằng tính năng Point-in-time Restore (PITR) / snapshot của cloud provider (Neon) đã thực hiện ở bước Preflight.
-   - Hoặc restore từ tệp dump logic:
+### 14.2. Hoàn nguyên khi có Migration Cơ Sở Dữ Liệu (Database Schema Rollback)
+1. **Phương án A (Khôi phục từ Snapshot / Backup trước migration — Khuyến nghị)**:
+   - Khôi phục database về thời điểm ngay trước khi thực thi migration bằng Point-in-time Restore (PITR) hoặc `pg_restore`:
      ```bash
-     # Khôi phục an toàn (nhập mật khẩu bảo mật hoặc qua ~/.pgpass, không để lộ secret trên CLI):
      pg_restore --clean --if-exists --no-owner -h <db-host> -p <db-port> -U <db-user> -d <db-name> /var/backups/ltvn_db_pre_migration_<timestamp>.dump
      ```
-   - Hoàn nguyên mã nguồn Git tương ứng và reload ứng dụng.
-2. **Phương án B: Forward-fix Migration (Khắc phục tiến về phía trước)**:
-   - Nếu không thể khôi phục toàn bộ database do đã phát sinh dữ liệu giao dịch mới hợp lệ:
-   - Lập trình viên tạo một tệp migration mới (`npm run db:generate` trên local) để hủy bỏ hoặc sửa chữa cấu trúc gây lỗi (ví dụ xóa cột/bảng mới, khôi phục index cũ).
-   - Rà soát SQL, commit vào Git và chạy `npm run db:migrate` trên Production.
+2. **Phương án B (Forward-fix Migration)**:
+   - Tạo tệp migration mới (`npm run db:generate` trên local) để sửa chữa cấu trúc gây lỗi, rà soát SQL, commit vào Git và chạy `npm run db:migrate` trên Production.
 
 ---
 
-## 11. Bảng Tra Cứu Lệnh Nhanh Cho Kỹ Sư DevOps
+## 15. Bảng Tra Cứu Lệnh Nhanh Cho Kỹ Sư DevOps
 
 ```bash
 # --- QUẢN TRỊ DỊCH VỤ ---
@@ -803,7 +886,7 @@ pm2 reload ltvn-api                 # Reload Backend không gián đoạn
 pm2 logs ltvn-api                   # Xem logs thời gian thực
 
 # --- CẬP NHẬT PHIÊN BẢN MỚI (DEPLOY SCRIPT) ---
-cd <application-release-directory>
+cd /var/www/ltvn
 git pull origin main
 npm ci && npm --prefix admin ci && npm --prefix api ci
 npm run build
@@ -811,17 +894,23 @@ npm run build:admin
 npm run build:api
 # Áp dụng migration đã review vào Production DB (Bắt buộc đã có backup/snapshot)
 npm run db:migrate
-# Tải lại ứng dụng bằng process manager (Ví dụ PM2 nếu sử dụng: pm2 reload ltvn-api)
+# Tải lại ứng dụng bằng PM2 Cluster
 pm2 reload ltvn-api
-npm run test:admin-drizzle
 
-# --- QUẢN LÝ DATABASE ---
+# --- QUẢN LÝ DATABASE & BẢO MẬT ---
 npm run db:migrate                  # Áp dụng versioned migrations lên Production DB
-npm run db:studio                   # Mở giao diện quản trị Drizzle Studio (chỉ localhost/admin)
-# Ghi chú: npm run db:push CHỈ dành cho local dev prototyping; TUYỆT ĐỐI KHÔNG chạy trên Production
+npm run db:backup                   # Chạy kịch bản sao lưu PostgreSQL an toàn
+npm run bootstrap:admin             # Khởi tạo tài khoản Admin đầu tiên (chỉ chạy 1 lần)
+npm run db:studio                   # Mở giao diện Drizzle Studio (chỉ localhost/dev)
 ```
 
 ---
 
-*Tài liệu được xây dựng và chuẩn hóa phục vụ vận hành thực tế tại Công ty TNHH Kỹ Thuật LT Việt Nam.*  
-*Bản quyền © 2026 LT Việt Nam Technology Co., Ltd. Mọi quyền được bảo lưu.*
+<div align="center">
+  <img src="public/images/brand/ltv-logo.png" alt="LT Việt Nam Logo" width="48" />
+  <p>
+    <strong>CÔNG TY TNHH KỸ THUẬT LT VIỆT NAM (LT VIETNAM TECHNOLOGY CO., LTD)</strong><br />
+    <em>Giải pháp Thiết bị Phân tích Dầu khí Phòng thí nghiệm (PAC) & Van Công nghiệp (Baker Hughes)</em><br />
+    Bản quyền © 2026 LT Việt Nam Technology Co., Ltd. Mọi quyền được bảo lưu.
+  </p>
+</div>

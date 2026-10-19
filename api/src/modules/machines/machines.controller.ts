@@ -48,7 +48,7 @@ export class MachinesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a PAC machine (Cascades child tables)' })
-  delete(@Param('id') id: string) {
+  delete(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.machinesService.delete(id);
   }
 }

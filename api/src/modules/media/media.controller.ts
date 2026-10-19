@@ -6,6 +6,7 @@ import {
   Body,
   Param,
   ValidationPipe,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MediaService } from './media.service.js';
@@ -33,7 +34,7 @@ export class MediaController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get media asset by ID' })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.mediaService.findOne(id);
   }
 
@@ -45,7 +46,7 @@ export class MediaController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a media asset' })
-  delete(@Param('id') id: string) {
+  delete(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.mediaService.delete(id);
   }
 }

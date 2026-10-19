@@ -2,6 +2,7 @@ import { Injectable, Inject, NotFoundException, ConflictException } from '@nestj
 import { eq, desc } from 'drizzle-orm';
 import { DRIZZLE, type DrizzleDb } from '../../database/database.module.js';
 import * as schema from '../../database/schema.js';
+import { isValidUuid } from '../../common/uuid.util.js';
 
 import type { CreateUserDto, UpdateUserDto } from './dto/user-mutation.dto.js';
 
@@ -9,6 +10,12 @@ function isUniqueConstraintError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false;
   const candidate = err as { code?: unknown; cause?: { code?: unknown } };
   return candidate.code === '23505' || candidate.cause?.code === '23505';
+}
+
+function isForeignKeyConstraintError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false;
+  const candidate = err as { code?: unknown; cause?: { code?: unknown } };
+  return candidate.code === '23503' || candidate.cause?.code === '23503';
 }
 
 @Injectable()
@@ -32,6 +39,9 @@ export class UsersService {
   }
 
   async findOne(id: string) {
+    if (!isValidUuid(id)) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
     const [user] = await this.db
       .select({
         id: schema.users.id,
@@ -114,11 +124,23 @@ export class UsersService {
   }
 
   async delete(id: string) {
-    const [deleted] = await this.db
-      .delete(schema.users)
-      .where(eq(schema.users.id, id))
-      .returning({ id: schema.users.id, email: schema.users.email });
-    if (!deleted) throw new NotFoundException(`User with id ${id} not found`);
-    return { success: true, deleted };
+    if (!isValidUuid(id)) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    try {
+      const [deleted] = await this.db
+        .delete(schema.users)
+        .where(eq(schema.users.id, id))
+        .returning({ id: schema.users.id, email: schema.users.email });
+      if (!deleted) throw new NotFoundException(`User with id ${id} not found`);
+      return { success: true, deleted };
+    } catch (err: unknown) {
+      if (isForeignKeyConstraintError(err)) {
+        throw new ConflictException(
+          'Không thể xóa tài khoản đang gắn với dữ liệu hệ thống (bài viết, liên hệ hoặc cấu hình). Vui lòng chuyển sang trạng thái Ngừng hoạt động (inactive).',
+        );
+      }
+      throw err;
+    }
   }
 }

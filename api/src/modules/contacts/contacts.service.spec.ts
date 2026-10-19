@@ -264,9 +264,63 @@ describe('F13 Admin contact updates', () => {
       email: 'forged@example.com',
     } as any);
 
-    expect(written).toMatchObject({ status: 'processing', assignedTo: assigneeId, adminNote: 'Follow up' });
+    expect(written).toMatchObject({ status: 'processing', assignedTo: assigneeId, adminNote: 'Follow up', resolvedAt: null });
     expect(written?.updatedAt).toBeInstanceOf(Date);
     expect(written?.updatedAt).not.toEqual(originalCreatedAt);
     for (const key of ['id', 'createdAt', 'email']) expect(written).not.toHaveProperty(key);
+  });
+
+  it('sets resolvedAt when status transitions to resolved and resets resolvedAt to null when reopened', async () => {
+    const writes: Array<Record<string, unknown>> = [];
+    const contactId = randomUUID();
+    const db = {
+      update: vi.fn(() => ({
+        set: vi.fn((payload: Record<string, unknown>) => {
+          writes.push(payload);
+          return { where: vi.fn(() => ({ returning: vi.fn(async () => [{ id: contactId }]) })) };
+        }),
+      })),
+      query: { contacts: { findFirst: vi.fn(async () => ({ id: contactId })) } },
+    } as unknown as DrizzleDb;
+    const service = new ContactsService(db);
+
+    await service.update(contactId, { status: 'resolved' });
+    expect(writes[0].resolvedAt).toBeInstanceOf(Date);
+
+    await service.update(contactId, { status: 'processing' });
+    expect(writes[1].resolvedAt).toBeNull();
+  });
+
+  it('rejects non-existent assignedTo user with BadRequestException on PostgreSQL 23503', async () => {
+    const contactId = randomUUID();
+    const db = {
+      update: vi.fn(() => ({
+        set: vi.fn(() => ({
+          where: vi.fn(() => ({
+            returning: vi.fn(async () => {
+              throw Object.assign(new Error('insert or update on table "contacts" violates foreign key constraint'), {
+                code: '23503',
+              });
+            }),
+          })),
+        })),
+      })),
+    } as unknown as DrizzleDb;
+    const service = new ContactsService(db);
+
+    await expect(service.update(contactId, { assignedTo: randomUUID() })).rejects.toThrow(
+      'Người phụ trách được chọn không tồn tại trong hệ thống.',
+    );
+  });
+
+  it('throws BadRequestException when findOne is called with a non-UUID string', async () => {
+    const findFirstSpy = vi.fn();
+    const db = {
+      query: { contacts: { findFirst: findFirstSpy } },
+    } as unknown as DrizzleDb;
+    const service = new ContactsService(db);
+
+    await expect(service.findOne('invalid-uuid')).rejects.toThrow('ID liên hệ không hợp lệ.');
+    expect(findFirstSpy).not.toHaveBeenCalled();
   });
 });

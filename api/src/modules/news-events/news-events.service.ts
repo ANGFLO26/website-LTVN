@@ -250,6 +250,17 @@ export class NewsEventsService {
       }
     }
 
+    const eventStartAt = this.eventDate(data.eventStartAt, 'eventStartAt');
+    const eventEndAt = this.eventDate(data.eventEndAt, 'eventEndAt');
+
+    if (
+      eventStartAt instanceof Date &&
+      eventEndAt instanceof Date &&
+      eventEndAt.getTime() < eventStartAt.getTime()
+    ) {
+      throw new BadRequestException('eventEndAt must be greater than or equal to eventStartAt');
+    }
+
     // Runtime allowlist also protects writes from legacy clients posting metadata.
     return {
       type: data.type,
@@ -260,9 +271,20 @@ export class NewsEventsService {
       status: data.status,
       content: this.normalizeContent(data.content),
       location: data.location,
-      eventStartAt: this.eventDate(data.eventStartAt, 'eventStartAt'),
-      eventEndAt: this.eventDate(data.eventEndAt, 'eventEndAt'),
+      eventStartAt,
+      eventEndAt,
     };
+  }
+
+  private handleMutationDatabaseError(err: any): never {
+    const pgCode = err?.code || err?.cause?.code;
+    if (pgCode === '23505') {
+      throw new ConflictException('Slug bài viết/sự kiện đã tồn tại. Vui lòng chọn đường dẫn (slug) khác.');
+    }
+    if (pgCode === '23503') {
+      throw new BadRequestException('Ảnh đại diện (thumbnailImageId) không tồn tại trong hệ thống.');
+    }
+    throw err;
   }
 
   async create(data: CreateNewsEventDto) {
@@ -327,52 +349,57 @@ export class NewsEventsService {
         ? (cb: (tx: any) => Promise<any>) => this.db.transaction(cb)
         : (cb: (tx: any) => Promise<any>) => cb(this.db);
 
-    const createdId = await runTx(async (tx) => {
-      // 1. Insert news_events (mirroring VI fields to parent legacy columns)
-      const [created] = await tx
-        .insert(schema.newsEvents)
-        .values({
-          ...fields,
-          type: data.type,
+    let createdId: string;
+    try {
+      createdId = await runTx(async (tx) => {
+        // 1. Insert news_events (mirroring VI fields to parent legacy columns)
+        const [created] = await tx
+          .insert(schema.newsEvents)
+          .values({
+            ...fields,
+            type: data.type,
+            title: viTitle,
+            slug: viSlug,
+            shortDescription: viShortDescription,
+            content: viContent,
+            location: viLocation,
+            publishedAt: new Date(),
+          })
+          .returning();
+
+        // 2. Insert news_event_translations (VI)
+        await tx.insert(schema.newsEventTranslations).values({
+          newsEventId: created.id,
+          locale: 'vi',
           title: viTitle,
           slug: viSlug,
           shortDescription: viShortDescription,
           content: viContent,
           location: viLocation,
-          publishedAt: new Date(),
-        })
-        .returning();
-
-      // 2. Insert news_event_translations (VI)
-      await tx.insert(schema.newsEventTranslations).values({
-        newsEventId: created.id,
-        locale: 'vi',
-        title: viTitle,
-        slug: viSlug,
-        shortDescription: viShortDescription,
-        content: viContent,
-        location: viLocation,
-        seoTitle: viSeoTitle,
-        seoDescription: viSeoDescription,
-      });
-
-      // 3. Insert news_event_translations (EN) if authored data is provided
-      if (enData) {
-        await tx.insert(schema.newsEventTranslations).values({
-          newsEventId: created.id,
-          locale: 'en',
-          title: enData.title,
-          slug: enData.slug,
-          shortDescription: enData.shortDescription,
-          content: enData.content,
-          location: enData.location,
-          seoTitle: enData.seoTitle,
-          seoDescription: enData.seoDescription,
+          seoTitle: viSeoTitle,
+          seoDescription: viSeoDescription,
         });
-      }
 
-      return created.id;
-    });
+        // 3. Insert news_event_translations (EN) if authored data is provided
+        if (enData) {
+          await tx.insert(schema.newsEventTranslations).values({
+            newsEventId: created.id,
+            locale: 'en',
+            title: enData.title,
+            slug: enData.slug,
+            shortDescription: enData.shortDescription,
+            content: enData.content,
+            location: enData.location,
+            seoTitle: enData.seoTitle,
+            seoDescription: enData.seoDescription,
+          });
+        }
+
+        return created.id;
+      });
+    } catch (err) {
+      this.handleMutationDatabaseError(err);
+    }
 
     return this.findOne(createdId);
   }
@@ -433,91 +460,105 @@ export class NewsEventsService {
         ? (cb: (tx: any) => Promise<any>) => this.db.transaction(cb)
         : (cb: (tx: any) => Promise<any>) => cb(this.db);
 
-    await runTx(async (tx) => {
-      // 1. Update news_events (common fields + mirrored VI fields)
-      const parentUpdates: Record<string, any> = { updatedAt: new Date() };
-      for (const [key, val] of Object.entries(fields)) {
-        if (val !== undefined) {
-          parentUpdates[key] = val;
+    try {
+      await runTx(async (tx) => {
+        // 1. Update news_events (common fields + mirrored VI fields)
+        const parentUpdates: Record<string, any> = { updatedAt: new Date() };
+        for (const [key, val] of Object.entries(fields)) {
+          if (val !== undefined) {
+            parentUpdates[key] = val;
+          }
         }
-      }
-      if (viUpdate) {
-        if (viUpdate.title !== undefined) parentUpdates.title = viUpdate.title;
-        if (viUpdate.slug !== undefined) parentUpdates.slug = viUpdate.slug;
-        if (viUpdate.shortDescription !== undefined) parentUpdates.shortDescription = viUpdate.shortDescription;
-        if (viUpdate.content !== undefined) parentUpdates.content = viUpdate.content;
-        if (viUpdate.location !== undefined) parentUpdates.location = viUpdate.location;
-      }
-
-      const [updated] = await tx
-        .update(schema.newsEvents)
-        .set(parentUpdates)
-        .where(eq(schema.newsEvents.id, id))
-        .returning();
-
-      if (!updated) {
-        throw new NotFoundException(`News/Event with id ${id} not found`);
-      }
-
-      // 2. Update news_event_translations (VI) if VI fields were modified
-      if (viUpdate) {
-        const transUpdate: Record<string, any> = { updatedAt: new Date() };
-        for (const [key, val] of Object.entries(viUpdate)) {
-          if (val !== undefined) transUpdate[key] = val;
+        if (viUpdate) {
+          if (viUpdate.title !== undefined) parentUpdates.title = viUpdate.title;
+          if (viUpdate.slug !== undefined) parentUpdates.slug = viUpdate.slug;
+          if (viUpdate.shortDescription !== undefined) parentUpdates.shortDescription = viUpdate.shortDescription;
+          if (viUpdate.content !== undefined) parentUpdates.content = viUpdate.content;
+          if (viUpdate.location !== undefined) parentUpdates.location = viUpdate.location;
         }
-        await tx
-          .update(schema.newsEventTranslations)
-          .set(transUpdate)
-          .where(
-            and(
-              eq(schema.newsEventTranslations.newsEventId, id),
-              eq(schema.newsEventTranslations.locale, 'vi'),
-            ),
-          );
-      }
 
-      // 3. Update or Insert news_event_translations (EN) if EN translation is provided
-      if (enInput !== undefined && enInput !== null && enInput.title && String(enInput.title).trim()) {
-        const enTitle = String(enInput.title).trim();
-        const enSlug = (enInput.slug ? String(enInput.slug).trim() : this.slugify(enTitle)).trim();
-        const enValues = {
-          title: enTitle,
-          slug: enSlug,
-          shortDescription: enInput.shortDescription ?? null,
-          content: this.normalizeContent(enInput.content ?? null),
-          location: enInput.location ?? null,
-          seoTitle: enInput.seoTitle ?? null,
-          seoDescription: enInput.seoDescription ?? null,
-          updatedAt: new Date(),
-        };
-
-        // Try updating existing EN translation
-        const updatedEn = await tx
-          .update(schema.newsEventTranslations)
-          .set(enValues)
-          .where(
-            and(
-              eq(schema.newsEventTranslations.newsEventId, id),
-              eq(schema.newsEventTranslations.locale, 'en'),
-            ),
-          )
+        const [updated] = await tx
+          .update(schema.newsEvents)
+          .set(parentUpdates)
+          .where(eq(schema.newsEvents.id, id))
           .returning();
 
-        // If no EN translation existed yet, insert a new one
-        if (!updatedEn || updatedEn.length === 0) {
-          await tx.insert(schema.newsEventTranslations).values({
-            newsEventId: id,
-            locale: 'en',
-            ...enValues,
-          });
+        if (!updated) {
+          throw new NotFoundException(`News/Event with id ${id} not found`);
         }
-      }
-    });
+
+        // 2. Update news_event_translations (VI) if VI fields were modified
+        if (viUpdate) {
+          const transUpdate: Record<string, any> = { updatedAt: new Date() };
+          for (const [key, val] of Object.entries(viUpdate)) {
+            if (val !== undefined) transUpdate[key] = val;
+          }
+          await tx
+            .update(schema.newsEventTranslations)
+            .set(transUpdate)
+            .where(
+              and(
+                eq(schema.newsEventTranslations.newsEventId, id),
+                eq(schema.newsEventTranslations.locale, 'vi'),
+              ),
+            );
+        }
+
+        // 3. Update or Insert news_event_translations (EN) if EN translation is provided
+        if (enInput !== undefined && enInput !== null && enInput.title && String(enInput.title).trim()) {
+          const enTitle = String(enInput.title).trim();
+          const enSlug = (enInput.slug ? String(enInput.slug).trim() : this.slugify(enTitle)).trim();
+          if (!enSlug) {
+            throw new BadRequestException('English slug cannot be empty');
+          }
+          const effectiveViSlug = viUpdate?.slug ?? updated.slug;
+          if (effectiveViSlug && enSlug === effectiveViSlug) {
+            throw new ConflictException('English slug cannot be identical to Vietnamese slug');
+          }
+          const enValues = {
+            title: enTitle,
+            slug: enSlug,
+            shortDescription: enInput.shortDescription ?? null,
+            content: this.normalizeContent(enInput.content ?? null),
+            location: enInput.location ?? null,
+            seoTitle: enInput.seoTitle ?? null,
+            seoDescription: enInput.seoDescription ?? null,
+            updatedAt: new Date(),
+          };
+
+          // Try updating existing EN translation
+          const updatedEn = await tx
+            .update(schema.newsEventTranslations)
+            .set(enValues)
+            .where(
+              and(
+                eq(schema.newsEventTranslations.newsEventId, id),
+                eq(schema.newsEventTranslations.locale, 'en'),
+              ),
+            )
+            .returning();
+
+          // If no EN translation existed yet, insert a new one
+          if (!updatedEn || updatedEn.length === 0) {
+            await tx.insert(schema.newsEventTranslations).values({
+              newsEventId: id,
+              locale: 'en',
+              ...enValues,
+            });
+          }
+        }
+      });
+    } catch (err) {
+      this.handleMutationDatabaseError(err);
+    }
 
     return this.findOne(id);
   }
 
   async delete(id: string) {
+    if (!isValidUuid(id)) {
+      throw new NotFoundException(`News/Event with id ${id} not found`);
+    }
     const [deleted] = await this.db
       .delete(schema.newsEvents)
       .where(eq(schema.newsEvents.id, id))

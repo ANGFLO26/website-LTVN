@@ -10,6 +10,7 @@ import { SeoHtmlService } from './modules/seo/seo-html.service.js';
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
+  app.enableShutdownHooks();
   const configService = app.get(ConfigService);
 
   // Trust only explicitly configured reverse proxies. Direct connections ignore forwarding headers.

@@ -51,7 +51,7 @@ export class NewsEventsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete news or event' })
-  delete(@Param('id') id: string) {
+  delete(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.newsEventsService.delete(id);
   }
 }

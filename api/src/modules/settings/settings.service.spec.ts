@@ -357,5 +357,41 @@ describe('SettingsService & SettingsController', () => {
         expect(isPublicHandler).toBeFalsy();
       }
     });
+
+    it('forwards req.admin identity (id & email) to SettingsService for audit logging', async () => {
+      const controller = new SettingsController(service);
+      const updateSpy = vi
+        .spyOn(service, 'updateEmailSettings')
+        .mockResolvedValue({} as any);
+      const testSpy = vi
+        .spyOn(service, 'sendTestEmail')
+        .mockResolvedValue({ success: true, message: 'ok', recipient: 'a@b.c' });
+
+      const fakeReq = {
+        admin: {
+          id: '00000000-0000-4000-8000-000000000001',
+          email: 'admin@ltvietnam.com.vn',
+          fullName: 'Root Admin',
+          role: 'admin' as const,
+        },
+      } as any;
+
+      const dto = {
+        notificationRecipient: 'admin@ltvietnam.com.vn',
+        smtpFrom: 'no-reply@ltvietnam.com.vn',
+        smtpHost: 'smtp.gmail.com',
+        smtpPort: 587,
+        smtpSecure: false,
+      };
+
+      await controller.updateEmailSettings(dto, fakeReq);
+      expect(updateSpy).toHaveBeenCalledWith(
+        dto,
+        '00000000-0000-4000-8000-000000000001',
+      );
+
+      await controller.sendTestEmail(fakeReq);
+      expect(testSpy).toHaveBeenCalledWith('admin@ltvietnam.com.vn');
+    });
   });
 });

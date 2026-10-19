@@ -36,7 +36,7 @@ export class StandardsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get single standard by ID' })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.standardsService.findOne(id);
   }
 
@@ -54,7 +54,7 @@ export class StandardsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a standard' })
-  delete(@Param('id') id: string) {
+  delete(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.standardsService.delete(id);
   }
 }
