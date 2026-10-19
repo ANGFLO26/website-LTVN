@@ -22,8 +22,6 @@ export class SmtpEmailSenderService implements IEmailSender {
       return this.cachedTransporter;
     }
 
-    this.logger.log('Khởi tạo SMTP transport.');
-
     const transporterOptions: Record<string, unknown> = {
       host: config.host,
       port: config.port,

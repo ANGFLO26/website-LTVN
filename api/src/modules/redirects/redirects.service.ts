@@ -103,7 +103,6 @@ export class RedirectsService {
       return inserted;
     });
 
-    this.logger.log(`Created 301 redirect: ${sourcePath} -> ${destinationPath} (ID: ${created.id})`);
     return created;
   }
 
@@ -160,7 +159,6 @@ export class RedirectsService {
       return saved;
     });
 
-    this.logger.log(`Updated 301 redirect ID ${id}: ${updated.sourcePath} -> ${updated.destinationPath} (active=${updated.isActive})`);
     return updated;
   }
 
@@ -194,7 +192,6 @@ export class RedirectsService {
       return saved;
     });
 
-    this.logger.log(`Toggled redirect ID ${id} active status to: ${updated.isActive}`);
     return updated;
   }
 
@@ -209,7 +206,6 @@ export class RedirectsService {
       await tx.delete(schema.redirects).where(eq(schema.redirects.id, id));
     });
 
-    this.logger.log(`Deleted redirect ID: ${id}`);
     return { success: true, id };
   }
 

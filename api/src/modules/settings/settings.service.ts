@@ -210,12 +210,6 @@ export class SettingsService {
       }
     });
 
-    if (dto.clearSmtpPassword === true)
-      this.logger.log('Đã xóa mật khẩu SMTP theo yêu cầu rõ ràng.');
-    else if (encryptedSecret !== null)
-      this.logger.log('Đã cập nhật mật khẩu SMTP mã hóa.');
-    else this.logger.log('Giữ nguyên mật khẩu SMTP hiện tại.');
-
     // Only invalidate after commit. Other cluster workers refresh on their cache TTL.
     this.emailConfig.invalidateCache();
 
@@ -307,8 +301,6 @@ Nếu bạn nhận được email này, tính năng gửi email qua SMTP của h
 </html>`;
 
     try {
-      this.logger.log('Đang gửi email kiểm tra SMTP.');
-
       const result = await this.emailSender.send({
         to: config.to,
         from: config.from,
@@ -317,8 +309,6 @@ Nếu bạn nhận được email này, tính năng gửi email qua SMTP của h
         html,
         messageId,
       });
-
-      this.logger.log('Gửi email kiểm tra thành công.');
 
       return {
         success: true,

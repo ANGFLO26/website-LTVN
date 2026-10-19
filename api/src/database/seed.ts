@@ -65,8 +65,8 @@ export async function seed() {
   assertSeedAllowed(getNodeEnv());
 
   const databaseUrl = getDatabaseUrl();
-  console.log('🌱 Bắt đầu nạp TOÀN DIỆN 100% dữ liệu từ Website chính vào PostgreSQL...');
-  console.log(`🔗 Database: ${databaseUrl.replace(/:[^:@]+@/, ':****@')}\n`);
+  console.log('Bắt đầu nạp dữ liệu mẫu vào PostgreSQL...');
+  console.log(`Database: ${databaseUrl.replace(/:[^:@]+@/, ':****@')}`);
 
   client = postgres(databaseUrl);
   db = drizzle(client, { schema });
@@ -1741,22 +1741,9 @@ export async function seed() {
       },
     ]);
 
-    console.log('\n========================================================');
-    console.log('🎉 NẠP TOÀN BỘ 100% DỮ LIỆU THÀNH CÔNG VÀO DATABASE POSTGRESQL!');
-    console.log(' - Users: 2 tài khoản (Admin, Editor)');
-    console.log(' - Media Assets: 16 hình ảnh sản phẩm & sự kiện');
-    console.log(' - Standards: 15 tiêu chuẩn quốc tế');
-    console.log(' - Machines: 13 dòng máy thực tế 100% từ Website');
-    console.log(' - Machine Images (Gallery): 13 ảnh thiết bị');
-    console.log(' - Machine Applications: 37 ứng dụng chi tiết');
-    console.log(' - Machine Highlights: 39 ưu điểm vượt trội');
-    console.log(' - Machine Specs: 39 thông số kỹ thuật chi tiết');
-    console.log(' - Machine Standards: 17 liên kết tiêu chuẩn');
-    console.log(' - News & Events: 3 bài viết đầy đủ đoạn văn & nextAction');
-    console.log(' - Contacts: 3 yêu cầu tư vấn thực tế từ các nhà máy đối tác');
-    console.log('========================================================\n');
+    console.log('Nạp dữ liệu mẫu vào PostgreSQL thành công.');
   } catch (error) {
-    console.error('❌ Lỗi khi nạp dữ liệu vào database:', error);
+    console.error('Lỗi khi nạp dữ liệu vào database:', error);
     process.exit(1);
   } finally {
     if (client) {

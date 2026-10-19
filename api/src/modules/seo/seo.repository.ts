@@ -75,38 +75,21 @@ export class DrizzleSeoRepository implements ISeoRepository {
   constructor(@Inject(DRIZZLE) private readonly db: DrizzleDb) {}
 
   async findPublishedMachineBySlug(slug: string): Promise<SeoPublishedMachine | null> {
-    if (!this.db?.query?.machines) {
+    if (!this.db?.query?.machines?.findFirst) {
       return null;
     }
 
-    if (this.db.query.machines.findFirst) {
-      const found = await this.db.query.machines.findFirst({
-        where: and(
-          eq(schema.machines.slug, slug),
-          eq(schema.machines.status, 'published'),
-          isNull(schema.machines.deletedAt),
-        ),
-        with: {
-          mainImage: true,
-        },
-      });
-      return (found as unknown as SeoPublishedMachine) ?? null;
-    }
-
-    if (this.db.query.machines.findMany) {
-      const list = (await this.db.query.machines.findMany({
-        where: and(
-          eq(schema.machines.status, 'published'),
-          isNull(schema.machines.deletedAt),
-        ),
-        with: {
-          mainImage: true,
-        },
-      })) as unknown as SeoPublishedMachine[];
-      return list.find((m) => m.slug === slug) ?? null;
-    }
-
-    return null;
+    const found = await this.db.query.machines.findFirst({
+      where: and(
+        eq(schema.machines.slug, slug),
+        eq(schema.machines.status, 'published'),
+        isNull(schema.machines.deletedAt),
+      ),
+      with: {
+        mainImage: true,
+      },
+    });
+    return (found as unknown as SeoPublishedMachine) ?? null;
   }
 
   async findPublishedNewsBySlug(slug: string): Promise<SeoMatchedNewsResult | null> {
@@ -164,41 +147,6 @@ export class DrizzleSeoRepository implements ISeoRepository {
           matchedTranslation: viTrans ?? null,
           isEnglish: false,
         };
-      }
-    }
-
-    // 3. Fallback for findMany in mocks
-    if (this.db.query.newsEvents.findMany) {
-      const all = (await this.db.query.newsEvents.findMany({
-        where: and(
-          eq(schema.newsEvents.status, 'published'),
-          isNull(schema.newsEvents.deletedAt),
-        ),
-        with: {
-          thumbnailImage: true,
-          translations: true,
-        },
-      })) as unknown as SeoPublishedNews[];
-
-      for (const item of all) {
-        const enTrans = item.translations?.find(
-          (t) => t.locale === 'en' && t.slug === slug,
-        );
-        if (enTrans) {
-          return {
-            news: item,
-            matchedTranslation: enTrans,
-            isEnglish: true,
-          };
-        }
-        if (item.slug === slug) {
-          const viTrans = item.translations?.find((t) => t.locale === 'vi');
-          return {
-            news: item,
-            matchedTranslation: viTrans ?? null,
-            isEnglish: false,
-          };
-        }
       }
     }
 

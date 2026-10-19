@@ -61,11 +61,8 @@ export class ContactOutboxWorker implements OnApplicationBootstrap, OnApplicatio
     }
 
     if (this.activeProcessingPromise) {
-      this.logger.log('Đang chờ tác vụ xử lý outbox hiện tại hoàn tất trước khi shutdown...');
       await this.activeProcessingPromise.catch(() => {});
     }
-
-    this.logger.log('Contact Outbox Worker đã dừng an toàn.');
   }
 
   private scheduleNextPoll(delayMs: number): void {
@@ -216,10 +213,6 @@ export class ContactOutboxWorker implements OnApplicationBootstrap, OnApplicatio
     const emailData = buildContactNotificationEmail(contact, record.id);
 
     try {
-      this.logger.log(
-        `Đang gửi thông báo email cho Contact ${contact.id} (Outbox ID: ${record.id}, Lần thử: ${record.attemptCount + 1})`,
-      );
-
       await this.emailSender.send({
         to: toAddress,
         from: smtpConfig?.from,
