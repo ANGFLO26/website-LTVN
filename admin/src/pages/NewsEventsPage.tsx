@@ -441,6 +441,14 @@ const slugify = (text: string): string => {
     .replace(/^-|-$/g, '');
 };
 
+const toLocalDateTimeInputValue = (value?: string | null): string => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
+
 export const NewsEventsPage: React.FC<Props> = ({ news, media, onSave, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState<'all' | 'news' | 'event'>('all');
@@ -689,13 +697,20 @@ export const NewsEventsPage: React.FC<Props> = ({ news, media, onSave, onDelete 
       };
     }
 
+    if (commonForm.type === 'event' && commonForm.eventStartAt && commonForm.eventEndAt) {
+      if (new Date(commonForm.eventEndAt).getTime() < new Date(commonForm.eventStartAt).getTime()) {
+        setSaveError('Thời gian kết thúc sự kiện phải sau hoặc bằng thời gian bắt đầu.');
+        return;
+      }
+    }
+
     const itemToSave: NewsEvent = {
       id: commonForm.id,
       type: commonForm.type,
       status: commonForm.status,
       thumbnailImageId: commonForm.thumbnailImageId || null,
-      eventStartAt: commonForm.eventStartAt || null,
-      eventEndAt: commonForm.eventEndAt || null,
+      eventStartAt: commonForm.type === 'event' ? (commonForm.eventStartAt || null) : null,
+      eventEndAt: commonForm.type === 'event' ? (commonForm.eventEndAt || null) : null,
       // Mirror VI translation fields to legacy parent columns
       title: viTranslation.title,
       slug: viTranslation.slug,
@@ -992,11 +1007,7 @@ export const NewsEventsPage: React.FC<Props> = ({ news, media, onSave, onDelete 
                   <input
                     type="datetime-local"
                     className="form-control"
-                    value={
-                      commonForm.eventStartAt
-                        ? new Date(commonForm.eventStartAt).toISOString().slice(0, 16)
-                        : ''
-                    }
+                    value={toLocalDateTimeInputValue(commonForm.eventStartAt)}
                     onChange={(e) =>
                       setCommonForm({
                         ...commonForm,
@@ -1010,11 +1021,7 @@ export const NewsEventsPage: React.FC<Props> = ({ news, media, onSave, onDelete 
                   <input
                     type="datetime-local"
                     className="form-control"
-                    value={
-                      commonForm.eventEndAt
-                        ? new Date(commonForm.eventEndAt).toISOString().slice(0, 16)
-                        : ''
-                    }
+                    value={toLocalDateTimeInputValue(commonForm.eventEndAt)}
                     onChange={(e) =>
                       setCommonForm({
                         ...commonForm,

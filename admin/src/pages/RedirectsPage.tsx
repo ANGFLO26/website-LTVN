@@ -36,6 +36,7 @@ export const RedirectsPage: React.FC<Props> = ({
   // Delete confirmation modal state
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const emptyRedirect: Partial<Redirect> = {
     sourcePath: '',
@@ -89,12 +90,13 @@ export const RedirectsPage: React.FC<Props> = ({
 
   const handleConfirmDelete = async () => {
     if (!deletingId || isDeleting) return;
+    setDeleteError(null);
     setIsDeleting(true);
     try {
       await onDelete(deletingId);
       setDeletingId(null);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Xóa chuyển hướng thất bại.');
+      setDeleteError(err instanceof Error ? err.message : 'Xóa chuyển hướng thất bại.');
     } finally {
       setIsDeleting(false);
     }
@@ -235,7 +237,13 @@ export const RedirectsPage: React.FC<Props> = ({
                     <td>
                       <button
                         type="button"
-                        onClick={() => onToggle(r.id)}
+                        onClick={async () => {
+                          try {
+                            await onToggle(r.id);
+                          } catch {
+                            // Error handled by App toast
+                          }
+                        }}
                         className={`badge ${r.isActive ? 'badge-active' : 'badge-inactive'}`}
                         style={{
                           cursor: 'pointer',
@@ -283,7 +291,10 @@ export const RedirectsPage: React.FC<Props> = ({
                       </button>
                       <button
                         className="btn-icon"
-                        onClick={() => setDeletingId(r.id)}
+                        onClick={() => {
+                          setDeleteError(null);
+                          setDeletingId(r.id);
+                        }}
                         title="Xóa quy tắc"
                         style={{ color: '#ef4444' }}
                       >
@@ -439,11 +450,21 @@ export const RedirectsPage: React.FC<Props> = ({
       {/* Delete Confirmation Modal */}
       <Modal
         isOpen={Boolean(deletingId)}
-        onClose={() => !isDeleting && setDeletingId(null)}
+        onClose={() => {
+          if (!isDeleting) {
+            setDeleteError(null);
+            setDeletingId(null);
+          }
+        }}
         title="Xác Nhận Xóa Quy Tắc Chuyển Hướng"
         maxWidth="480px"
       >
         <div style={{ padding: '0.5rem 0' }}>
+          {deleteError && (
+            <div className="modal-error-alert" role="alert" style={{ marginBottom: '1rem' }}>
+              <span>{deleteError}</span>
+            </div>
+          )}
           <p style={{ marginBottom: '1rem', color: '#334155', lineHeight: 1.5 }}>
             Bạn có chắc chắn muốn xóa quy tắc chuyển hướng sau đây không?
           </p>
@@ -480,7 +501,10 @@ export const RedirectsPage: React.FC<Props> = ({
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={() => setDeletingId(null)}
+              onClick={() => {
+                setDeleteError(null);
+                setDeletingId(null);
+              }}
               disabled={isDeleting}
             >
               Hủy

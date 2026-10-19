@@ -65,7 +65,8 @@ export const MachinesPage: React.FC<Props> = ({
   const handleSave = async () => {
     if (!editingMachine || !editingMachine.name.trim() || isSaving) return;
     let machineToSave = editingMachine;
-    if (!machineToSave.slug) {
+    const rawSlug = machineToSave.slug ? machineToSave.slug.trim() : '';
+    if (!rawSlug) {
       const generatedSlug = machineToSave.name
         .toLowerCase()
         .normalize('NFD')
@@ -74,7 +75,63 @@ export const MachinesPage: React.FC<Props> = ({
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
       machineToSave = { ...machineToSave, slug: generatedSlug };
+    } else {
+      machineToSave = { ...machineToSave, slug: rawSlug };
     }
+
+    const nonEmptyApps = (machineToSave.applications || []).filter(
+      (a) => a.title.trim() || (a.description ?? '').trim()
+    );
+    if (nonEmptyApps.some((a) => !a.title.trim())) {
+      setSaveError('Tiêu đề ứng dụng không được để trống.');
+      setActiveTab('apps');
+      return;
+    }
+
+    const nonEmptyHighlights = (machineToSave.highlights || []).filter(
+      (h) => h.title.trim() || (h.description ?? '').trim()
+    );
+    if (nonEmptyHighlights.some((h) => !h.title.trim())) {
+      setSaveError('Tiêu đề điểm nổi bật không được để trống.');
+      setActiveTab('highlights');
+      return;
+    }
+
+    const nonEmptySpecs = (machineToSave.specs || []).filter(
+      (s) => s.specName.trim() || s.specValue.trim()
+    );
+    if (nonEmptySpecs.some((s) => !s.specName.trim() || !s.specValue.trim())) {
+      setSaveError('Thông số kỹ thuật phải có đầy đủ Tên thông số và Giá trị.');
+      setActiveTab('specs');
+      return;
+    }
+
+    machineToSave = {
+      ...machineToSave,
+      applications: nonEmptyApps.map((a, idx) => ({
+        ...a,
+        title: a.title.trim(),
+        description: a.description?.trim() ? a.description.trim() : null,
+        sortOrder: idx + 1,
+      })),
+      highlights: nonEmptyHighlights.map((h, idx) => ({
+        ...h,
+        title: h.title.trim(),
+        description: h.description?.trim() ? h.description.trim() : null,
+        sortOrder: idx + 1,
+      })),
+      specs: nonEmptySpecs.map((s, idx) => ({
+        ...s,
+        specName: s.specName.trim(),
+        specValue: s.specValue.trim(),
+        sortOrder: idx + 1,
+      })),
+      standards: (machineToSave.standards || []).map((st, idx) => ({
+        ...st,
+        sortOrder: idx + 1,
+      })),
+    };
+
     setSaveError(null);
     setIsSaving(true);
     try {

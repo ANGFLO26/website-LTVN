@@ -33,13 +33,24 @@ export const MediaPage: React.FC<Props> = ({ media, onSave, onDelete }) => {
   };
 
   const handleCreate = async () => {
-    if (!newAsset.fileName || !newAsset.publicUrl) return;
+    const trimmedFileName = newAsset.fileName.trim();
+    const trimmedPublicUrl = newAsset.publicUrl.trim();
+    if (!trimmedFileName || !trimmedPublicUrl) {
+      if (typeof setSaveError === 'function') {
+        setSaveError('Vui lòng nhập đầy đủ Tên tệp tin và Đường dẫn URL hình ảnh.');
+      }
+      return;
+    }
+    const baseKey = `uploads/${trimmedFileName}`;
+    const storageKey = media.some((m) => m.storageKey === baseKey)
+      ? `uploads/${Date.now()}-${trimmedFileName}`
+      : baseKey;
     const asset: MediaCreateInput = {
-      fileName: newAsset.fileName,
-      storageKey: `uploads/${newAsset.fileName}`,
-      publicUrl: newAsset.publicUrl,
-      altText: newAsset.altText || null,
-      mimeType: newAsset.mimeType || 'image/jpeg',
+      fileName: trimmedFileName,
+      storageKey,
+      publicUrl: trimmedPublicUrl,
+      altText: newAsset.altText.trim() || null,
+      mimeType: newAsset.mimeType.trim() || 'image/jpeg',
       sizeBytes: Number(newAsset.sizeBytes) || 120000,
       width: Number(newAsset.width) || 1200,
       height: Number(newAsset.height) || 800,
@@ -276,7 +287,7 @@ export const MediaPage: React.FC<Props> = ({ media, onSave, onDelete }) => {
                   }}
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
-                      'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80';
+                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect fill='%231e293b' width='400' height='300'/><text fill='%2394a3b8' font-family='sans-serif' font-size='16' dy='5' font-weight='bold' x='50%' y='50%' text-anchor='middle'>Image Not Found</text></svg>";
                   }}
                 />
               </div>

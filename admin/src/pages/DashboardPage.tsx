@@ -133,7 +133,13 @@ export const DashboardPage: React.FC<Props> = ({
                           <button
                             className="btn btn-secondary btn-sm"
                             title="Đánh dấu đang xử lý"
-                            onClick={() => onUpdateContactStatus(c.id, 'processing')}
+                            onClick={async () => {
+                              try {
+                                await onUpdateContactStatus(c.id, 'processing');
+                              } catch {
+                                // Error handled by App toast
+                              }
+                            }}
                           >
                             <Check size={14} />
                             <span>Xử lý</span>

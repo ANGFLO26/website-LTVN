@@ -92,6 +92,7 @@ export function ContactPage() {
         body: JSON.stringify(payload),
       })
       if (response.ok) {
+        form.reset()
         setSubmitted(true)
         setSubmitError('')
       } else if (response.status === 429) {

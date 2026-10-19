@@ -475,11 +475,6 @@ export function App() {
       const url = new URL(window.location.href);
       const token = url.searchParams.get('token');
       if (token && token.trim()) {
-        url.searchParams.delete('token');
-        const cleanPath = url.pathname.replace(/\/reset-password\/?$/, '') || '/';
-        const cleanQuery = url.searchParams.toString() ? `?${url.searchParams.toString()}` : '';
-        const cleanUrl = cleanPath + cleanQuery + url.hash;
-        window.history.replaceState({}, document.title, cleanUrl);
         return token.trim();
       }
     } catch {
@@ -498,6 +493,21 @@ export function App() {
     }
     return 'login';
   });
+
+  useEffect(() => {
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('token') || /\/reset-password\/?$/.test(url.pathname)) {
+        url.searchParams.delete('token');
+        const cleanPath = url.pathname.replace(/\/reset-password\/?$/, '') || '/';
+        const cleanQuery = url.searchParams.toString() ? `?${url.searchParams.toString()}` : '';
+        const cleanUrl = cleanPath + cleanQuery + url.hash;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    } catch {
+      // Ignore URL parse error in non-browser or test contexts
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;

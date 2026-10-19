@@ -323,11 +323,13 @@ export const ContactsPage: React.FC<Props> = ({ contacts, users = [], onUpdateSt
                   onChange={(e) => setAssignedToInput(e.target.value)}
                 >
                   <option value="">-- Chưa phân công --</option>
-                  {users.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.fullName} ({u.email})
-                    </option>
-                  ))}
+                  {users
+                    .filter((u) => u.status === 'active' || u.id === viewingContact.assignedTo)
+                    .map((u) => (
+                      <option key={u.id} value={u.id} disabled={u.status !== 'active'}>
+                        {u.fullName} ({u.email}){u.status !== 'active' ? ' - Đã khóa' : ''}
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>
