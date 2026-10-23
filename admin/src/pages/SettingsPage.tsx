@@ -13,6 +13,8 @@ import {
   Mail,
   Send,
   Save,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { buildApiUrl, getApiBaseUrl, getPublicSiteUrl, getSwaggerUrl } from '../config/urls';
 import { ConfiguredExternalLink } from '../components/ConfiguredExternalLink';
@@ -23,12 +25,16 @@ interface Props {
   backendConnected: boolean;
   onRefreshData: () => void;
   onPasswordChanged?: () => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
 export const SettingsPage: React.FC<Props> = ({
   backendConnected,
   onRefreshData,
   onPasswordChanged,
+  theme = 'dark',
+  onToggleTheme,
 }) => {
   // Email Settings state
   const [emailLoading, setEmailLoading] = useState(false);
@@ -228,6 +234,44 @@ export const SettingsPage: React.FC<Props> = ({
       </div>
 
       <div className="settings-grid">
+        {/* Theme Settings Card */}
+        <div className="card">
+          <div className="card-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {theme === 'dark' ? <Moon size={18} color="#3b82f6" /> : <Sun size={18} color="#f59e0b" />}
+              <div className="card-title">Chế Độ Giao Diện (Sáng / Tối)</div>
+            </div>
+            <span className="badge" style={{ background: 'var(--primary-light)', color: 'var(--text-active-menu)' }}>
+              {theme === 'dark' ? 'Giao diện Tối' : 'Giao diện Sáng'}
+            </span>
+          </div>
+          <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+              Tùy chỉnh tông màu hiển thị của Cổng Quản Trị để phù hợp với môi trường làm việc của bạn. Lựa chọn được lưu tự động trên trình duyệt.
+            </p>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 4 }}>
+              <button
+                type="button"
+                className={`btn ${theme === 'dark' ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => onToggleTheme && theme !== 'dark' && onToggleTheme()}
+                style={{ flex: '1 1 180px', justifyContent: 'center' }}
+              >
+                <Moon size={16} />
+                <span>Chế độ Tối (Dark)</span>
+              </button>
+              <button
+                type="button"
+                className={`btn ${theme === 'light' ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => onToggleTheme && theme !== 'light' && onToggleTheme()}
+                style={{ flex: '1 1 180px', justifyContent: 'center' }}
+              >
+                <Sun size={16} />
+                <span>Chế độ Sáng (Light)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Backend API Info */}
         <div className="card">
           <div className="card-header">
@@ -246,13 +290,13 @@ export const SettingsPage: React.FC<Props> = ({
           <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ fontSize: '0.88rem' }}>
               <strong>Endpoint Gốc:</strong>{' '}
-              <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: 4 }}>
+              <code style={{ background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '2px 6px', borderRadius: 4 }}>
                 {buildApiUrl('/api') || 'Chưa cấu hình VITE_API_BASE_URL hợp lệ'}
               </code>
             </div>
             <div style={{ fontSize: '0.88rem' }}>
               <strong>Website:</strong>{' '}
-              <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: 4 }}>
+              <code style={{ background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '2px 6px', borderRadius: 4 }}>
                 {getPublicSiteUrl() || 'Chưa cấu hình VITE_PUBLIC_SITE_URL hợp lệ'}
               </code>
             </div>

@@ -5,12 +5,14 @@
 :root {
   --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   
-  /* Color Palette - Slate & Deep Navy */
+  /* Color Palette - Dark (Default) */
   --bg-app: #090d16;
   --bg-sidebar: #0f172a;
+  --bg-header: rgba(15, 23, 42, 0.85);
   --bg-card: #111827;
   --bg-card-hover: #162033;
   --bg-input: #1e293b;
+  --bg-table-th: rgba(15, 23, 42, 0.4);
   --border-subtle: #1e293b;
   --border-strong: #334155;
   --border-focus: #3b82f6;
@@ -37,6 +39,10 @@
   --text-muted: #94a3b8;
   --text-faint: #64748b;
   --text-on-primary: #ffffff;
+  --text-active-menu: #60a5fa;
+
+  /* Button and specific element colors */
+  --btn-secondary-hover: #334155;
 
   /* Layout Dimensions */
   --sidebar-width: 260px;
@@ -51,6 +57,53 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
   --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.25);
+}
+
+[data-theme='light'] {
+  /* Color Palette - Light */
+  --bg-app: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.92);
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-input: #f8fafc;
+  --bg-table-th: #f1f5f9;
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-focus: #2563eb;
+
+  /* Accent Colors */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: rgba(37, 99, 235, 0.1);
+  
+  --emerald: #059669;
+  --emerald-light: rgba(16, 185, 129, 0.12);
+  
+  --amber: #d97706;
+  --amber-light: rgba(245, 158, 11, 0.12);
+  
+  --rose: #dc2626;
+  --rose-light: rgba(239, 68, 68, 0.12);
+
+  --purple: #7c3aed;
+  --purple-light: rgba(139, 92, 246, 0.12);
+
+  /* Typography Colors */
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-faint: #64748b;
+  --text-on-primary: #ffffff;
+  --text-active-menu: #2563eb;
+
+  /* Button and specific element colors */
+  --btn-secondary-hover: #e2e8f0;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 25px rgba(37, 99, 235, 0.15);
 }
 
 * {
@@ -169,7 +222,7 @@ body {
 
 .menu-item.active {
   background-color: var(--primary-light);
-  color: #60a5fa;
+  color: var(--text-active-menu, #60a5fa);
   font-weight: 600;
 }
 
@@ -234,7 +287,7 @@ body {
 /* Header */
 .admin-header {
   height: var(--header-height);
-  background-color: rgba(15, 23, 42, 0.8);
+  background-color: var(--bg-header);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-subtle);
   position: sticky;
@@ -363,7 +416,7 @@ body {
 }
 
 .btn-secondary:hover {
-  background: #334155;
+  background: var(--btn-secondary-hover, #334155);
 }
 
 .btn-danger {
@@ -488,7 +541,7 @@ body {
   color: var(--text-faint);
   font-weight: 700;
   border-bottom: 1px solid var(--border-subtle);
-  background-color: rgba(15, 23, 42, 0.4);
+  background-color: var(--bg-table-th, rgba(15, 23, 42, 0.4));
 }
 
 .data-table td {
@@ -792,9 +845,9 @@ body {
 }
 
 .toast {
-  background: #1e293b;
-  color: white;
-  border: 1px solid #334155;
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-strong);
   padding: 12px 18px;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
@@ -804,6 +857,16 @@ body {
   font-size: 0.85rem;
   font-weight: 500;
   animation: toastIn 0.2s ease;
+}
+
+.theme-toggle-btn {
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-input);
 }
 
 .toast.toast-error {

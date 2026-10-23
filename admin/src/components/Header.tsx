@@ -1,5 +1,5 @@
 import React from 'react';
-import { Server, Bell, ExternalLink, Menu } from 'lucide-react';
+import { Server, Bell, ExternalLink, Menu, Sun, Moon } from 'lucide-react';
 import type { AdminView } from '../types';
 import { buildApiUrl, getPublicSiteUrl, getSwaggerUrl } from '../config/urls';
 import { ConfiguredExternalLink } from './ConfiguredExternalLink';
@@ -11,6 +11,8 @@ interface Props {
   onToggleSidebar: () => void;
   newContactsCount?: number;
   onNavigate?: (view: AdminView) => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
 export const Header: React.FC<Props> = ({
@@ -20,6 +22,8 @@ export const Header: React.FC<Props> = ({
   onToggleSidebar,
   newContactsCount = 0,
   onNavigate,
+  theme = 'dark',
+  onToggleTheme,
 }) => {
   const publicSiteUrl = getPublicSiteUrl();
   const titles: Record<AdminView, string> = {
@@ -81,6 +85,18 @@ export const Header: React.FC<Props> = ({
           <span className="header-secondary-label">Swagger Docs</span>
           <ExternalLink size={14} />
         </ConfiguredExternalLink>
+
+        {onToggleTheme && (
+          <button
+            type="button"
+            className="btn-icon theme-toggle-btn"
+            title={theme === 'dark' ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
+            aria-label={theme === 'dark' ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
+            onClick={onToggleTheme}
+          >
+            {theme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#3b82f6" />}
+          </button>
+        )}
 
         <button
           type="button"

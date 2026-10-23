@@ -235,7 +235,8 @@ export const ContactsPage: React.FC<Props> = ({ contacts, users = [], onUpdateSt
             <div
               className="contact-info-grid"
               style={{
-                background: '#1e293b',
+                background: 'var(--bg-input)',
+                border: '1px solid var(--border-subtle)',
                 padding: 16,
                 borderRadius: 10,
                 display: 'grid',
@@ -272,7 +273,7 @@ export const ContactsPage: React.FC<Props> = ({ contacts, users = [], onUpdateSt
             {/* Subject and Full Message */}
             <div className="form-group">
               <label>Chủ Đề Yêu Cầu</label>
-              <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#f8fafc' }}>
+              <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>
                 {viewingContact.subject || 'Không có tiêu đề'}
               </div>
             </div>
@@ -281,13 +282,13 @@ export const ContactsPage: React.FC<Props> = ({ contacts, users = [], onUpdateSt
               <label>Nội Dung Tin Nhắn</label>
               <div
                 style={{
-                  background: '#090d16',
-                  border: '1px solid #334155',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-strong)',
                   borderRadius: 8,
                   padding: 14,
                   fontSize: '0.88rem',
                   lineHeight: 1.6,
-                  color: '#e2e8f0',
+                  color: 'var(--text-main)',
                 }}
               >
                 {viewingContact.message}

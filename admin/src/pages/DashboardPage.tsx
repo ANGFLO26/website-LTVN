@@ -174,7 +174,7 @@ export const DashboardPage: React.FC<Props> = ({
                   {machines.filter((m) => m.status === 'published').length}
                 </span>
               </div>
-              <div style={{ height: 8, background: '#1e293b', borderRadius: 4, overflow: 'hidden' }}>
+              <div style={{ height: 8, background: 'var(--border-subtle)', borderRadius: 4, overflow: 'hidden' }}>
                 <div
                   style={{
                     height: '100%',
@@ -192,7 +192,7 @@ export const DashboardPage: React.FC<Props> = ({
                   {machines.filter((m) => m.status === 'draft').length}
                 </span>
               </div>
-              <div style={{ height: 8, background: '#1e293b', borderRadius: 4, overflow: 'hidden' }}>
+              <div style={{ height: 8, background: 'var(--border-subtle)', borderRadius: 4, overflow: 'hidden' }}>
                 <div
                   style={{
                     height: '100%',
@@ -203,7 +203,7 @@ export const DashboardPage: React.FC<Props> = ({
               </div>
             </div>
 
-            <div style={{ marginTop: 'auto', paddingTop: 16, borderTop: '1px solid #1e293b' }}>
+            <div style={{ marginTop: 'auto', paddingTop: 16, borderTop: '1px solid var(--border-subtle)' }}>
               <button
                 className="btn btn-primary"
                 style={{ width: '100%', justifyContent: 'center' }}

@@ -465,17 +465,17 @@ export const RedirectsPage: React.FC<Props> = ({
               <span>{deleteError}</span>
             </div>
           )}
-          <p style={{ marginBottom: '1rem', color: '#334155', lineHeight: 1.5 }}>
+          <p style={{ marginBottom: '1rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
             Bạn có chắc chắn muốn xóa quy tắc chuyển hướng sau đây không?
           </p>
 
           {redirectBeingDeleted && (
             <div
               style={{
-                backgroundColor: '#f8fafc',
+                backgroundColor: 'var(--bg-input)',
                 padding: '0.85rem 1rem',
                 borderRadius: '6px',
-                border: '1px solid #e2e8f0',
+                border: '1px solid var(--border-subtle)',
                 marginBottom: '1.25rem',
                 fontSize: '0.875rem',
               }}

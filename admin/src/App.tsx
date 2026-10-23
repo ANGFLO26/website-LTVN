@@ -28,7 +28,30 @@ import type {
 } from './types';
 import './admin.css';
 
-function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (message?: string) => void }) {
+export type ThemeMode = 'dark' | 'light';
+const THEME_STORAGE_KEY = 'ltvn_admin_theme';
+
+function getInitialTheme(): ThemeMode {
+  try {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+  } catch {
+    // Ignore storage restrictions
+  }
+  return 'dark';
+}
+
+function AdminDashboard({
+  user,
+  onLogout,
+  theme,
+  onToggleTheme,
+}: {
+  user: AdminIdentity;
+  onLogout: (message?: string) => void;
+  theme: ThemeMode;
+  onToggleTheme: () => void;
+}) {
   const [currentView, setCurrentView] = useState<AdminView>('dashboard');
   const [smallScreen, setSmallScreen] = useState(() => window.matchMedia('(max-width: 1023px)').matches);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -350,6 +373,8 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
           onToggleSidebar={() => setSidebarOpen(open => !open)}
           newContactsCount={newContactsCount}
           onNavigate={navigate}
+          theme={theme}
+          onToggleTheme={onToggleTheme}
         />
 
         <main className="admin-content">
@@ -443,6 +468,8 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
               backendConnected={backendConnected}
               onRefreshData={handleResetData}
               onPasswordChanged={() => onLogout('Đổi mật khẩu thành công. Vui lòng đăng nhập lại.')}
+              theme={theme}
+              onToggleTheme={onToggleTheme}
             />
           )}
           </>}
@@ -465,9 +492,23 @@ function AdminDashboard({ user, onLogout }: { user: AdminIdentity; onLogout: (me
 }
 
 export function App() {
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
   const [user, setUser] = useState<AdminIdentity | null>(null);
   const [checking, setChecking] = useState(() => Boolean(auth.getSession()));
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Ignore
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Password recovery routing state: token is kept strictly in component memory
   const [resetToken, setResetToken] = useState<string | null>(() => {
@@ -587,11 +628,13 @@ export function App() {
           setMessage('');
           setAuthView('forgot');
         }}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
     );
   }
 
-  return <AdminDashboard user={user} onLogout={logout} />;
+  return <AdminDashboard user={user} onLogout={logout} theme={theme} onToggleTheme={toggleTheme} />;
 }
 
 
