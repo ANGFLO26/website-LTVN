@@ -1,6 +1,6 @@
 # PostgreSQL backup and restore verification
 
-`scripts/backup-db.mjs` runs a full-schema and data `pg_dump --format=custom`. It does not automatically read `api/.env`, run migrations, or connect to a database without all explicit settings below:
+`scripts/backup-db.mjs` runs a full-schema and data `pg_dump --format=custom`. It does not automatically read `backend/.env`, run migrations, or connect to a database without all explicit settings below:
 
 | Environment setting | Meaning |
 | --- | --- |

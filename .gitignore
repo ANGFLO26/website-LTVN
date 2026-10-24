@@ -77,7 +77,7 @@ artifacts/
 *.dump
 *.backup
 *.sql
-!api/drizzle/**/*.sql
+!backend/drizzle/**/*.sql
 
 # OS generated files
 .DS_Store

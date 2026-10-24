@@ -19,8 +19,8 @@ import { fileURLToPath } from 'node:url';
 import readline from 'node:readline';
 import { Writable } from 'node:stream';
 import { randomUUID } from 'node:crypto';
-import postgres from '../api/node_modules/postgres/src/index.js';
-import bcrypt from '../api/node_modules/bcryptjs/index.js';
+import postgres from '../backend/node_modules/postgres/src/index.js';
+import bcrypt from '../backend/node_modules/bcryptjs/index.js';
 
 const { hash } = bcrypt;
 const __filename = fileURLToPath(import.meta.url);
@@ -89,14 +89,14 @@ export function maskDatabaseUrl(url) {
 }
 
 /**
- * Resolve database URL from process environment or api/.env.
+ * Resolve database URL from process environment or backend/.env.
  */
 export function getDatabaseUrl() {
   if (process.env.DATABASE_URL && process.env.DATABASE_URL.trim()) {
     return process.env.DATABASE_URL.trim();
   }
   try {
-    const envPath = resolve(__dirname, '../api/.env');
+    const envPath = resolve(__dirname, '../backend/.env');
     const envContent = readFileSync(envPath, 'utf-8');
     const match = envContent.match(/DATABASE_URL=["']?([^"'\r\n]+)["']?/);
     if (match && match[1]) return match[1].trim();

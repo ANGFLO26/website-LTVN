@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'ltvn-api',
       script: 'dist/main.js',
-      cwd: './api',
+      cwd: './backend',
       instances: 2,
       exec_mode: 'cluster',
       autorestart: true,
