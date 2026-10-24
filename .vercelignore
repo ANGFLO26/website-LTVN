@@ -1,10 +1,9 @@
-# Exclude backend, admin, and scripts from Vercel static frontend deployment
+# Exclude backend, admin, and agent metadata from Vercel static frontend deployment
 backend
 backend/**
 admin
 admin/**
-scripts
-scripts/**
 ecosystem.config.cjs
 .agents
 .agents/**
+
