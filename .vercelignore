@@ -1,0 +1,7 @@
+# Exclude backend and admin from Vercel static frontend deployment
+# This prevents Vercel from treating api/ files as Serverless Functions (>12 limit on Hobby plan)
+api
+admin
+scripts
+ecosystem.config.cjs
+.agents
