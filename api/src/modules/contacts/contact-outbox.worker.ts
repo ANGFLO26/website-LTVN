@@ -72,7 +72,8 @@ export class ContactOutboxWorker implements OnApplicationBootstrap, OnApplicatio
       try {
         await this.runWorkerTick();
       } catch (err) {
-        this.logger.error(`Lỗi không mong muốn trong outbox worker tick. code=${sanitizeError(err)}`);
+        const errMessage = err instanceof Error ? err.message : String(err);
+        this.logger.error(`Lỗi không mong muốn trong outbox worker tick: ${errMessage} (code=${sanitizeError(err)})`);
       } finally {
         if (!this.isShuttingDown) {
           const config = this.emailConfig.getWorkerConfig();
@@ -109,7 +110,7 @@ export class ContactOutboxWorker implements OnApplicationBootstrap, OnApplicatio
         WHERE (
           (status = 'pending' AND next_attempt_at <= NOW())
           OR
-          (status = 'processing' AND updated_at < NOW() - (${leaseSeconds} || ' seconds')::interval)
+          (status = 'processing' AND updated_at < NOW() - (${leaseSeconds} * INTERVAL '1 second'))
         )
         AND event_type = 'contact.notification.requested'
         ORDER BY next_attempt_at ASC, created_at ASC

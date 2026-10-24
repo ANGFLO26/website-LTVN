@@ -1,16 +1,28 @@
-import { ArrowLeft, Check, Phone, Send } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { ArrowLeft, Check, Phone, Send, FileDown } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { ProductCard } from '../components/ProductCard'
 import { DataLoadError } from '../components/DataLoadError'
 import { useSiteData } from '../context/DataContext'
 import { SeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
+import { QuickRfqModal } from '../components/QuickRfqModal'
 
 export function ProductPage() {
   const { slug } = useParams()
   const { getProductBySlug, products, productsStatus, refreshData } = useSiteData()
   const product = getProductBySlug(slug)
   const { content, language, t } = useLanguage()
+  const [isRfqOpen, setIsRfqOpen] = useState(false)
+  const [showStickyBar, setShowStickyBar] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickyBar(window.scrollY > 420)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   if (productsStatus === 'loading') {
     return (
@@ -27,10 +39,14 @@ export function ProductPage() {
   }
 
   if (productsStatus === 'error') {
-    return <>
-      <SeoHead title={t('productNotFound')} robots="noindex,nofollow" />
-      <section className="container" style={{ paddingBlock: '4rem' }}><DataLoadError onRetry={refreshData} /></section>
-    </>
+    return (
+      <>
+        <SeoHead title={t('productNotFound')} robots="noindex,nofollow" />
+        <section className="container" style={{ paddingBlock: '4rem' }}>
+          <DataLoadError onRetry={refreshData} />
+        </section>
+      </>
+    )
   }
 
   if (!product) {
@@ -121,9 +137,21 @@ export function ProductPage() {
               </dl>
               <p className="product-advice-hint">{t('productAdviceHint')}</p>
               <div className="hero-actions product-hero-actions">
-                <Link to={`/lien-he?san-pham=${product.slug}`} className="button button-primary">
-                  <Send size={17} aria-hidden="true" /> {t('requestProduct')}
-                </Link>
+                <button
+                  type="button"
+                  className="button button-primary"
+                  onClick={() => setIsRfqOpen(true)}
+                >
+                  <Send size={17} aria-hidden="true" /> {t('quickRfqButton')}
+                </button>
+                <button
+                  type="button"
+                  className="button button-secondary"
+                  onClick={() => setIsRfqOpen(true)}
+                  title={t('downloadBrochure')}
+                >
+                  <FileDown size={17} aria-hidden="true" /> {t('downloadBrochure')}
+                </button>
                 <a href="tel:+842466506373" className="button button-secondary product-phone-button">
                   <Phone size={17} aria-hidden="true" /> {t('callTechnicalTeam')}
                 </a>
@@ -169,12 +197,16 @@ export function ProductPage() {
             <p>{t('productConsultDesc')}</p>
           </div>
           <div className="product-consultation-actions">
-            <Link to={`/lien-he?san-pham=${product.slug}`} className="button button-primary">
+            <button
+              type="button"
+              className="button button-primary"
+              onClick={() => setIsRfqOpen(true)}
+            >
               <Send size={17} aria-hidden="true" /> {content({
-                vi: `Trao đổi cấu hình ${product.model}`,
-                en: `Discuss the ${product.model} configuration`,
+                vi: `Yêu cầu báo giá ${product.model}`,
+                en: `Request a quote for ${product.model}`,
               })}
-            </Link>
+            </button>
             <a href="tel:+842466506373" className="button product-consultation-phone">
               <Phone size={17} aria-hidden="true" /> {t('callTechnicalTeam')}
             </a>
@@ -195,6 +227,43 @@ export function ProductPage() {
           </div>
         </div>
       </section>
+
+      {/* Floating / Sticky Bottom RFQ Bar when scrolling */}
+      {showStickyBar && (
+        <aside className="sticky-rfq-bar" aria-label={t('quickRfqTitle')}>
+          <div className="container sticky-rfq-inner">
+            <div className="sticky-rfq-info">
+              <span className="sticky-rfq-brand">{product.brand}</span>
+              <strong>{product.model}</strong>
+              <span className="sticky-rfq-name">{content(product.name)}</span>
+            </div>
+            <div className="sticky-rfq-actions">
+              <a href="tel:+842466506373" className="button button-secondary button-sm">
+                <Phone size={15} aria-hidden="true" />
+                <span className="hide-on-mobile">(024) 6650 6373</span>
+              </a>
+              <button
+                type="button"
+                className="button button-primary button-sm"
+                onClick={() => setIsRfqOpen(true)}
+              >
+                <Send size={15} aria-hidden="true" />
+                <span>{t('quickRfqButton')}</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+      )}
+
+      <QuickRfqModal
+        isOpen={isRfqOpen}
+        onClose={() => setIsRfqOpen(false)}
+        product={{
+          model: product.model,
+          name: content(product.name),
+          slug: product.slug,
+        }}
+      />
     </>
   )
 }

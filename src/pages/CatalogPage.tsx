@@ -1,4 +1,4 @@
-import { RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react'
+import { RotateCcw, Search, SlidersHorizontal, X, Award } from 'lucide-react'
 import { useDeferredValue, useMemo, useState } from 'react'
 import { EmptyState, PageIntro } from '../components/PageElements'
 import { ProductCard } from '../components/ProductCard'
@@ -165,10 +165,47 @@ export function CatalogPage({ family }: { family: ProductFamily }) {
             ))}
           </div>
 
+          {isPac && (
+            <div className="catalog-standards-bar" role="group" aria-label={t('standardQuickFilter')}>
+              <span className="catalog-standards-label">
+                <Award size={15} aria-hidden="true" />
+                {t('standardQuickFilter')}
+              </span>
+              <div className="catalog-standards-pills">
+                {['ASTM D86', 'ASTM D93', 'ASTM D2500', 'ASTM D3828', 'ASTM D3241', 'ASTM D7668', 'ISO 3405'].map((std) => {
+                  const isActive = query.toLowerCase() === std.toLowerCase()
+                  return (
+                    <button
+                      key={std}
+                      type="button"
+                      className={`standard-pill ${isActive ? 'active' : ''}`}
+                      onClick={() => setQuery(isActive ? '' : std)}
+                      aria-pressed={isActive}
+                    >
+                      {std}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
           <div className="catalog-result-head">
             <h2>{isPac ? 'PAC' : 'Baker Hughes'}</h2>
             <div className="catalog-result-meta">
-              <span aria-live="polite">{filteredProducts.length} {t('productsCount')}</span>
+              <span aria-live="polite" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <strong>{filteredProducts.length}</strong> {t('productsCount')}
+                {query && (
+                  <span className="active-filter-badge">
+                    {query}
+                  </span>
+                )}
+                {brand !== ALL_FILTER && (
+                  <span className="active-filter-badge">
+                    {brand}
+                  </span>
+                )}
+              </span>
               {hasActiveFilters && (
                 <button type="button" className="catalog-clear-button" onClick={clearFilters}>
                   <RotateCcw size={15} aria-hidden="true" />

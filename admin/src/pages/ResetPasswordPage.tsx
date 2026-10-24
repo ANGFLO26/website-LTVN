@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Lock, Eye, EyeOff, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Lock, Eye, EyeOff, AlertTriangle, ArrowLeft, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
 import { auth } from '../services/auth';
 import '../auth.css';
 
@@ -54,14 +54,16 @@ export function ResetPasswordPage({ token, onResetSuccess, onRequestNewLink }: P
 
     try {
       const res = await auth.resetPassword(token.trim(), newPassword);
-      // Clear sensitive fields in memory immediately
       setNewPassword('');
       setConfirmPassword('');
       onResetSuccess(res.message || 'Mật khẩu đã được cập nhật thành công. Vui lòng đăng nhập lại.');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.';
+      const msg =
+        err instanceof Error && err.name === 'Error'
+          ? err.message
+          : 'Không thể cập nhật mật khẩu. Vui lòng kiểm tra lại liên kết hoặc thử lại.';
       setError(msg);
-      if (msg.includes('không hợp lệ') || msg.includes('hết hạn')) {
+      if (msg.includes('hết hạn') || msg.includes('không hợp lệ') || msg.includes('đã qua sử dụng')) {
         setIsTokenInvalid(true);
       }
     } finally {
@@ -71,141 +73,172 @@ export function ResetPasswordPage({ token, onResetSuccess, onRequestNewLink }: P
 
   if (isTokenInvalid) {
     return (
-      <main className="auth-screen">
-        <section className="auth-card" aria-labelledby="reset-invalid-title">
-          <div className="brand-icon" aria-hidden="true">LT</div>
-          <p className="auth-brand">LT VIỆT NAM · ADMIN</p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '14px 0' }}>
-            <AlertTriangle size={24} color="#f87171" aria-hidden="true" />
-            <h1 id="reset-invalid-title" style={{ fontSize: '1.35rem', margin: 0 }}>
+      <main className="sit-auth-page">
+        <div className="sit-auth-canvas" aria-hidden="true" />
+        <section className="sit-auth-card-single" aria-labelledby="invalid-token-title">
+          <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+            <AlertTriangle size={48} color="#f59e0b" aria-hidden="true" style={{ margin: '0 auto 1rem' }} />
+            <h1 id="invalid-token-title" className="sit-form-title" style={{ fontSize: '28px' }}>
               Liên kết không hợp lệ
             </h1>
+            <p className="sit-form-desc">
+              Liên kết đặt lại mật khẩu này đã hết hạn (sau 30 phút), đã được sử dụng hoặc không hợp lệ.
+            </p>
+            <button
+              type="button"
+              className="sit-submit-btn"
+              onClick={onRequestNewLink}
+            >
+              <span>Yêu cầu liên kết mới</span>
+            </button>
           </div>
-          <p className="auth-description" style={{ marginBottom: 20 }}>
-            Liên kết đặt lại mật khẩu không hợp lệ, đã hết hạn hoặc đã được sử dụng trước đó.
-          </p>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={onRequestNewLink}
-            style={{ width: '100%', justifyContent: 'center' }}
-          >
-            <span>Yêu cầu liên kết mới</span>
-          </button>
         </section>
       </main>
     );
   }
 
   return (
-    <main className="auth-screen">
-      <section className="auth-card" aria-labelledby="reset-title">
-        <div className="brand-icon" aria-hidden="true">LT</div>
-        <p className="auth-brand">LT VIỆT NAM · ADMIN</p>
-        <h1 id="reset-title">Đặt lại mật khẩu</h1>
-        <p className="auth-description">
-          Tạo mật khẩu mới cho tài khoản quản trị của bạn theo chuẩn bảo mật an toàn.
-        </p>
+    <main className="sit-auth-page">
+      <div className="sit-auth-canvas" aria-hidden="true" />
+
+      <section className="sit-auth-card-single" aria-labelledby="reset-title">
+        <button
+          type="button"
+          className="sit-back-btn"
+          onClick={onRequestNewLink}
+          disabled={submitting}
+        >
+          <ArrowLeft size={16} aria-hidden="true" />
+          <span>Quay lại trang đăng nhập</span>
+        </button>
+
+        <div>
+          <div className="sit-access-pill">
+            <ShieldCheck size={14} aria-hidden="true" />
+            Cập nhật bảo mật
+          </div>
+          <h1 id="reset-title" className="sit-form-title" style={{ fontSize: '32px' }}>
+            Đặt lại mật khẩu
+          </h1>
+          <p className="sit-form-desc">
+            Tạo mật khẩu mới cho tài khoản quản trị của bạn theo tiêu chuẩn an toàn.
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit} aria-busy={submitting}>
           {/* New password field */}
-          <label htmlFor="reset-new-password">Mật khẩu mới *</label>
-          <div className="auth-input-group">
-            <input
-              id="reset-new-password"
-              name="newPassword"
-              type={showNew ? 'text' : 'password'}
-              autoComplete="new-password"
-              required
-              autoFocus
-              disabled={submitting}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Nhập mật khẩu mới..."
-            />
-            <button
-              type="button"
-              className="auth-eye-btn"
-              onClick={() => setShowNew(!showNew)}
-              aria-label={showNew ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-              tabIndex={-1}
-            >
-              {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
+          <div className="sit-form-field">
+            <label className="sit-field-label" htmlFor="reset-new-password">
+              Mật khẩu mới *
+            </label>
+            <div className="sit-input-wrapper">
+              <Lock className="sit-input-icon" aria-hidden="true" />
+              <input
+                id="reset-new-password"
+                name="newPassword"
+                type={showNew ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                autoFocus
+                disabled={submitting}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Nhập mật khẩu mới…"
+                className="sit-input has-eye"
+              />
+              <button
+                type="button"
+                className="sit-eye-btn"
+                onClick={() => setShowNew(!showNew)}
+                aria-label={showNew ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                tabIndex={-1}
+              >
+                {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
           {/* Confirm password field */}
-          <label htmlFor="reset-confirm-password">Xác nhận mật khẩu mới *</label>
-          <div className="auth-input-group">
-            <input
-              id="reset-confirm-password"
-              name="confirmPassword"
-              type={showConfirm ? 'text' : 'password'}
-              autoComplete="new-password"
-              required
-              disabled={submitting}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Nhập lại mật khẩu mới..."
-            />
-            <button
-              type="button"
-              className="auth-eye-btn"
-              onClick={() => setShowConfirm(!showConfirm)}
-              aria-label={showConfirm ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-              tabIndex={-1}
-            >
-              {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
+          <div className="sit-form-field">
+            <label className="sit-field-label" htmlFor="reset-confirm-password">
+              Xác nhận mật khẩu mới *
+            </label>
+            <div className="sit-input-wrapper">
+              <Lock className="sit-input-icon" aria-hidden="true" />
+              <input
+                id="reset-confirm-password"
+                name="confirmPassword"
+                type={showConfirm ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                disabled={submitting}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Nhập lại mật khẩu mới…"
+                className="sit-input has-eye"
+              />
+              <button
+                type="button"
+                className="sit-eye-btn"
+                onClick={() => setShowConfirm(!showConfirm)}
+                aria-label={showConfirm ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                tabIndex={-1}
+              >
+                {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
-          {/* Password criteria checklist matching PR-10A */}
+          {/* Password criteria checklist */}
           {newPassword && (
-            <div className="auth-password-criteria" role="status">
-              <span style={{ color: ruleLength ? '#34d399' : 'var(--text-muted)' }}>
+            <div className="sit-criteria-grid" role="status">
+              <span className={`sit-criteria-item ${ruleLength ? 'valid' : ''}`}>
                 {ruleLength ? '✓' : '○'} Tối thiểu 12 ký tự
               </span>
-              <span style={{ color: ruleUpper ? '#34d399' : 'var(--text-muted)' }}>
-                {ruleUpper ? '✓' : '○'} Có chữ in hoa (A-Z)
+              <span className={`sit-criteria-item ${ruleUpper ? 'valid' : ''}`}>
+                {ruleUpper ? '✓' : '○'} Chữ in hoa (A-Z)
               </span>
-              <span style={{ color: ruleLower ? '#34d399' : 'var(--text-muted)' }}>
-                {ruleLower ? '✓' : '○'} Có chữ thường (a-z)
+              <span className={`sit-criteria-item ${ruleLower ? 'valid' : ''}`}>
+                {ruleLower ? '✓' : '○'} Chữ thường (a-z)
               </span>
-              <span style={{ color: ruleDigit ? '#34d399' : 'var(--text-muted)' }}>
-                {ruleDigit ? '✓' : '○'} Có chữ số (0-9)
+              <span className={`sit-criteria-item ${ruleDigit ? 'valid' : ''}`}>
+                {ruleDigit ? '✓' : '○'} Chữ số (0-9)
               </span>
-              <span style={{ color: ruleSpecial ? '#34d399' : 'var(--text-muted)' }}>
-                {ruleSpecial ? '✓' : '○'} Có ký tự đặc biệt (!@#...)
+              <span className={`sit-criteria-item ${ruleSpecial ? 'valid' : ''}`}>
+                {ruleSpecial ? '✓' : '○'} Ký tự đặc biệt (!@#)
               </span>
               {confirmPassword && (
-                <span style={{ color: ruleMatchConfirm ? '#34d399' : '#f87171' }}>
+                <span className={`sit-criteria-item ${ruleMatchConfirm ? 'valid' : ''}`} style={{ color: ruleMatchConfirm ? '#15803d' : '#b91c1c' }}>
                   {ruleMatchConfirm ? '✓ Mật khẩu khớp nhau' : '✕ Chưa khớp nhau'}
                 </span>
               )}
             </div>
           )}
 
-          {error && <p className="auth-error" role="alert">{error}</p>}
+          {error && (
+            <div className="sit-alert-error" role="alert">
+              <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} aria-hidden="true" />
+              <span>{error}</span>
+            </div>
+          )}
 
           <button
             type="submit"
-            className="btn btn-primary"
+            className="sit-submit-btn"
             disabled={submitting || (newPassword !== '' && !isPolicyValid)}
           >
-            <Lock size={17} aria-hidden="true" />
+            {submitting ? (
+              <Loader2 size={16} className="spin" aria-hidden="true" />
+            ) : (
+              <Lock size={16} aria-hidden="true" />
+            )}
             <span>{submitting ? 'Đang cập nhật mật khẩu…' : 'Cập nhật mật khẩu mới'}</span>
           </button>
-
-          <button
-            type="button"
-            className="btn btn-link auth-back-link"
-            onClick={onRequestNewLink}
-            disabled={submitting}
-          >
-            <ArrowLeft size={15} aria-hidden="true" />
-            <span>Quay lại trang đăng nhập</span>
-          </button>
         </form>
+
+        <div className="sit-auth-footer">
+          Nếu cần trợ giúp thêm, vui lòng liên hệ trực tiếp với quản trị viên LT Việt Nam.
+        </div>
       </section>
     </main>
   );

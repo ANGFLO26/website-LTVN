@@ -24,8 +24,38 @@ export function ContactPage() {
   const [searchParams] = useSearchParams()
   const productParam = searchParams.get('san-pham')?.trim() ?? ''
   const topicParam = searchParams.get('chu-de')?.trim() ?? ''
+  const groupParam = searchParams.get('nhom')?.trim() ?? ''
   const selectedProduct = productParam ? getProductBySlug(productParam) : undefined
-  const defaultRequestType = productParam || topicParam ? 'product_consultation' : ''
+  const activeTopic = topicParam || groupParam
+  const defaultRequestType =
+    activeTopic === 'ho-so-nang-luc'
+      ? 'partnership'
+      : productParam || activeTopic
+        ? 'product_consultation'
+        : ''
+
+  const topicLabels: Record<string, { vi: string; en: string }> = {
+    'ho-so-nang-luc': {
+      vi: 'Yêu cầu cung cấp Hồ sơ năng lực (Company Profile)',
+      en: 'Request for Company Profile (PDF)',
+    },
+    'tu-van-ky-thuat': {
+      vi: 'Tư vấn kỹ thuật & lựa chọn cấu hình thiết bị',
+      en: 'Technical consultation & equipment configuration',
+    },
+    'tu-van-pac': {
+      vi: 'Tư vấn thiết bị phân tích PAC theo phương pháp thử',
+      en: 'PAC analytical instruments consultation by test method',
+    },
+    pac: {
+      vi: 'Tư vấn thiết bị phân tích PAC theo phương pháp thử',
+      en: 'PAC analytical instruments consultation by test method',
+    },
+    'phase-70xi': {
+      vi: 'Tư vấn ứng dụng máy đo điểm đông đặc Phase DFA-70Xi',
+      en: 'Application inquiry for Phase DFA-70Xi cold flow analyzer',
+    },
+  }
   const [submitted, setSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -167,7 +197,7 @@ export function ContactPage() {
               <span className="eyebrow">{t('contactFormEyebrow')}</span>
               <h2>{t('contactFormTitle')}</h2>
               <p>{t('contactFormDesc')}</p>
-              {(selectedProduct || productParam || topicParam) && (
+              {(selectedProduct || productParam || activeTopic) && (
                 <div
                   style={{
                     marginTop: '0.75rem',
@@ -185,7 +215,9 @@ export function ContactPage() {
                   <span>
                     {selectedProduct
                       ? `${content(selectedProduct.name)}${selectedProduct.model ? ` (${selectedProduct.model})` : ''}`
-                      : productParam || topicParam}
+                      : activeTopic && topicLabels[activeTopic]
+                        ? content(topicLabels[activeTopic])
+                        : productParam || activeTopic}
                   </span>
                 </div>
               )}

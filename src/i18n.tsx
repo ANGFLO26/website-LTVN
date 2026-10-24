@@ -13,6 +13,7 @@ const uiCopy = {
   contactAdvice: ['Liên hệ tư vấn', 'Request consultation'],
   viewAll: ['Xem tất cả', 'View all'],
   viewDetail: ['Xem chi tiết', 'View details'],
+
   featuredProducts: ['Sản phẩm nổi bật', 'Featured products'],
   latestUpdates: ['Cập nhật mới nhất', 'Latest updates'],
   searchPlaceholder: [
@@ -46,7 +47,7 @@ const uiCopy = {
     'Share the sample or process medium, applicable standards and operating conditions to discuss a suitable model, configuration and implementation approach.',
   ],
   sendRequirement: ['Gửi yêu cầu tư vấn', 'Send consultation request'],
-  downloadBrochure: ['Tải brochure', 'Download brochure'],
+  downloadBrochure: ['Tải Catalog PDF', 'Download Catalog PDF'],
   backToCatalog: ['Quay lại danh mục', 'Back to catalog'],
   updatesAll: ['Tất cả', 'All'],
   updatesNews: ['Tin tức', 'News'],
@@ -101,9 +102,9 @@ const uiCopy = {
   closeMenu: ['Đóng menu', 'Close menu'],
 
   // --- New Keys added during Refactor ---
-  heroEyebrow: ['THIẾT BỊ PHÂN TÍCH · VAN CÔNG NGHIỆP', 'ANALYTICAL INSTRUMENTS · INDUSTRIAL VALVES'],
-  heroTitle: ['Giải pháp thiết bị cho phòng thí nghiệm và nhà máy.', 'Equipment solutions for laboratories and plants.'],
-  heroDesc: ['Thiết bị phân tích và van công nghiệp, được tư vấn, triển khai và hỗ trợ bởi đội ngũ kỹ thuật LT Việt Nam.', 'Analytical instruments and industrial valves, configured, commissioned and supported by LT Vietnam\'s technical team.'],
+  heroEyebrow: ['ĐẠI DIỆN PHÂN PHỐI ỦY QUYỀN PAC (USA)', 'AUTHORIZED DISTRIBUTOR OF PAC (USA)'],
+  heroTitle: ['Thiết bị phân tích phòng thí nghiệm & Van công nghiệp.', 'Analytical Laboratory Instruments & Industrial Valves.'],
+  heroDesc: ['Đại diện phân phối ủy quyền thiết bị phân tích PAC (Herzog, ISL, Alcor, Phase) và van Masoneilan tại Việt Nam. Tư vấn đúng tiêu chuẩn ASTM/ISO, chuyển giao và bảo hành tận nơi.', 'Authorized distributor of PAC analytical instruments (Herzog, ISL, Alcor, Phase) and Masoneilan valves in Vietnam. ASTM/ISO compliant solutions, on-site commissioning and support.'],
   exploreSolutions: ['Khám phá giải pháp', 'Explore solutions'],
   talkToEngineer: ['Trao đổi với kỹ sư', 'Talk to an engineer'],
   serviceCommitments: ['Cam kết dịch vụ', 'Service commitments'],
@@ -271,6 +272,30 @@ const uiCopy = {
   requiredFieldsNote: ['Các trường có dấu * là bắt buộc.', 'Fields marked * are required.'],
   contactMethod: ['Email hoặc số điện thoại', 'Email or phone number'],
   contactMethodHint: ['Dùng kênh thuận tiện nhất để chúng tôi phản hồi.', 'Use the most convenient channel for our response.'],
+  quickRfqTitle: ['Yêu cầu báo giá nhanh', 'Quick Request for Quote'],
+  quickRfqDesc: ['Điền thông tin bên dưới để nhận bảng chào giá và tài liệu kỹ thuật sớm nhất.', 'Submit your details below to receive the official quotation and technical documentation promptly.'],
+  quickRfqSubmit: ['Gửi yêu cầu báo giá', 'Submit Quote Request'],
+  quickRfqSubmitting: ['Đang gửi yêu cầu...', 'Submitting request...'],
+  quickRfqSuccess: ['Yêu cầu báo giá đã được gửi thành công!', 'Quote request sent successfully!'],
+  quickRfqSuccessDesc: ['Đội ngũ kỹ sư LT Việt Nam đã tiếp nhận yêu cầu và sẽ liên hệ phản hồi trong thời gian sớm nhất.', 'LT Vietnam technical team has received your request and will contact you shortly.'],
+  quickRfqClose: ['Đóng', 'Close'],
+  quickRfqButton: ['Yêu cầu báo giá nhanh', 'Quick quote request'],
+  quickRfqForProduct: ['Báo giá cho thiết bị', 'Quote for instrument'],
+  standardQuickFilter: ['Lọc nhanh theo tiêu chuẩn ASTM:', 'Filter by ASTM Standard:'],
+  pacCorePillars: ['4 CÔNG NGHỆ PHÂN TÍCH PAC CỐT LÕI', '4 CORE PAC ANALYTICAL TECHNOLOGIES'],
+  pacCorePillarsTitle: ['Thiết bị kiểm nghiệm chuẩn xác cho phòng Lab lọc hóa dầu', 'Precision Testing Equipment for Refinery & Fuel Labs'],
+  pacDistillation: ['Chưng cất tự động', 'Automatic Distillation'],
+  pacDistillationDesc: ['Đo dải sôi và đường cong chưng cất tự động chuẩn xác theo ASTM D86, ISO 3405.', 'Automated boiling range and distillation curve testing per ASTM D86, ISO 3405.'],
+  pacFlashPoint: ['Điểm chớp cháy cốc kín', 'Closed Cup Flash Point'],
+  pacFlashPointDesc: ['Xác định điểm chớp cháy an toàn cho nhiên liệu, dầu bôi trơn và dung môi theo ASTM D93.', 'Safe automated flash point determination for fuels, lube oils and solvents per ASTM D93.'],
+  pacColdFlow: ['Dòng chảy lạnh & Đông đặc', 'Cold Flow & Pour Point'],
+  pacColdFlowDesc: ['Kiểm tra điểm đông đặc và điểm đục với tốc độ quang học tức thì theo ASTM D2500, D5972.', 'Fast optical pour and cloud point testing for fuels and distillates per ASTM D2500, D5972.'],
+  pacAviation: ['Nhiên liệu bay & Trị số Cetane', 'Aviation Fuel & Cetane ID'],
+  pacAviationDesc: ['Kiểm nghiệm độ bền oxy hóa nhiệt Jet A-1 và xác định chỉ số cetane theo ASTM D3241, D7668.', 'Jet A-1 thermal oxidation stability and derived cetane number analysis per ASTM D3241, D7668.'],
+  headerQuoteBtn: ['Báo giá nhanh', 'Request Quote'],
+  technicalHotline: ['Hotline kỹ thuật', 'Technical Hotline'],
+  activeFilter: ['Đang lọc theo', 'Filtered by'],
+
 } as const
 
 export type UiKey = keyof typeof uiCopy

@@ -405,7 +405,12 @@ function adaptNewsToItem(n: ApiNewsEvent): NewsItem {
     excerpt,
     location,
     image,
-    imageFit: viSlug === 'chuyen-giao-dfa-70xi' ? 'contain' : 'cover',
+    imageFit:
+      viSlug === 'ban-giao-pac-optidist-2' ||
+      viSlug === 'chuyen-giao-dfa-70xi' ||
+      Boolean(image && (image.includes('/products/') || image.includes('optidist') || image.includes('phase') || image.includes('transparent')))
+        ? 'contain'
+        : 'cover',
     relatedProduct,
     nextAction,
     paragraphs,

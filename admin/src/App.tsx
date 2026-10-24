@@ -396,6 +396,7 @@ function AdminDashboard({
               contacts={contacts}
               news={news}
               media={media}
+              standards={standards}
               onNavigate={navigate}
               onUpdateContactStatus={handleUpdateContactStatus}
             />

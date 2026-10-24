@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { NewsCard } from '../components/NewsCard'
 import { DataLoadError } from '../components/DataLoadError'
 import { SectionHeading } from '../components/PageElements'
+import { CustomerShowcase } from '../components/CustomerShowcase'
 import { useSiteData } from '../context/DataContext'
 import { useSeoHead } from '../components/SeoHead'
 import { useLanguage } from '../i18n'
@@ -109,10 +110,10 @@ export function HomePage() {
               </Link>
             </div>
           </div>
-
         </div>
       </section>
 
+      {/* Trust Strip */}
       <section className="home-trust-strip" aria-label={t('serviceCommitments')}>
         <div className="container home-trust-grid">
           {servicePromises.map(({ title, detail, Icon }) => (
@@ -124,47 +125,90 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* Social Proof: Major Customer References right on Homepage */}
+      <CustomerShowcase />
+
+      {/* Core Analytical Solutions: 4 Pillars of PAC */}
       <section id="giai-phap" className="section home-solution-section">
         <div className="container">
           <SectionHeading
-            title={t('equipmentTwoNeeds')}
+            eyebrow={t('pacCorePillars')}
+            title={t('pacCorePillarsTitle')}
             description={t('equipmentDesc')}
           />
 
-          <div className="home-solution-grid">
-            <Link to="/pac" className="home-solution-path home-solution-lab">
-              <div className="home-solution-copy">
-                <span className="home-solution-kicker">PAC · HERZOG</span>
-                <h3>{t('labAnalysis')}</h3>
-                <p>{t('labDesc')}</p>
-                <span className="home-solution-link">
-                  {t('explorePac')}
-                  <ArrowRight aria-hidden="true" />
-                </span>
+          <div className="pac-pillars-grid">
+            <Link to="/pac" className="pac-pillar-card">
+              <div className="pac-pillar-media">
+                <img src="/images/products/optidist-2-official.png" alt="HERZOG OptiDist" loading="lazy" decoding="async" />
               </div>
-              <div className="home-solution-media home-solution-media-lab" aria-hidden="true">
-                <img src="/images/products/optidist-2-official.png" alt="PAC OptiDist 2" loading="lazy" decoding="async" />
-                <img src="/images/products/cid-510-transparent.png" alt="Herzog CID 510" loading="lazy" decoding="async" />
+              <div className="pac-pillar-body">
+                <span className="pac-pillar-kicker">HERZOG · CHƯNG CẤT</span>
+                <h3 className="pac-pillar-title">{t('pacDistillation')}</h3>
+                <div className="pac-pillar-standards">
+                  <span className="pac-standard-tag">ASTM D86</span>
+                  <span className="pac-standard-tag">ISO 3405</span>
+                </div>
+                <p className="pac-pillar-desc">{t('pacDistillationDesc')}</p>
+                <span className="pac-pillar-action">
+                  {t('viewDetail')} <ArrowRight size={15} aria-hidden="true" />
+                </span>
               </div>
             </Link>
 
-            {/* Tạm thời đóng thẻ Baker Hughes - Mở lại khi cần hiển thị:
-            <Link to="/baker-hughes" className="home-solution-path home-solution-valves">
-              <div className="home-solution-copy">
-                <span className="home-solution-kicker">BAKER HUGHES</span>
-                <h3>{t('processControl')}</h3>
-                <p>{t('processDesc')}</p>
-                <span className="home-solution-link">
-                  {t('exploreBaker')}
-                  <ArrowRight aria-hidden="true" />
+            <Link to="/pac" className="pac-pillar-card">
+              <div className="pac-pillar-media">
+                <img src="/images/products/optiflash.jpg" alt="ISL OptiFlash" loading="lazy" decoding="async" />
+              </div>
+              <div className="pac-pillar-body">
+                <span className="pac-pillar-kicker">ISL · ĐIỂM CHỚP CHÁY</span>
+                <h3 className="pac-pillar-title">{t('pacFlashPoint')}</h3>
+                <div className="pac-pillar-standards">
+                  <span className="pac-standard-tag">ASTM D93</span>
+                  <span className="pac-standard-tag">IP 170</span>
+                </div>
+                <p className="pac-pillar-desc">{t('pacFlashPointDesc')}</p>
+                <span className="pac-pillar-action">
+                  {t('viewDetail')} <ArrowRight size={15} aria-hidden="true" />
                 </span>
               </div>
-              <div className="home-solution-media home-solution-media-valves" aria-hidden="true">
-                <img src="/images/products/valve-21000-transparent.png" alt="Masoneilan Valve" loading="lazy" decoding="async" />
-                <img src="/images/products/consolidated-2700-transparent.png" alt="Consolidated Safety Valve" loading="lazy" decoding="async" />
+            </Link>
+
+            <Link to="/pac" className="pac-pillar-card">
+              <div className="pac-pillar-media">
+                <img src="/images/products/hdv-632.jpg" alt="Phase Cold Flow" loading="lazy" decoding="async" />
+              </div>
+              <div className="pac-pillar-body">
+                <span className="pac-pillar-kicker">PHASE · DÒNG CHẢY LẠNH</span>
+                <h3 className="pac-pillar-title">{t('pacColdFlow')}</h3>
+                <div className="pac-pillar-standards">
+                  <span className="pac-standard-tag">ASTM D2500</span>
+                  <span className="pac-standard-tag">ASTM D5972</span>
+                </div>
+                <p className="pac-pillar-desc">{t('pacColdFlowDesc')}</p>
+                <span className="pac-pillar-action">
+                  {t('viewDetail')} <ArrowRight size={15} aria-hidden="true" />
+                </span>
               </div>
             </Link>
-            */}
+
+            <Link to="/pac" className="pac-pillar-card">
+              <div className="pac-pillar-media">
+                <img src="/images/products/cid-510-transparent.png" alt="Herzog CID 510" loading="lazy" decoding="async" />
+              </div>
+              <div className="pac-pillar-body">
+                <span className="pac-pillar-kicker">ALCOR · NHIÊN LIỆU BAY</span>
+                <h3 className="pac-pillar-title">{t('pacAviation')}</h3>
+                <div className="pac-pillar-standards">
+                  <span className="pac-standard-tag">ASTM D3241</span>
+                  <span className="pac-standard-tag">ASTM D7668</span>
+                </div>
+                <p className="pac-pillar-desc">{t('pacAviationDesc')}</p>
+                <span className="pac-pillar-action">
+                  {t('viewDetail')} <ArrowRight size={15} aria-hidden="true" />
+                </span>
+              </div>
+            </Link>
           </div>
 
           <div className="home-flow-bridge" aria-label={t('nextStep')}>
@@ -177,6 +221,7 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* Technical Process Section */}
       <section className="home-process-section" aria-labelledby="home-process-title">
         <div className="container">
           <div className="home-process-heading">
@@ -243,8 +288,8 @@ export function HomePage() {
                   <span>{t('stepOutcomes')}</span>
                   <strong>{activeStep.outcome}</strong>
                 </div>
-                <Link to="/gioi-thieu" className="text-link home-process-link">
-                  {t('howItWorks')}
+                <Link to="/lien-he?chu-de=tu-van-ky-thuat" className="text-link home-process-link">
+                  {language === 'vi' ? 'Trao đổi bài toán kỹ thuật với chúng tôi' : 'Discuss your technical requirement with our team'}
                   <ArrowRight size={17} aria-hidden="true" />
                 </Link>
               </div>
@@ -253,6 +298,7 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* News & Technical Articles */}
       <section className="section home-news-section">
         <div className="container">
           <SectionHeading
@@ -276,6 +322,7 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* Contact CTA */}
       <section className="contact-cta home-contact-cta">
         <div className="container contact-cta-inner">
           <div>
